@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteCategory, fetchCategories, searchCategories, setSelectedCategoryId } from '../../slices/categorySlice'
+import { deleteCategory, fetchCategories, searchCategories, setSelectedCategoryId } from '../../../slices/categorySlice'
 import { useNavigate } from 'react-router-dom';
 
 function CategoryList () {
