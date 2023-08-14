@@ -16,7 +16,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 
 import { useColorScheme } from '@mui/material/styles';
 
-import { Sidebar, Menu, MenuItem, SubMenu, useProSidebar } from 'react-pro-sidebar';
+import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 
 // Icons
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -29,13 +29,29 @@ import ImportExportIcon from '@mui/icons-material/ImportExport';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import PreviewIcon from '@mui/icons-material/Preview';
 import CommentIcon from '@mui/icons-material/Comment';
+import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
+import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
+import SaveIcon from '@mui/icons-material/Save';
+import PrintIcon from '@mui/icons-material/Print';
+import ShareIcon from '@mui/icons-material/Share';
+import SpeedDial from '@mui/material/SpeedDial';
+import SpeedDialIcon from '@mui/material/SpeedDialIcon';
+import SpeedDialAction from '@mui/material/SpeedDialAction';
 
 import Categories from './categories';
 import AddCategoryForm from '../../components/admin/Category/AddCategoryForm';
-import { Paper } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 import { css } from '@emotion/react';
 import AdminTopBar from '../../components/admin/AdminTopBar';
+import AdminDashboard from './dashboard/Dashboard';
 
+// import '../../../public/avatar.png'
+const actions = [
+  { icon: <FileCopyIcon />, name: 'Copy' },
+  { icon: <SaveIcon />, name: 'Save' },
+  { icon: <PrintIcon />, name: 'Print' },
+  { icon: <ShareIcon />, name: 'Share' },
+];
 
 function ModeToggle() {
   const { mode, setMode } = useColorScheme();
@@ -96,20 +112,42 @@ function Admin() {
               {" "}
               <h2>QUẢN TRỊ</h2>
             </MenuItem>
-            <SubMenu label="Tổng Quan" icon={<Dashboard />}>
-              <MenuItem onClick={() => {
-                navigate('/');
-              }} icon={<BarChartIcon/>}> Thống Kê Theo Biểu Đồ </MenuItem>
-              <MenuItem icon={<NumbersIcon/>}> Thống Kê Số Liệu </MenuItem>
-            </SubMenu>
-            <MenuItem icon={<CategoryIcon/>} component={<Link to='/categories' />}> Quản Lý Danh Mục </MenuItem>
+            <Box mb="25px">
+              <Box display="flex" justifyContent="center" alignItems="center">
+                <img
+                  alt="profile-user"
+                  src={`../../../public/avatar.png`}
+                  style={{ cursor: "pointer", borderRadius: "50%", 
+                    width: collapse ? "50px" : "100px", // Sử dụng điều kiện để thay đổi kích thước
+                    height: collapse ? "50px" : "100px", }}
+                />
+              </Box>
+              <Box textAlign="center" >
+                <Typography
+                  variant="h4"
+                  fontWeight="bold"
+                  sx={{ m: "10px 0 0 0", fontSize: collapse ? '1.5rem' : '2.125rem' }}
+                >
+                  Nghĩa
+                </Typography>
+                <Typography variant="h5" sx={{ fontSize: collapse ? '1rem' : '1.5rem' }}>
+                  Quản Trị Viên
+                </Typography>
+              </Box>
+            </Box>
+            <MenuItem icon={<Dashboard/>} component={<Link to='/admin/dashboard' />}> Tổng Quan </MenuItem>
+            <MenuItem icon={<CategoryIcon/>} component={<Link to='/admin/categories' />}> Quản Lý Danh Mục </MenuItem>
             <MenuItem icon={<BrandingWatermarkIcon/>}> Quản Lý Thương Hiệu </MenuItem>
             <MenuItem icon={<PhoneAndroidIcon/>}> Quản Lý Sản Phẩm </MenuItem>
             <MenuItem icon={<ImportExportIcon/>}> Quản Lý Xuất/Nhập </MenuItem>
             <MenuItem icon={<InventoryIcon/>}> Quản Lý Đơn Hàng </MenuItem>
             <MenuItem icon={<PreviewIcon/>}> Quản Lý Đánh Giá </MenuItem>
             <MenuItem icon={<CommentIcon/>}> Quản Lý Bình Luận </MenuItem>
-            <ModeToggle />
+            <SubMenu label="Quản Lý Tài Khoản" icon={<ManageAccountsOutlinedIcon />}>
+              <MenuItem rootStyles={{background: 'none'}} 
+                 onClick={() => {navigate('/')}} icon={<BarChartIcon/>}> Thống Kê Theo Biểu Đồ </MenuItem>
+              <MenuItem icon={<NumbersIcon/>}> Thống Kê Số Liệu </MenuItem>
+            </SubMenu>
           </Menu>
         </Sidebar>
         
@@ -118,14 +156,15 @@ function Admin() {
         >
           <AdminTopBar />
           <Routes>
-            <Route path="/categories" element={<Categories />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/categories" element={<Categories />} />
             <Route path="/add-category" element={<AddCategoryForm />} />
             <Route path="/" element={<Test />} ></Route>
           </Routes>
         </div>
 
       </div>
-        
+      
     </>
   );
 }
