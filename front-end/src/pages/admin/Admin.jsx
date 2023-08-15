@@ -16,7 +16,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 
 import { useColorScheme } from '@mui/material/styles';
 
-import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
+import { Sidebar, Menu, MenuItem, SubMenu, sidebarClasses } from 'react-pro-sidebar';
 
 // Icons
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -44,6 +44,7 @@ import { Box, Paper } from '@mui/material';
 import { css } from '@emotion/react';
 import AdminTopBar from '../../components/admin/AdminTopBar';
 import AdminDashboard from './dashboard/Dashboard';
+import Brands from './brands';
 
 // import '../../../public/avatar.png'
 const actions = [
@@ -89,7 +90,7 @@ function Admin() {
   return (
     <>
       <div style={{ display: 'flex'}}>
-        <Sidebar  backgroundColor='none' collapsed={collapse}>
+        <Sidebar backgroundColor='none' collapsed={collapse}>
           <Menu 
           style={{ height: "100vh" }}
           menuItemStyles={{
@@ -97,11 +98,12 @@ function Admin() {
               // the active class will be added automatically by react router
               // so we can use it to style the active menu item
               [`&.active`]: {
-                backgroundColor: '#13395e',
-                color: '#b6c8d9',
+                backgroundColor: '#ff5722',
+                color: '#dd2c00',
               },
             },
-          }} >
+          }} 
+          >
           <MenuItem
               icon={<MenuOutlinedIcon />}
               onClick={() => {
@@ -116,7 +118,7 @@ function Admin() {
               <Box display="flex" justifyContent="center" alignItems="center">
                 <img
                   alt="profile-user"
-                  src={`../../../public/avatar.png`}
+                  src={`../../../public/avar.jpg`}
                   style={{ cursor: "pointer", borderRadius: "50%", 
                     width: collapse ? "50px" : "100px", // Sử dụng điều kiện để thay đổi kích thước
                     height: collapse ? "50px" : "100px", }}
@@ -135,9 +137,9 @@ function Admin() {
                 </Typography>
               </Box>
             </Box>
-            <MenuItem icon={<Dashboard/>} component={<Link to='/admin/dashboard' />}> Tổng Quan </MenuItem>
+            <MenuItem active={true} icon={<Dashboard/>} component={<Link to='/admin/dashboard' />}> Tổng Quan </MenuItem>
             <MenuItem icon={<CategoryIcon/>} component={<Link to='/admin/categories' />}> Quản Lý Danh Mục </MenuItem>
-            <MenuItem icon={<BrandingWatermarkIcon/>}> Quản Lý Thương Hiệu </MenuItem>
+            <MenuItem icon={<BrandingWatermarkIcon/>} component={<Link to='/admin/brands'/>}> Quản Lý Thương Hiệu </MenuItem>
             <MenuItem icon={<PhoneAndroidIcon/>}> Quản Lý Sản Phẩm </MenuItem>
             <MenuItem icon={<ImportExportIcon/>}> Quản Lý Xuất/Nhập </MenuItem>
             <MenuItem icon={<InventoryIcon/>}> Quản Lý Đơn Hàng </MenuItem>
@@ -158,6 +160,7 @@ function Admin() {
           <Routes>
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/categories" element={<Categories />} />
+            <Route path="/admin/brands" element={<Brands />} />
             <Route path="/add-category" element={<AddCategoryForm />} />
             <Route path="/" element={<Test />} ></Route>
           </Routes>

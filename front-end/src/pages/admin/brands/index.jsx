@@ -1,24 +1,17 @@
 import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
-
 import { useSelector } from "react-redux";
-
 import * as React from "react";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 
 // import Icons
-
+import UpdateIcon from '@mui/icons-material/Update';
 import DeleteIcon from '@mui/icons-material/Delete';
+import FileUploadIcon from "@mui/icons-material/FileUpload";
 
-import { styled } from "@mui/material/styles";
-import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 
-import { DataGrid } from "@mui/x-data-grid";
-
-import AddIcon from "@mui/icons-material/Add";
-import FileUploadIcon from "@mui/icons-material/FileUpload";
 import {
   Table,
   TableBody,
@@ -27,53 +20,48 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import DeleteCategory from "../../../components/admin/Category/ConfirmDeleteCategory";
-import CategoryEditForm from "../../../components/admin/Category/CategoryEditForm";
-import CategoryAddForm from "../../../components/admin/Category/CategoryAddForm";
 
 // import Component
+import DeleteBrand from "../../../components/admin/brand/ConfirmDeleteBrand";
+import BrandAddForm from "../../../components/admin/brand/BrandAddForm";
+import BrandEditForm from "../../../components/admin/brand/BrandEditForm";
+
+
 
 // example data
-
 const rows = [
   {
-    cate_id: 1,
-    cate_name: "Điện thoại",
-    cate_desc: "Điện thoại di động",
-    cate_status: 1,
-    cate_created: "2023-8-14 11:11:11",
-    cate_updated: "2023-8-14 11:11:11",
+    brand_id: 1,
+    brand_name: "IPhone",
+    brand_desc: "Hoa Kỳ",
+    brand_status: 1,
+    brand_created: "2023-8-14 11:11:11",
+    brand_updated: "2023-8-14 11:11:11",
   },
   {
-    cate_id: 2,
-    cate_name: "Laptop",
-    cate_desc: "Máy tính xách tay (laptop)",
-    cate_status: 1,
-    cate_created: "2023-8-14 11:11:11",
-    cate_updated: "2023-8-14 11:11:11",
+    brand_id: 2,
+    brand_name: "Realme",
+    brand_desc: "Trung Quốc",
+    brand_status: 0,
+    brand_created: "2023-8-14 11:11:11",
+    brand_updated: "2023-8-14 11:11:11",
   },
   {
-    cate_id: 3,
-    cate_name: "Máy ảnh",
-    cate_desc: "Máy ảnh kỹ thuật số",
-    cate_status: 0,
-    cate_created: "2023-8-14 11:11:11",
-    cate_updated: "2023-8-14 11:11:11",
+    brand_id: 3,
+    brand_name: "Xiaomi",
+    brand_desc: "Trung Quốc",
+    brand_status: 1,
+    brand_created: "2023-8-14 11:11:11",
+    brand_updated: "2023-8-14 11:11:11",
   },
 ];
 
-function Categories() {
-  const categories = useSelector((state) => state.categories);
+function Brands() {
+  const Brands = useSelector((state) => state.Brands);
   return (
     <>
-      {/* <Typography variant='body1' color='text.red'>Test nhe</Typography> */}
 
-      {/* <Stack spacing={2} direction="row">
-          <Link to='/add-category' type='button'><Button variant="contained"><ThreeDRotation />Thêm danh mục mới</Button></Link><br />
-          <Link to='/' type='button'><Button variant="outlined"><HomeIcon></HomeIcon>Trang chủ</Button></Link>
-        </Stack> */}
-
-      <h1>QUẢN LÝ DANH MỤC SẢN PHẨM</h1>
+      <h1>QUẢN LÝ THƯƠNG HIỆU SẢN PHẨM</h1>
       <div style={{ height: 400, width: "100%" }}>
         <Grid container spacing={2} marginBottom={2}>
           <Grid
@@ -84,7 +72,7 @@ function Categories() {
             justifyContent="flex-start"
             alignItems="center"
           >
-            <CategoryAddForm />
+            <BrandAddForm />
           </Grid>
           <Grid
             item
@@ -98,6 +86,7 @@ function Categories() {
               startIcon={<FileUploadIcon />}
               variant="contained"
               color="success"
+              type="file"
             >
               Nhập Excel
             </Button>
@@ -108,7 +97,7 @@ function Categories() {
             <TableHead>
               <TableRow>
                 <TableCell>ID</TableCell>
-                <TableCell align="center">Tên Danh Mục</TableCell>
+                <TableCell align="center">Tên Thương Hiệu</TableCell>
                 <TableCell align="center">Mô Tả</TableCell>
                 <TableCell align="center">Trạng Thái</TableCell>
                 <TableCell align="right">
@@ -123,21 +112,22 @@ function Categories() {
             <TableBody>
               {rows.map((row) => (
                 <TableRow
-                  key={row.cate_id}
+                  key={row.brand_id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
-                    {row.cate_id}
+                    {row.brand_id}
                   </TableCell>
-                  <TableCell align="center">{row.cate_name}</TableCell>
-                  <TableCell align="center">{row.cate_desc}</TableCell>
-                  <TableCell align="center">{row.cate_status}</TableCell>
-                  <TableCell align="right">{row.cate_created}</TableCell>
-                  <TableCell align="right">{row.cate_updated}</TableCell>
+                  <TableCell align="center">{row.brand_name}</TableCell>
+                  <TableCell align="center">{row.brand_desc}</TableCell>
+                  <TableCell align="center">{row.brand_status}</TableCell>
+                  <TableCell align="right">{row.brand_created}</TableCell>
+                  <TableCell align="right">{row.brand_updated}</TableCell>
                   <TableCell align="left">
                     <Stack direction="row" spacing={2}>
-                      <CategoryEditForm data={{id: row.cate_id, name: row.cate_name, desc: row.cate_desc, status: row.cate_status}}/>
-                      <DeleteCategory deleteID={row.cate_id}/>
+                      <BrandEditForm data={{id: row.brand_id, name: row.brand_name, desc: row.brand_desc, status: row.brand_status}} />
+                      {/* <Button variant="contained" href="#outlined-buttons" color="error" startIcon={<DeleteIcon />}>Xóa</Button> */}
+                      <DeleteBrand deleteID={row.brand_id}/>
                     </Stack>
                   </TableCell>
                 </TableRow>
@@ -150,4 +140,4 @@ function Categories() {
   );
 }
 
-export default Categories;
+export default Brands;
