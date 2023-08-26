@@ -7,4 +7,6 @@ import lombok.Data;
 public class BrandRequestDto {
     private Integer brandId;
     private String brandName;
+    private String brandDesc;
+    private Integer brandStatus;
 }

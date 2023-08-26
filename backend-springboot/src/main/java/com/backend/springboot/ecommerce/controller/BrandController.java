@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +41,7 @@ public class BrandController {
 
     @PostMapping
     public ResponseEntity<?> createBrand(@RequestBody BrandRequestDto brandRequestDto) {
-        Brand brand = new Brand(brandRequestDto.getBrandName());
+        Brand brand = new Brand(brandRequestDto.getBrandName(), brandRequestDto.getBrandDesc());
         brandRepository.save(brand);
         return ResponseEntity.ok(new MessageResponse("Add brand successfully!!!"));
     }
@@ -51,6 +52,9 @@ public class BrandController {
         if (brandEntityOptional.isPresent()) {
             Brand existingBrand = brandEntityOptional.get();
             existingBrand.setBrandName(brandRequestDto.getBrandName());
+            existingBrand.setBrandDesc(brandRequestDto.getBrandDesc());
+            existingBrand.setBrandStatus(brandRequestDto.getBrandStatus());
+            existingBrand.setBrandUpdatedAt(LocalDateTime.now());
 
             brandRepository.save(existingBrand);
             return ResponseEntity.ok(new MessageResponse("Update brand successfully!"));
@@ -59,8 +63,23 @@ public class BrandController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @GetMapping("/delete/{id}")
     public ResponseEntity<?> deleteBrand(@PathVariable Integer id) {
+        Optional<Brand> brandOptional = brandRepository.findById(id);
+        if (brandOptional.isPresent()) {
+            Brand existingBrand = brandOptional.get();
+            existingBrand.setBrandStatus(-1);
+            existingBrand.setBrandUpdatedAt(LocalDateTime.now());
+
+            brandRepository.save(existingBrand);
+            return ResponseEntity.ok(new MessageResponse("Delete brand successfully!"));
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteBrandOld(@PathVariable Integer id) {
         Optional<Brand> brandEntityOptional = brandRepository.findById(id);
         if (brandEntityOptional.isPresent()) {
             brandRepository.deleteById(id);
