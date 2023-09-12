@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from "react"
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -11,20 +12,44 @@ import Slide from '@mui/material/Slide';
 import AddIcon from "@mui/icons-material/Add";
 import { InputAdornment, TextField } from '@mui/material';
 
+import { addCategory, fetchCategories } from '../../../slices/categorySlice';
+import { useDispatch } from 'react-redux';
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function CategoryAddForm() {
-  const [open, setOpen] = React.useState(false);
 
+  const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
   };
-
   const handleClose = () => {
     setOpen(false);
   };
+  
+  const [cateName, setCateName] = useState();
+  const [cateDesc, setCateDesc] = useState();
+
+  const dispatch = useDispatch();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const newCategory = {
+      categoryName: cateName,
+      categoryDesc: cateDesc,
+    };
+    dispatch(addCategory(newCategory))
+      .then(() => {
+        dispatch(fetchCategories());
+        console.log('Thêm danh mục mới thành công');
+      })
+      .catch((error) => {
+          console.log('Thêm danh mục thất bại: '+error);
+      });
+    setOpen(false);
+  }
 
   return (
     <div>
@@ -51,13 +76,7 @@ export default function CategoryAddForm() {
             type="text"
             fullWidth
             variant="standard"
-            // InputProps={{
-            //   startAdornment: (
-            //     <InputAdornment position="start">
-            //       <AccountCircle />
-            //     </InputAdornment>
-            //   ),
-            // }}
+            onChange={e => {setCateName(e.target.value)}}
           />
           <TextField
             autoFocus
@@ -67,10 +86,11 @@ export default function CategoryAddForm() {
             type="text"
             fullWidth
             variant="standard"
+            onChange={e => {setCateDesc(e.target.value)}}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Xác nhận</Button>
+          <Button onClick={handleSubmit}>Xác nhận</Button>
           <Button onClick={handleClose}>Hủy</Button>
         </DialogActions>
       </Dialog>

@@ -3,6 +3,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+const pathAPI = 'http://localhost:9004';
+
 const initialState = {
     categories: [],
     isLoading: false,
@@ -14,7 +16,7 @@ const initialState = {
 export const fetchCategories = createAsyncThunk(
     'categories/fetchCategories',
     async () => {
-        const response = await axios.get('http://localhost:3001/api/categories');
+        const response = await axios.get(pathAPI + '/api/category');
         return response.data;
     }
 );
@@ -22,7 +24,7 @@ export const fetchCategories = createAsyncThunk(
 export const addCategory = createAsyncThunk(
     'categories/addCategory',
     async (categoryData) => {
-        const response = await axios.post('http://localhost:3001/api/categories', categoryData);
+        const response = await axios.post(pathAPI + '/api/category', categoryData);
         return response.data;
     }
 );
@@ -30,7 +32,7 @@ export const addCategory = createAsyncThunk(
 export const updateCategory = createAsyncThunk(
     'categories/updateCategory',
     async ({ categoryId, categoryData }) => {
-        const response = await axios.put(`http://localhost:3001/api/category/${categoryId}`, categoryData);
+        const response = await axios.put(pathAPI+`/api/category/${categoryId}`, categoryData);
         return response.data;
     }
 );
@@ -38,7 +40,7 @@ export const updateCategory = createAsyncThunk(
 export const deleteCategory = createAsyncThunk(
     'categories/deleteCategory',
     async (categoryId) => {
-        await axios.delete(`http://localhost:3001/api/categories/${categoryId}`);
+        await axios.delete(pathAPI+`/api/category/delete/${categoryId}`);
         return categoryId;
     }
 );
@@ -91,7 +93,7 @@ const categorySlice = createSlice({
             })
             .addCase(addCategory.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.categories.push(action.payload);
+                // state.categories.push(action.payload);
             })
             .addCase(addCategory.rejected, (state, action) => {
                 state.isLoading = false;
@@ -102,19 +104,19 @@ const categorySlice = createSlice({
                 state.error = null;
             })
             .addCase(updateCategory.fulfilled, (state, action) => {
-                const updatedCategory = action.payload;
-                const index = state.categories.findIndex((category) => category.cate_id === updatedCategory.cate_id);
-                if (index !== -1) {
-                    state.categories[index] = updatedCategory;
-                }
+                // const updatedCategory = action.payload;
+                // const index = state.categories.findIndex((category) => category.cate_id === updatedCategory.cate_id);
+                // if (index !== -1) {
+                //     state.categories[index] = updatedCategory;
+                // }
             })
             .addCase(updateCategory.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.error.message;
             })
             .addCase(deleteCategory.fulfilled, (state, action) => {
-                const deltedCategoryId = action.payload;
-                state.categories = state.categories.filter((category) => category.cate_id !== deltedCategoryId);
+                // const deltedCategoryId = action.payload;
+                // state.categories = state.categories.filter((category) => category.cate_id !== deltedCategoryId);
             })
             .addCase(fetchCategory.pending, (state) => {
                 state.isLoading = true;

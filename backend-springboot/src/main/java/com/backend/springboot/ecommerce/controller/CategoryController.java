@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+// import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.springboot.ecommerce.entity.Category;
@@ -21,13 +23,15 @@ import com.backend.springboot.ecommerce.payload.request.CategoryRequestDto;
 import com.backend.springboot.ecommerce.payload.response.MessageResponse;
 import com.backend.springboot.ecommerce.repository.CategoryRepository;
 
-@CrossOrigin(origins = "*", maxAge = 3600, allowCredentials = "false")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/category")
 public class CategoryController {
     
     @Autowired
     private CategoryRepository categoryRepository;
+
+
 
     @GetMapping
     public ResponseEntity<List<Category>> getAllCategory() {
@@ -70,7 +74,7 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/delete/{categoryId}")
+    @DeleteMapping("/delete/{categoryId}")
     public ResponseEntity<?> deleteCategory(@PathVariable Integer categoryId) {
         Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
         if (categoryOptional.isPresent()) {

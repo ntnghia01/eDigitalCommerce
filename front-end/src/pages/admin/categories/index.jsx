@@ -30,37 +30,13 @@ import {
 import DeleteCategory from "../../../components/admin/Category/ConfirmDeleteCategory";
 import CategoryEditForm from "../../../components/admin/Category/CategoryEditForm";
 import CategoryAddForm from "../../../components/admin/Category/CategoryAddForm";
+import CategoryTable from "../../../components/admin/Category/CategoryTable";
 
 // import Component
 
 // example data
 
-const rows = [
-  {
-    cate_id: 1,
-    cate_name: "Điện thoại",
-    cate_desc: "Điện thoại di động",
-    cate_status: 1,
-    cate_created: "2023-8-14 11:11:11",
-    cate_updated: "2023-8-14 11:11:11",
-  },
-  {
-    cate_id: 2,
-    cate_name: "Laptop",
-    cate_desc: "Máy tính xách tay (laptop)",
-    cate_status: 1,
-    cate_created: "2023-8-14 11:11:11",
-    cate_updated: "2023-8-14 11:11:11",
-  },
-  {
-    cate_id: 3,
-    cate_name: "Máy ảnh",
-    cate_desc: "Máy ảnh kỹ thuật số",
-    cate_status: 0,
-    cate_created: "2023-8-14 11:11:11",
-    cate_updated: "2023-8-14 11:11:11",
-  },
-];
+
 
 function Categories() {
   const categories = useSelector((state) => state.categories);
@@ -103,48 +79,7 @@ function Categories() {
             </Button>
           </Grid>
         </Grid>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>ID</TableCell>
-                <TableCell align="center">Tên Danh Mục</TableCell>
-                <TableCell align="center">Mô Tả</TableCell>
-                <TableCell align="center">Trạng Thái</TableCell>
-                <TableCell align="right">
-                  Ngày Tạo&nbsp;(yyyy-mm-dd hh-mm-ss)
-                </TableCell>
-                <TableCell align="right">
-                  Ngày Cập Nhật&nbsp;(yyyy-mm-dd hh-mm-ss)
-                </TableCell>
-                <TableCell align="left">Thao Tác</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((row) => (
-                <TableRow
-                  key={row.cate_id}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {row.cate_id}
-                  </TableCell>
-                  <TableCell align="center">{row.cate_name}</TableCell>
-                  <TableCell align="center">{row.cate_desc}</TableCell>
-                  <TableCell align="center">{row.cate_status}</TableCell>
-                  <TableCell align="right">{row.cate_created}</TableCell>
-                  <TableCell align="right">{row.cate_updated}</TableCell>
-                  <TableCell align="left">
-                    <Stack direction="row" spacing={2}>
-                      <CategoryEditForm data={{id: row.cate_id, name: row.cate_name, desc: row.cate_desc, status: row.cate_status}}/>
-                      <DeleteCategory deleteID={row.cate_id}/>
-                    </Stack>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <CategoryTable />
       </div>
     </>
   );

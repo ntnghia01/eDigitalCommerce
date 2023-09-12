@@ -5,11 +5,10 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 // import java.util.Locale.Category;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Data
 @NoArgsConstructor
@@ -28,8 +27,10 @@ public class Category implements Serializable {
     private String cateDesc;
     @Column(name = "cate_status", nullable = false)
     private Integer cateStatus;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "cate_created_at", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime cateCreatedAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "cate_updated_at", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime cateUpdatedAt;
 

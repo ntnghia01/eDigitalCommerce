@@ -10,6 +10,9 @@ import Slide from '@mui/material/Slide';
 // import Icons
 import DeleteIcon from '@mui/icons-material/Delete';
 
+import { useDispatch, useSelector } from "react-redux";
+import { deleteCategory, fetchCategories } from '../../../slices/categorySlice';
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -24,6 +27,21 @@ export default function DeleteCategory(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const dispatch = useDispatch();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // console.log(props.deleteID);
+    dispatch(deleteCategory(props.deleteID)).then(() => {
+      dispatch(fetchCategories());
+      setOpen(false);
+      console.log('Delete category successfully');
+    })
+    .catch((error) => {
+        console.log('Delete category failed: '+error);
+    });
+  }
 
   return (
     <div>
@@ -42,10 +60,9 @@ export default function DeleteCategory(props) {
           <DialogContentText id="alert-dialog-slide-description">
             Bạn có chắc muốn xóa danh mục ID={props.deleteID} này?
           </DialogContentText>
-          
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Xác nhận</Button>
+          <Button onClick={handleSubmit}>Xác nhận</Button>
           <Button onClick={handleClose}>Hủy</Button>
         </DialogActions>
       </Dialog>

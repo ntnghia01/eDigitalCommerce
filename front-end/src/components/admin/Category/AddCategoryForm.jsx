@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useDispatch } from "react-redux";
-import { addCategory } from "../../../slices/categorySlice";
+import { addCategory, fetchCategories } from "../../../slices/categorySlice";
 
 const AddCategoryForm = () => {
     const [cate_name_value, setCateName] = useState('');
@@ -21,7 +21,13 @@ const AddCategoryForm = () => {
             cate_name: cate_name_value,
             cate_desc: cate_desc_value,
         };
-        dispatch(addCategory(newCategory));
+        dispatch(addCategory(newCategory))
+            .then(() => {
+                dispatch(fetchCategories());
+            })
+            .catch((error) => {
+                console.log('Thêm danh mục thất bại: '+error);
+            });
         setCateName('');
         setCateDesc('');
     }

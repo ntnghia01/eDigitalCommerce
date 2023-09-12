@@ -1,4 +1,5 @@
-import * as React from "react";
+
+import React, { useEffect, useState } from 'react';
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -12,11 +13,18 @@ import UpdateIcon from "@mui/icons-material/Update";
 import { FormControlLabel, Radio, RadioGroup, TextField } from "@mui/material";
 import FormLabel from '@mui/material/FormLabel';
 
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCategories, fetchCategory, updateCategory } from "../../../slices/categorySlice";
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function CategoryEditForm(props) {
+
+  // console.log(props.data.id);
+  const existCategory = props.data;
+
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -26,6 +34,32 @@ export default function CategoryEditForm(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const dispatch = useDispatch();
+
+  const [cateId, setCateID] = useState(existCategory.id);
+  const [cateName, setCateName] = useState(existCategory.name);
+  const [cateDesc, setCateDesc] = useState(existCategory.desc);
+  const [cateStatus, setCateStatus] = useState(existCategory.status);
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const updateCategoryData = {
+      categoryName: cateName,
+      categoryDesc: cateDesc,
+      categoryStatus: cateStatus,
+    };
+    // console.log(updateCategory);
+    dispatch(updateCategory({categoryId: cateId, categoryData: updateCategoryData}))
+      .then(() => {
+        dispatch(fetchCategories());
+        console.log('Category updated successfully');
+      })
+      .catch((error) => {
+          console.log('Sủa danh mục thất bại: '+error);
+      });
+    setOpen(false);
+  }
 
   return (
     <div>
@@ -44,11 +78,8 @@ export default function CategoryEditForm(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{`Chỉnh Sửa Danh Mục ID=${props.data.id}`}</DialogTitle>
+        <DialogTitle>{`Chỉnh Sửa Danh Mục ID=${existCategory.id}`}</DialogTitle>
         <DialogContent>
-          {/* <DialogContentText id="alert-dialog-slide-description">
-            Tên danh mục
-          </DialogContentText> */}
           <TextField
             autoFocus
             margin="dense"
@@ -57,7 +88,8 @@ export default function CategoryEditForm(props) {
             type="text"
             fullWidth
             variant="standard"
-            defaultValue={`${props.data.name}`}
+            defaultValue={cateName}
+            onChange={e => {setCateName(e.target.value)}}
           />
           <TextField
             autoFocus
@@ -67,30 +99,22 @@ export default function CategoryEditForm(props) {
             type="text"
             fullWidth
             variant="standard"
-            defaultValue={`${props.data.desc}`}
+            defaultValue={cateDesc}
+            onChange={e => {setCateDesc(e.target.value)}}
           />
-          {/* <TextField
-            autoFocus
-            margin="dense"
-            id="cate_desc"
-            label="Trạng thái"
-            type="text"
-            fullWidth
-            variant="standard"
-          /> */}
-          {/* <FormLabel id="demo-row-radio-buttons-group-label" >Trạng thái</FormLabel> */}
           <RadioGroup
             row
             aria-labelledby="demo-row-radio-buttons-group-label"
             name="row-radio-buttons-group"
-            defaultValue={`${props.data.status}`}
+            value={cateStatus}
+            onChange={e => {setCateStatus(e.target.value)}}
           >
             <FormControlLabel value="1" control={<Radio />} label="Hoạt động" />
             <FormControlLabel value="0" control={<Radio />} label="Không hoạt động" />
           </RadioGroup>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Xác nhận</Button>
+          <Button onClick={handleSubmit}>Xác nhận</Button>
           <Button onClick={handleClose}>Hủy</Button>
         </DialogActions>
       </Dialog>
