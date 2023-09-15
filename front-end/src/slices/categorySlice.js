@@ -146,7 +146,7 @@ const categorySlice = createSlice({
     },
     // cac reducers khac...
 //    categories: [],
-});;
+});
 // categories: [],
 export const { setSelectedCategoryId } = categorySlice.actions;
 export default categorySlice.reducer;

@@ -8,15 +8,16 @@ import com.backend.springboot.ecommerce.payload.request.BrandRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(origins = "*", maxAge = 3600, allowCredentials="false")
+@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/brands")
+@RequestMapping("/api/brand")
 public class BrandController {
 
     @Autowired
@@ -63,9 +64,9 @@ public class BrandController {
         }
     }
 
-    @GetMapping("/delete/{id}")
-    public ResponseEntity<?> deleteBrand(@PathVariable Integer id) {
-        Optional<Brand> brandOptional = brandRepository.findById(id);
+    @DeleteMapping("/delete/{brandId}")
+    public ResponseEntity<?> deleteBrand(@PathVariable Integer brandId) {
+        Optional<Brand> brandOptional = brandRepository.findById(brandId);
         if (brandOptional.isPresent()) {
             Brand existingBrand = brandOptional.get();
             existingBrand.setBrandStatus(-1);
@@ -78,15 +79,15 @@ public class BrandController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteBrandOld(@PathVariable Integer id) {
-        Optional<Brand> brandEntityOptional = brandRepository.findById(id);
-        if (brandEntityOptional.isPresent()) {
-            brandRepository.deleteById(id);
-            return ResponseEntity.ok(new MessageResponse("Delete brand successfully!"));
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+    // @DeleteMapping("/{brandId}")
+    // public ResponseEntity<?> deleteBrandOld(@PathVariable Integer brandId) {
+    //     Optional<Brand> brandEntityOptional = brandRepository.findById(brandId);
+    //     if (brandEntityOptional.isPresent()) {
+    //         brandRepository.deleteById(brandId);
+    //         return ResponseEntity.ok(new MessageResponse("Delete brand successfully!"));
+    //     } else {
+    //         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    //     }
+    // }
 
 }

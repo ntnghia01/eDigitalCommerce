@@ -6,8 +6,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
-
-// import Icons
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +15,10 @@ import { deleteCategory, fetchCategories } from '../../../slices/categorySlice';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
+});
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 export default function DeleteCategory(props) {
@@ -28,6 +32,17 @@ export default function DeleteCategory(props) {
     setOpen(false);
   };
 
+  const [openSuccessSnackbar, setOpenSuccessSnackbar] = React.useState(false);
+  const handleOpenSuccessSnackbar = () => {
+    setOpenSuccessSnackbar(true);
+  };
+  const handleCloseSuccessSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSuccessSnackbar(false);
+  };
+
   const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
@@ -36,6 +51,7 @@ export default function DeleteCategory(props) {
     dispatch(deleteCategory(props.deleteID)).then(() => {
       dispatch(fetchCategories());
       setOpen(false);
+      handleOpenSuccessSnackbar();
       console.log('Delete category successfully');
     })
     .catch((error) => {
@@ -66,6 +82,11 @@ export default function DeleteCategory(props) {
           <Button onClick={handleClose}>Hủy</Button>
         </DialogActions>
       </Dialog>
+      <Snackbar open={openSuccessSnackbar} autoHideDuration={3000} onClose={handleCloseSuccessSnackbar}>
+        <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%', color: 'white' }}>
+          Xóa thành công!
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

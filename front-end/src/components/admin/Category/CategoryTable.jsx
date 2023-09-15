@@ -1,8 +1,10 @@
-
+// import * as React from 'react';
 import Stack from "@mui/material/Stack";
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Paper from "@mui/material/Paper";
+import Typography from '@mui/material/Typography';
+// import Input from '@mui/joy/Input';
 
 import {
   Table,
@@ -17,6 +19,19 @@ import DeleteCategory from "../../../components/admin/Category/ConfirmDeleteCate
 import CategoryEditForm from "../../../components/admin/Category/CategoryEditForm";
 import { fetchCategories } from "../../../slices/categorySlice";
 
+const formatDateTime = (oriDateTime) => {
+  const dateTime = new Date(oriDateTime);
+  const date = dateTime.getDate();
+  const month = dateTime.getMonth() + 1;
+  const year = dateTime.getFullYear();
+  const hour = dateTime.getHours();
+  const minute = dateTime.getMinutes();
+  const second = dateTime.getSeconds();
+
+  const newDateTime = `${date < 10 ? '0' : ''}${date}-${month < 10 ? '0' : ''}${month}-${year} ${hour < 10 ? '0' : ''}${hour}:${minute < 10 ? '0' : ''}${minute}:${second < 10 ? '0' : ''}${second}`;
+  return newDateTime;
+}
+
 export default function CategoryTable () {
 
     const dispatch = useDispatch();
@@ -30,28 +45,15 @@ export default function CategoryTable () {
 
     console.log(categories);
 
-    const formatDateTime = (oriDateTime) => {
-        const dateTime = new Date(oriDateTime);
-        const date = dateTime.getDate();
-        const month = dateTime.getMonth() + 1;
-        const year = dateTime.getFullYear();
-        const hour = dateTime.getHours();
-        const minute = dateTime.getMinutes();
-        const second = dateTime.getSeconds();
-    
-        const newDateTime = `${date < 10 ? '0' : ''}${date}-${month < 10 ? '0' : ''}${month}-${year} ${hour < 10 ? '0' : ''}${hour}:${minute < 10 ? '0' : ''}${minute}:${second < 10 ? '0' : ''}${second}`;
-        return newDateTime;
-      }
-
     return (
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <Table style={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell>ID</TableCell>
                 <TableCell align="left">Tên Danh Mục</TableCell>
                 <TableCell align="left">Mô Tả</TableCell>
-                <TableCell align="right">Trạng Thái</TableCell>
+                <TableCell align="left">Trạng Thái</TableCell>
                 <TableCell align="right">
                   Ngày Tạo&nbsp;(dd-mm-yyyy hh-mm-ss)
                 </TableCell>
@@ -72,7 +74,10 @@ export default function CategoryTable () {
                   </TableCell>
                   <TableCell align="left">{category.cateName}</TableCell>
                   <TableCell align="left">{category.cateDesc}</TableCell>
-                  <TableCell align="right">{category.cateStatus}</TableCell>
+                  <TableCell align="left" color="red">
+                    {category.cateStatus == 1 ? <Typography sx={{backgroundColor:'#4caf50', color:'white', paddingLeft: '1rem', borderRadius: '5rem', maxWidth: "95%"}}>Đang hoạt động</Typography>
+                    : <Typography sx={{backgroundColor:'#ff3d00', color:'white', paddingLeft: '1rem', borderRadius: '5rem', maxWidth: "75%"}}>Vô hiệu hóa</Typography>}
+                  </TableCell>
                   <TableCell align="right">{formatDateTime(category.cateCreatedAt)}</TableCell>
                   <TableCell align="right">{formatDateTime(category.cateUpdatedAt)}</TableCell>
                   <TableCell align="left">

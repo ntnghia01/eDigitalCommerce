@@ -7,6 +7,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 // import Icons
 import UpdateIcon from "@mui/icons-material/Update";
@@ -20,19 +22,32 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 export default function CategoryEditForm(props) {
 
   // console.log(props.data.id);
   const existCategory = props.data;
 
   const [open, setOpen] = React.useState(false);
-
   const handleClickOpen = () => {
     setOpen(true);
   };
-
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const [openSuccessSnackbar, setOpenSuccessSnackbar] = React.useState(false);
+  const handleOpenSuccessSnackbar = () => {
+    setOpenSuccessSnackbar(true);
+  };
+  const handleCloseSuccessSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSuccessSnackbar(false);
   };
 
   const dispatch = useDispatch();
@@ -53,6 +68,7 @@ export default function CategoryEditForm(props) {
     dispatch(updateCategory({categoryId: cateId, categoryData: updateCategoryData}))
       .then(() => {
         dispatch(fetchCategories());
+        handleOpenSuccessSnackbar();
         console.log('Category updated successfully');
       })
       .catch((error) => {
@@ -118,6 +134,11 @@ export default function CategoryEditForm(props) {
           <Button onClick={handleClose}>Hủy</Button>
         </DialogActions>
       </Dialog>
+      <Snackbar open={openSuccessSnackbar} autoHideDuration={3000} onClose={handleCloseSuccessSnackbar}>
+        <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%', color: 'white' }}>
+          Cập nhật thành công!
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

@@ -7,6 +7,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 // import Icons
 import AddIcon from "@mui/icons-material/Add";
@@ -19,6 +21,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 export default function CategoryAddForm() {
 
   const [open, setOpen] = React.useState(false);
@@ -28,6 +34,18 @@ export default function CategoryAddForm() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  const handleOpenSnackbar = () => {
+    setOpenSnackbar(true);
+  };
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+  
   
   const [cateName, setCateName] = useState();
   const [cateDesc, setCateDesc] = useState();
@@ -43,10 +61,13 @@ export default function CategoryAddForm() {
     dispatch(addCategory(newCategory))
       .then(() => {
         dispatch(fetchCategories());
+        handleOpenSnackbar();
+        setCateName('');
+        setCateDesc('');
         console.log('Thêm danh mục mới thành công');
       })
       .catch((error) => {
-          console.log('Thêm danh mục thất bại: '+error);
+          console.log('Thêm danh mục thất bại: '+ error);
       });
     setOpen(false);
   }
@@ -76,6 +97,7 @@ export default function CategoryAddForm() {
             type="text"
             fullWidth
             variant="standard"
+            value={cateName}
             onChange={e => {setCateName(e.target.value)}}
           />
           <TextField
@@ -86,6 +108,7 @@ export default function CategoryAddForm() {
             type="text"
             fullWidth
             variant="standard"
+            value={cateDesc}
             onChange={e => {setCateDesc(e.target.value)}}
           />
         </DialogContent>
@@ -94,6 +117,11 @@ export default function CategoryAddForm() {
           <Button onClick={handleClose}>Hủy</Button>
         </DialogActions>
       </Dialog>
+      <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%', color: 'white' }}>
+          Thêm mới thành công!
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

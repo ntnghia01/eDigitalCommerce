@@ -19,7 +19,7 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import Stack from "@mui/material/Stack";
 import SearchIcon from "@mui/icons-material/Search";
 
-import "../../../public/avatar.png";
+// import "../../../public/avatar.png";
 
 export default function AdminTopBar() {
   const { mode, setMode } = useColorScheme();

@@ -4,12 +4,16 @@ import thunk from 'redux-thunk';
 import rootReducer from '../reducers'; // Import các reducers của bạn từ thư mục tương ứng
 import categoryReducer from '../slices/categorySlice';
 import { configureStore } from '@reduxjs/toolkit';
+import brandSlice from '../slices/brandSlice';
+import categorySlice from '../slices/categorySlice';
 
 
 // const store = createStore(rootReducer, applyMiddleware(thunk));
 const store = configureStore ({
     reducer: {
-        categories: categoryReducer,
+        // categories: categoryReducer,
+        categories: categorySlice,
+        brand: brandSlice,
     },
 });
 

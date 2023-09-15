@@ -23,15 +23,13 @@ import com.backend.springboot.ecommerce.payload.request.CategoryRequestDto;
 import com.backend.springboot.ecommerce.payload.response.MessageResponse;
 import com.backend.springboot.ecommerce.repository.CategoryRepository;
 
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/category")
 public class CategoryController {
     
     @Autowired
     private CategoryRepository categoryRepository;
-
-
 
     @GetMapping
     public ResponseEntity<List<Category>> getAllCategory() {

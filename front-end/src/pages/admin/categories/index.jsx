@@ -49,7 +49,7 @@ function Categories() {
           <Link to='/' type='button'><Button variant="outlined"><HomeIcon></HomeIcon>Trang chủ</Button></Link>
         </Stack> */}
 
-      <h1>QUẢN LÝ DANH MỤC SẢN PHẨM</h1>
+      <h1 style={{textAlign: 'center'}}>QUẢN LÝ DANH MỤC SẢN PHẨM</h1>
       <div style={{ height: 400, width: "100%" }}>
         <Grid container spacing={2} marginBottom={2}>
           <Grid

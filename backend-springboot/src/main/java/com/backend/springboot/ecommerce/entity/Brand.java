@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,8 +24,10 @@ public class Brand implements Serializable{
     private String brandDesc;
     @Column (name = "brand_status", nullable = false)
     private Integer brandStatus;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name="brand_created_at", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime brandCreatedAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name="brand_updated_at", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime brandUpdatedAt;
 
