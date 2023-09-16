@@ -61,11 +61,11 @@ import { Box, Paper } from "@mui/material";
 import AdminTopBar from "../../components/admin/AdminTopBar";
 import AdminDashboard from "./dashboard/Dashboard";
 import Brands from "./brands";
+import Supplier from "./supplier";
 
 // import '../../../public/avatar.png'
 
 function Admin() {
-
   const navigate = useNavigate();
   const [collapse, setCollapse] = useState(false);
 
@@ -139,43 +139,65 @@ function Admin() {
             <MenuItem
               active={true}
               icon={<Dashboard />}
+              style={{ fontSize: "0.99rem" }}
               component={<Link to="/admin/dashboard" />}
-              style={{fontSize: '0.99rem'}}
             >
               {" "}
               Tổng Quan{" "}
             </MenuItem>
             <MenuItem
               icon={<CategoryIcon />}
+              style={{ fontSize: "0.99rem" }}
               component={<Link to="/admin/categories" />}
-              style={{fontSize: '0.99rem'}}
             >
               {" "}
               Quản Lý Danh Mục{" "}
             </MenuItem>
             <MenuItem
               icon={<BrandingWatermarkIcon />}
+              style={{ fontSize: "0.99rem" }}
               component={<Link to="/admin/brands" />}
-              style={{fontSize: '0.99rem'}}
             >
               {" "}
               Quản Lý Thương Hiệu{" "}
             </MenuItem>
-            <MenuItem 
+            <MenuItem
               icon={<FactoryIcon />}
-              style={{fontSize: '0.99rem'}}
-              > 
-              Quản Lý Nhà Cung Cấp 
+              style={{ fontSize: "0.99rem" }}
+              component={<Link to="/admin/supplier" />}
+            >
+              Quản Lý Nhà Cung Cấp
             </MenuItem>
-            <MenuItem icon={<PhoneAndroidIcon />}style={{fontSize: '0.99rem'}}> Quản Lý Sản Phẩm </MenuItem>
-            <MenuItem icon={<ImportExportIcon />}style={{fontSize: '0.99rem'}}> Quản Lý Xuất/Nhập </MenuItem>
-            <MenuItem icon={<InventoryIcon />}style={{fontSize: '0.99rem'}}> Quản Lý Đơn Hàng </MenuItem>
-            <MenuItem icon={<PreviewIcon />}style={{fontSize: '0.99rem'}}> Quản Lý Đánh Giá </MenuItem>
-            <MenuItem icon={<CommentIcon />}style={{fontSize: '0.99rem'}}> Quản Lý Bình Luận </MenuItem>
+            <MenuItem
+              icon={<PhoneAndroidIcon />}
+              style={{ fontSize: "0.99rem" }}
+              component={<Link to="/admin/product" />}
+            >
+              Quản Lý Sản Phẩm
+            </MenuItem>
+            <MenuItem
+              icon={<ImportExportIcon />}
+              style={{ fontSize: "0.99rem" }}
+            >
+              {" "}
+              Quản Lý Nhập/Xuất{" "}
+            </MenuItem>
+            <MenuItem icon={<InventoryIcon />} style={{ fontSize: "0.99rem" }}>
+              {" "}
+              Quản Lý Đơn Hàng{" "}
+            </MenuItem>
+            <MenuItem icon={<PreviewIcon />} style={{ fontSize: "0.99rem" }}>
+              {" "}
+              Quản Lý Đánh Giá{" "}
+            </MenuItem>
+            <MenuItem icon={<CommentIcon />} style={{ fontSize: "0.99rem" }}>
+              {" "}
+              Quản Lý Bình Luận{" "}
+            </MenuItem>
             <SubMenu
               label="Quản Lý Tài Khoản"
               icon={<ManageAccountsOutlinedIcon />}
-              style={{fontSize: '0.99rem'}}
+              style={{ fontSize: "0.99rem" }}
             >
               <MenuItem
                 rootStyles={{ background: "none" }}
@@ -200,6 +222,7 @@ function Admin() {
             <Route path="/admin/brands" element={<Brands />} />
             <Route path="/add-category" element={<AddCategoryForm />} />
             <Route path="/" element={<Test />}></Route>
+            <Route path="/admin/supplier" element={<Supplier />} />
           </Routes>
         </div>
       </div>

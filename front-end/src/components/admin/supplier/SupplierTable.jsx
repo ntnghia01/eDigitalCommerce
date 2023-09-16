@@ -22,6 +22,9 @@ import {
 import ComfirmDeleteBrand from "../../../components/admin/brand/ConfirmDeleteBrand";
 import BrandEditForm from "../../../components/admin/brand/BrandEditForm";
 import { fetchBrands } from "../../../slices/brandSlice";
+import { fetchSuppliers } from "../../../slices/supplierSlice";
+import SupplierEditForm from "./SupplierEditForm";
+import ComfirmDeleteSupplier from "./ComfirmDeleteSupplier";
 
 const formatDateTime = (oriDateTime) => {
     const dateTime = new Date(oriDateTime);
@@ -36,23 +39,25 @@ const formatDateTime = (oriDateTime) => {
     return newDateTime;
 }
 
-export default function BrandTable() {
+export default function SuppierTable() {
 
     const dispatch = useDispatch();
-    const brands = useSelector((state) => state.brand.brands);
+    const suppliers = useSelector((state) => state.supplier.suppliers);
 
     React.useEffect(() => {
-        dispatch((fetchBrands()));
+        dispatch((fetchSuppliers()));
     }, [dispatch]);
-    console.log(brands);
+    console.log(suppliers);
     return (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell>ID</TableCell>
-                <TableCell align="left">Tên Thương Hiệu</TableCell>
-                <TableCell align="left">Mô Tả</TableCell>
+                <TableCell align="left">Nhà Cung Cấp</TableCell>
+                <TableCell align="left">Email</TableCell>
+                <TableCell align="left">Số điện thoại</TableCell>
+                <TableCell align="left">Địa chỉ</TableCell>
                 <TableCell align="left">Trạng Thái</TableCell>
                 <TableCell align="right">
                   Ngày Tạo&nbsp;(dd-mm-yyyy hh-mm-ss)
@@ -64,30 +69,32 @@ export default function BrandTable() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {brands.map((brand) => (
+              {suppliers.map((supplier) => (
                 <TableRow
-                  key={brand.brandId}
+                  key={supplier.supplierId}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
-                    {brand.brandId}
+                    {supplier.supplierId}
                   </TableCell>
-                  <TableCell align="left">{brand.brandName}</TableCell>
-                  <TableCell align="left">{brand.brandDesc}</TableCell>
+                  <TableCell align="left">{supplier.supplierName}</TableCell>
+                  <TableCell align="left">{supplier.supplierEmail}</TableCell>
+                  <TableCell align="left">{supplier.supplierPhone}</TableCell>
+                  <TableCell align="left">{supplier.supplierAddress}</TableCell>
                   <TableCell align="left">
-                    {brand.brandStatus == 1 ? 
-                    <Typography sx={{backgroundColor:'#4caf50', color:'white', paddingLeft: '1rem', borderRadius: '5rem', maxWidth: "95%"}}>Đang hoạt động</Typography>
-                    : brand.brandStatus == 0 ?
-                    <Typography sx={{backgroundColor:'orange', color:'white', paddingLeft: '1rem', borderRadius: '5rem', maxWidth: "75%"}}>Vô hiệu hóa</Typography>
-                    : <Typography sx={{backgroundColor:'#ff3d00', color:'white', paddingLeft: '1rem', borderRadius: '5rem', maxWidth: "75%"}}>Đã xóa</Typography>
+                    {supplier.supplierStatus == 1 ? 
+                    <Typography sx={{backgroundColor:'#4caf50', color:'white', paddingLeft: '1rem', borderRadius: '5rem'}}>Đang hoạt động</Typography>
+                    : supplier.supplierStatus == 0 ?
+                    <Typography sx={{backgroundColor:'orange', color:'white', paddingLeft: '1rem', borderRadius: '5rem'}}>Vô hiệu hóa</Typography>
+                    : <Typography sx={{backgroundColor:'#ff3d00', color:'white', paddingLeft: '1rem', borderRadius: '5rem'}}>Đã xóa</Typography>
                   }
                     </TableCell>
-                  <TableCell align="right">{formatDateTime(brand.brandCreatedAt)}</TableCell>
-                  <TableCell align="right">{formatDateTime(brand.brandUpdatedAt)}</TableCell>
+                  <TableCell align="right">{formatDateTime(supplier.supplierCreatedAt)}</TableCell>
+                  <TableCell align="right">{formatDateTime(supplier.supplierUpdatedAt)}</TableCell>
                   <TableCell align="left">
                     <Stack direction="row" spacing={2}>
-                      <BrandEditForm data={{id: brand.brandId, name: brand.brandName, desc: brand.brandDesc, status: brand.brandStatus}} />
-                      <ComfirmDeleteBrand deleteID={brand.brandId}/>
+                      <SupplierEditForm data={{id: supplier.supplierId, name: supplier.supplierName, email: supplier.supplierEmail, phone: supplier.supplierPhone, address: supplier.supplierAddress, status: supplier.supplierStatus}} />
+                      <ComfirmDeleteSupplier deleteID={supplier.supplierId}/>
                     </Stack>
                   </TableCell>
                 </TableRow>

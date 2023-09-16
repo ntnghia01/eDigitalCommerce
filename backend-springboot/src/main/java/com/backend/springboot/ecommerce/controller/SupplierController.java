@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +33,7 @@ public class SupplierController {
 
     @GetMapping
     public ResponseEntity<List<Supplier>> getAllSupplier() {
-        List<Supplier> supplierList = supplierRepository.findAll();
+        List<Supplier> supplierList = supplierRepository.findAllSupplier();
         return new ResponseEntity<>(supplierList, HttpStatus.OK);
     }
 
@@ -62,7 +63,7 @@ public class SupplierController {
         }
     }
 
-    @PutMapping("/delete/{supplierId}")
+    @DeleteMapping("/delete/{supplierId}")
     public ResponseEntity<?> deleteSupplier(@PathVariable Integer supplierId) {
         Optional<Supplier> supplierOptional = supplierRepository.findById(supplierId);
         if (supplierOptional.isPresent()) {

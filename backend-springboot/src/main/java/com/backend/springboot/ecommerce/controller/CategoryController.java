@@ -33,7 +33,7 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<List<Category>> getAllCategory() {
-        List<Category> categoryList = categoryRepository.findAll();
+        List<Category> categoryList = categoryRepository.findAllCategory();
         return new ResponseEntity<>(categoryList, HttpStatus.OK);
     }
 

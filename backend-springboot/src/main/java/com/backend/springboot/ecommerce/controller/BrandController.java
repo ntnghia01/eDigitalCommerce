@@ -25,7 +25,7 @@ public class BrandController {
 
     @GetMapping
     public ResponseEntity<List<Brand>> getAllBrands() {
-        List<Brand> brandList = brandRepository.findAll();
+        List<Brand> brandList = brandRepository.findAllBrand();
         return new ResponseEntity<>(brandList, HttpStatus.OK);
     }
 

@@ -3,6 +3,8 @@ package com.backend.springboot.ecommerce.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,8 +36,10 @@ public class Supplier implements Serializable {
     private String supplierAddress;
     @Column (name = "supplier_status", nullable = false)
     private Integer supplierStatus;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column (name = "supplier_created_at", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime supplierCreatedAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column (name = "supplier_updated_at", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime supplierUpdatedAt;
 

@@ -6,6 +6,8 @@ import categoryReducer from '../slices/categorySlice';
 import { configureStore } from '@reduxjs/toolkit';
 import brandSlice from '../slices/brandSlice';
 import categorySlice from '../slices/categorySlice';
+import supplierSlice from '../slices/supplierSlice';
+import productSlice from '../slices/productSlice';
 
 
 // const store = createStore(rootReducer, applyMiddleware(thunk));
@@ -14,6 +16,8 @@ const store = configureStore ({
         // categories: categoryReducer,
         categories: categorySlice,
         brand: brandSlice,
+        supplier: supplierSlice,
+        product: productSlice
     },
 });
 
