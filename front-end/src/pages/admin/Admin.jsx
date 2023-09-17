@@ -62,6 +62,7 @@ import AdminTopBar from "../../components/admin/AdminTopBar";
 import AdminDashboard from "./dashboard/Dashboard";
 import Brands from "./brands";
 import Supplier from "./supplier";
+import Product from "./product";
 
 // import '../../../public/avatar.png'
 
@@ -223,6 +224,7 @@ function Admin() {
             <Route path="/add-category" element={<AddCategoryForm />} />
             <Route path="/" element={<Test />}></Route>
             <Route path="/admin/supplier" element={<Supplier />} />
+            <Route path="/admin/product" element={<Product />} />
           </Routes>
         </div>
       </div>

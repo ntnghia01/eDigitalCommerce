@@ -14,6 +14,8 @@ import BrandAddForm from "../../../components/admin/brand/BrandAddForm";
 import BrandTable from "../../../components/admin/brand/BrandTable";
 import SuppierTable from "../../../components/admin/supplier/SupplierTable";
 import SupplierAddForm from "../../../components/admin/supplier/SupplierAddForm";
+import ProductTable from "../../../components/admin/product/ProductTable";
+import ProductAddForm from "../../../components/admin/product/ProductAddForm";
 
 function Product() {
   return (
@@ -29,7 +31,7 @@ function Product() {
             justifyContent="flex-start"
             alignItems="center"
           >
-            <SupplierAddForm />
+            <ProductAddForm />
           </Grid>
           <Grid
             item
@@ -49,7 +51,7 @@ function Product() {
             </Button>
           </Grid>
         </Grid>
-        <SuppierTable />
+        <ProductTable />
       </div>
     </>
   );

@@ -4,16 +4,24 @@ import axios from "axios";
 const prefixAPI = 'http://localhost:9004';
 
 const initialState = {
-    products: []
+    products: [],
 }
 
 export const fetchProducts = createAsyncThunk (
     'product/fetchProducts',
     async () => {
-        const response = await axios.get(prefixAPI + 'api/product');
+        const response = await axios.get(prefixAPI + '/api/product');
         return response.data;
     }
 );
+
+export const addProduct = createAsyncThunk (
+    'product/add',
+    async (productData) => {
+        const response = await axios.post(prefixAPI + '/api/product', productData);
+        return response.data;
+    }
+)
 
 const productSlice = createSlice ({
     name: 'products',

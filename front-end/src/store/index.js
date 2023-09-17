@@ -17,7 +17,7 @@ const store = configureStore ({
         categories: categorySlice,
         brand: brandSlice,
         supplier: supplierSlice,
-        product: productSlice
+        product: productSlice,
     },
 });
 
