@@ -24,7 +24,7 @@ import BrandEditForm from "../../../components/admin/brand/BrandEditForm";
 import { fetchBrands } from "../../../slices/brandSlice";
 import { fetchSuppliers } from "../../../slices/supplierSlice";
 import SupplierEditForm from "./SupplierEditForm";
-import ComfirmDeleteSupplier from "./ComfirmDeleteSupplier";
+import ConfirmDeleteSupplier from "./ConfirmDeleteSupplier";
 
 const formatDateTime = (oriDateTime) => {
     const dateTime = new Date(oriDateTime);
@@ -94,7 +94,7 @@ export default function SuppierTable() {
                   <TableCell align="left">
                     <Stack direction="row" spacing={2}>
                       <SupplierEditForm data={{id: supplier.supplierId, name: supplier.supplierName, email: supplier.supplierEmail, phone: supplier.supplierPhone, address: supplier.supplierAddress, status: supplier.supplierStatus}} />
-                      <ComfirmDeleteSupplier deleteID={supplier.supplierId}/>
+                      <ConfirmDeleteSupplier deleteID={supplier.supplierId}/>
                     </Stack>
                   </TableCell>
                 </TableRow>

@@ -21,6 +21,22 @@ export const addProduct = createAsyncThunk (
         const response = await axios.post(prefixAPI + '/api/product', productData);
         return response.data;
     }
+);
+
+export const editProduct = createAsyncThunk (
+    'product/edit',
+    async ({proId, productData}) => {
+        const response = await axios.put(prefixAPI + `/api/product/${proId}`, productData);
+        return response.data;
+    }
+);
+
+export const deleteProduct = createAsyncThunk (
+    'product/delete',
+    async (proId) => {
+        await axios.delete(prefixAPI + `/api/product/${proId}`);
+        return proId;
+    }
 )
 
 const productSlice = createSlice ({

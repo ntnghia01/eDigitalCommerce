@@ -20,6 +20,8 @@ import {
 
 
 import { fetchProducts } from "../../../slices/productSlice";
+import ProductEditForm from "./ProductEditForm";
+import ConfirmDeleteProduct from "./ConfirmDeleteProduct";
 
 const formatDateTime = (oriDateTime) => {
     const dateTime = new Date(oriDateTime);
@@ -42,7 +44,7 @@ export default function ProductTable() {
     React.useEffect(() => {
         dispatch(fetchProducts());
     }, [dispatch]);
-    console.log(products);
+    // console.log(products);
     return (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -92,9 +94,9 @@ export default function ProductTable() {
                   <TableCell align="right">{formatDateTime(product.proUpdatedAt)}</TableCell>
                   <TableCell align="left">
                     <Stack direction="row" spacing={2}>
-                      {/* <SupplierEditForm 
+                      <ProductEditForm 
                         data={{id: product.proId, name: product.proName, price: product.proPrice, desc: product.proDesc, quantity: product.proQuantity, category: product.category.cateId, brand: product.brand.brandId, status: product.proStatus}} />
-                      <ComfirmDeleteSupplier deleteID={product.proId}/> */}
+                      <ConfirmDeleteProduct deleteID={product.proId}/>
                     </Stack>
                   </TableCell>
                 </TableRow>

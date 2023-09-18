@@ -3,21 +3,23 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
-import AddIcon from "@mui/icons-material/Add";
-import { Select, TextField } from "@mui/material";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
 
-// Redux
+// import Icons
+import UpdateIcon from "@mui/icons-material/Update";
+import { FormControl, FormControlLabel, Radio, RadioGroup, Select, TextField } from "@mui/material";
+import FormLabel from '@mui/material/FormLabel';
 import { useDispatch, useSelector } from "react-redux";
+import { editBrand, fetchBrands } from "../../../slices/brandSlice";
+import { editSupplier, fetchSuppliers } from "../../../slices/supplierSlice";
 import { fetchCategories } from "../../../slices/categorySlice";
-import { fetchBrands } from "../../../slices/brandSlice";
-import { addProduct, fetchProducts } from "../../../slices/productSlice";
+import { editProduct, fetchProducts } from "../../../slices/productSlice";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -27,7 +29,11 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function ProductAddForm() {
+export default function ProductEditForm(props) {
+
+  const existProduct = props.data;
+//   console.log(existProduct);
+
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -36,15 +42,15 @@ export default function ProductAddForm() {
     setOpen(false);
   };
 
-  const [openSnackbar, setOpenSnackbar] = React.useState(false);
-  const handleOpenSnackbar = () => {
-    setOpenSnackbar(true);
+  const [openSuccessSnackbar, setOpenSuccessSnackbar] = React.useState(false);
+  const handleOpenSuccessSnackbar = () => {
+    setOpenSuccessSnackbar(true);
   };
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === "clickaway") {
+  const handleCloseSuccessSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
       return;
     }
-    setOpenSnackbar(false);
+    setOpenSuccessSnackbar(false);
   };
 
   const dispatch = useDispatch();
@@ -57,43 +63,49 @@ export default function ProductAddForm() {
     dispatch(fetchBrands());
   }, [dispatch]);
 
-  const [proName, setProName] = React.useState();
-  const [proPrice, setProPrice] = React.useState();
-  const [proDesc, setProDesc] = React.useState();
-  const [proQuantity, setProQuantity] = React.useState("0");
-  const [proCategory, setProCategory] = React.useState();
-  const [proBrand, setProBrand] = React.useState();
-
+  const [proId, setProductID] = React.useState(existProduct.id);
+  const [proName, setProductName] = React.useState(existProduct.name);
+  const [proPrice, setProductPrice] = React.useState(existProduct.price);
+  const [proDesc, setProductDesc] = React.useState(existProduct.desc);
+  const [proQuantity, setProductQuantity] = React.useState(existProduct.quantity);
+  const [proStatus, setProductStatus] = React.useState(existProduct.status);
+  const [proCategory, setProductCategory] = React.useState(existProduct.category);
+  const [proBrand, setProductBrand] = React.useState(existProduct.brand);
+//   console.log(proCategory);
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newProduct = {
-      proName: proName,
-      proPrice: proPrice,
-      proDesc: proDesc,
-      proQuantity: proQuantity,
-      cateId: proCategory,
-      brandId: proBrand,
-    };
-    dispatch(addProduct(newProduct))
+    const updateProductData = {
+        proName: proName,
+        proPrice: proPrice,
+        proDesc: proDesc,
+        proQuantity: proQuantity,
+        proStatus: proStatus,
+        cateId: proCategory,
+        brandId: proBrand
+    }
+    // console.log(updateProductData);
+    dispatch(editProduct({proId: proId, productData: updateProductData}))
       .then(() => {
         dispatch(fetchProducts());
-        handleOpenSnackbar();
-        console.log("Thêm sản phẩm thành công!");
+        handleOpenSuccessSnackbar();
+        console.log("Cập nhật sản phẩm thành công!");
       })
       .catch((error) => {
-        console.log("Thêm thất bại: " + error);
-      });
+        console.log('Cập nhật sản phẩm thất bại: ' + error);
+      })
     setOpen(false);
   };
+   
 
   return (
     <div>
       <Button
         variant="contained"
-        startIcon={<AddIcon />}
+        color="warning"
+        startIcon={<UpdateIcon />}
         onClick={handleClickOpen}
       >
-        Thêm mới
+        Cập nhật
       </Button>
       <Dialog
         open={open}
@@ -102,7 +114,7 @@ export default function ProductAddForm() {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Thêm Sản Phẩm Mới"}</DialogTitle>
+        <DialogTitle>{`Chỉnh Sửa Nhà Cung Cấp ID=${props.data.id}`}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -112,8 +124,9 @@ export default function ProductAddForm() {
             type="text"
             fullWidth
             variant="standard"
+            value={proName}
             onChange={(e) => {
-              setProName(e.target.value);
+              setProductName(e.target.value);
             }}
           />
           <TextField
@@ -124,8 +137,9 @@ export default function ProductAddForm() {
             type="text"
             fullWidth
             variant="standard"
+            value={proPrice}
             onChange={(e) => {
-              setProPrice(e.target.value);
+              setProductPrice(e.target.value);
             }}
           />
           <TextField
@@ -136,8 +150,9 @@ export default function ProductAddForm() {
             type="text"
             fullWidth
             variant="standard"
+            value={proDesc}
             onChange={(e) => {
-              setProDesc(e.target.value);
+              setProductDesc(e.target.value);
             }}
           />
           <TextField
@@ -148,9 +163,9 @@ export default function ProductAddForm() {
             type="text"
             fullWidth
             variant="standard"
-            defaultValue={proQuantity}
+            value={proQuantity}
             onChange={(e) => {
-              setProQuantity(e.target.value);
+              setProductQuantity(e.target.value);
             }}
           />
           <FormControl fullWidth sx={{mt: 3}}>
@@ -158,50 +173,52 @@ export default function ProductAddForm() {
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              defaultValue=""
               label="Danh mục"
+              value={proCategory}
               onChange={(e) => {
-                setProCategory(e.target.value);
+                setProductCategory(e.target.value);
               }}
             >
                 {categoryData.map((category) => (
-                    <MenuItem key={category.cateId} value={category.cateId}>{category.cateName}</MenuItem>
+                    <MenuItem key={category.cateId} value={category.cateId + ""}>{category.cateName}</MenuItem>
                 ))}
             </Select>
           </FormControl>
           <FormControl fullWidth sx={{mt: 3}}>
-            <InputLabel id="demo-simple-select-label">Thương hiệu</InputLabel>
+            <InputLabel id="demo-simple-select-label-2">Thương hiệu</InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              defaultValue=""
+              labelId="demo-simple-select-label-2"
+              id="demo-simple-select-2"
               label="Thương hiệu"
+              value={proBrand}
               onChange={(e) => {
-                setProBrand(e.target.value);
+                setProductBrand(e.target.value);
               }}
             >
               {brandData.map((brand) => (
-                    <MenuItem key={brand.brandId} value={brand.brandId}>{brand.brandName}</MenuItem>
+                    <MenuItem key={brand.brandId} value={brand.brandId + ""}>{brand.brandName}</MenuItem>
                 ))}
             </Select>
           </FormControl>
+          <RadioGroup
+            row
+            aria-labelledby="demo-row-radio-buttons-group-label"
+            name="row-radio-buttons-group"
+            value={proStatus}
+            onChange={e => {setProductStatus(e.target.value)}}
+          >
+            <FormControlLabel value="1" control={<Radio />} label="Hoạt động" />
+            <FormControlLabel value="0" control={<Radio />} label="Không hoạt động" />
+          </RadioGroup>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleSubmit}>Xác nhận</Button>
           <Button onClick={handleClose}>Hủy</Button>
         </DialogActions>
       </Dialog>
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity="success"
-          sx={{ width: "100%", color: "white" }}
-        >
-          Thêm mới thành công!
+      <Snackbar open={openSuccessSnackbar} autoHideDuration={3000} onClose={handleCloseSuccessSnackbar}>
+        <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%', color: 'white' }}>
+          Cập nhật thành công!
         </Alert>
       </Snackbar>
     </div>
