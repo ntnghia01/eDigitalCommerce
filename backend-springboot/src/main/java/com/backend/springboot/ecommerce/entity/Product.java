@@ -29,6 +29,8 @@ public class Product implements Serializable {
     private Integer proId;
     @Column (name = "pro_name", nullable = false)
     private String proName;
+    @Column (name = "pro_image", nullable = false)
+    private String proImage;
     @Column (name = "pro_price", nullable = true)
     private Integer proPrice;
     @Column (name = "pro_desc", nullable = true)

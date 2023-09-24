@@ -36,6 +36,8 @@ const formatDateTime = (oriDateTime) => {
     return newDateTime;
 }
 
+const uploadDirectory = "D:/Projects/eDigitalCommerce/backend-springboot/src/main/java/com/backend/springboot/ecommerce/uploads/";
+
 export default function ProductTable() {
 
     const dispatch = useDispatch();
@@ -53,12 +55,12 @@ export default function ProductTable() {
                 <TableCell>ID</TableCell>
                 <TableCell align="left">Tên</TableCell>
                 <TableCell align="left">Hình ảnh</TableCell>
-                <TableCell align="left">Giá</TableCell>
+                <TableCell align="right">Giá</TableCell>
                 <TableCell align="left">Mô tả</TableCell>
-                <TableCell align="left">Số lượng</TableCell>
+                <TableCell align="right">Số lượng</TableCell>
                 <TableCell align="left">Danh mục</TableCell>
                 <TableCell align="left">Thương hiệu</TableCell>
-                <TableCell align="left">Trạng thái</TableCell>
+                <TableCell align="center">Trạng thái</TableCell>
                 <TableCell align="right">
                   Ngày Tạo&nbsp;(dd-mm-yyyy hh-mm-ss)
                 </TableCell>
@@ -76,15 +78,15 @@ export default function ProductTable() {
                 >
                   <TableCell component="th" scope="row">{product.proId}</TableCell>
                   <TableCell align="left">{product.proName}</TableCell>
-                  <TableCell align="left">Chưa</TableCell>
-                  <TableCell align="left">{product.proPrice}</TableCell>
+                  <TableCell align="left"><img src={`http://localhost:9004/api/product/images/${product.proImage}`} alt="" style={{width: "100px", height: "100px"}}/></TableCell>
+                  <TableCell align="right">{product.proPrice}</TableCell>
                   <TableCell align="left">{product.proDesc}</TableCell>
-                  <TableCell align="left">{product.proQuantity}</TableCell>
+                  <TableCell align="right">{product.proQuantity}</TableCell>
                   <TableCell align="left">{product.category.cateName}</TableCell>
                   <TableCell align="left">{product.brand.brandName}</TableCell>
                   <TableCell align="left">
                     {product.proStatus == 1 ? 
-                        <Typography sx={{backgroundColor:'#4caf50', color:'white', paddingLeft: '1rem', borderRadius: '5rem'}}>Đang hoạt động</Typography>
+                        <Typography sx={{backgroundColor:'#4caf50', color:'white', paddingLeft: '1rem', borderRadius: '5rem'}}>Hoạt động</Typography>
                     : product.proStatus == 0 ?
                         <Typography sx={{backgroundColor:'orange', color:'white', paddingLeft: '1rem', borderRadius: '5rem'}}>Vô hiệu hóa</Typography>
                     :   <Typography sx={{backgroundColor:'#ff3d00', color:'white', paddingLeft: '1rem', borderRadius: '5rem'}}>Đã xóa</Typography>
@@ -93,9 +95,9 @@ export default function ProductTable() {
                   <TableCell align="right">{formatDateTime(product.proCreatedAt)}</TableCell>
                   <TableCell align="right">{formatDateTime(product.proUpdatedAt)}</TableCell>
                   <TableCell align="left">
-                    <Stack direction="row" spacing={2}>
-                      <ProductEditForm 
-                        data={{id: product.proId, name: product.proName, price: product.proPrice, desc: product.proDesc, quantity: product.proQuantity, category: product.category.cateId, brand: product.brand.brandId, status: product.proStatus}} />
+                    <Stack spacing={2}>
+                      <ProductEditForm
+                        data={{id: product.proId, name: product.proName, price: product.proPrice, desc: product.proDesc, quantity: product.proQuantity, category: product.category.cateId, brand: product.brand.brandId, status: product.proStatus, image: product.proImage}} />
                       <ConfirmDeleteProduct deleteID={product.proId}/>
                     </Stack>
                   </TableCell>

@@ -10,6 +10,8 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
+import { styled } from '@mui/material/styles';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 // import Icons
 import UpdateIcon from "@mui/icons-material/Update";
@@ -21,6 +23,18 @@ import { editSupplier, fetchSuppliers } from "../../../slices/supplierSlice";
 import { fetchCategories } from "../../../slices/categorySlice";
 import { editProduct, fetchProducts } from "../../../slices/productSlice";
 
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -32,7 +46,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 export default function ProductEditForm(props) {
 
   const existProduct = props.data;
-//   console.log(existProduct);
+  // console.log(existProduct);
 
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
@@ -71,19 +85,25 @@ export default function ProductEditForm(props) {
   const [proStatus, setProductStatus] = React.useState(existProduct.status);
   const [proCategory, setProductCategory] = React.useState(existProduct.category);
   const [proBrand, setProductBrand] = React.useState(existProduct.brand);
+  const [proImage, setProImage] = React.useState(existProduct.image);
+  const [image, setImage] = React.useState();
 //   console.log(proCategory);
+
+  const updateProductData = {
+    proName: proName,
+    proPrice: proPrice,
+    proDesc: proDesc,
+    proQuantity: proQuantity,
+    cateId: proCategory,
+    brandId: proBrand,
+    proStatus: proStatus,
+    proImage: proImage,
+    image: image
+  }
   const handleSubmit = (e) => {
     e.preventDefault();
-    const updateProductData = {
-        proName: proName,
-        proPrice: proPrice,
-        proDesc: proDesc,
-        proQuantity: proQuantity,
-        proStatus: proStatus,
-        cateId: proCategory,
-        brandId: proBrand
-    }
-    // console.log(updateProductData);
+    
+    console.log(updateProductData);
     dispatch(editProduct({proId: proId, productData: updateProductData}))
       .then(() => {
         dispatch(fetchProducts());
@@ -104,6 +124,7 @@ export default function ProductEditForm(props) {
         color="warning"
         startIcon={<UpdateIcon />}
         onClick={handleClickOpen}
+        style={{width: '8rem'}}
       >
         Cập nhật
       </Button>
@@ -114,7 +135,7 @@ export default function ProductEditForm(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{`Chỉnh Sửa Nhà Cung Cấp ID=${props.data.id}`}</DialogTitle>
+        <DialogTitle>{`Chỉnh Sửa Sản Phẩm ID=${props.data.id}`}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -210,6 +231,10 @@ export default function ProductEditForm(props) {
             <FormControlLabel value="1" control={<Radio />} label="Hoạt động" />
             <FormControlLabel value="0" control={<Radio />} label="Không hoạt động" />
           </RadioGroup>
+          <Button component="label" variant="contained" style={{marginTop: 20}} startIcon={<CloudUploadIcon />}>
+            Upload hình ảnh
+            <VisuallyHiddenInput type="file" onChange={(e) => { setImage(e.target.files[0]); }}/>
+          </Button>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleSubmit}>Xác nhận</Button>

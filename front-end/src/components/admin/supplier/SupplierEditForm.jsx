@@ -86,6 +86,7 @@ export default function SupplierEditForm(props) {
         color="warning"
         startIcon={<UpdateIcon />}
         onClick={handleClickOpen}
+        style={{width: '8rem'}}
       >
         Cập nhật
       </Button>

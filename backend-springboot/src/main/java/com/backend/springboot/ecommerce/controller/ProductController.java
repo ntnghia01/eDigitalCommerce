@@ -1,21 +1,35 @@
 package com.backend.springboot.ecommerce.controller;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+// import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+// import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.springboot.ecommerce.entity.Brand;
 import com.backend.springboot.ecommerce.entity.Category;
@@ -37,6 +51,9 @@ public class ProductController {
     @Autowired
     private BrandRepository brandRepository;
 
+    @Value("${file.upload.directory}")
+    private String uploadDirectory;
+
     @GetMapping
     public ResponseEntity<List<Product>> getAllProduct() {
         List<Product> productList = productRepository.findAllProduct();
@@ -44,12 +61,35 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createProduct(@RequestBody ProductRequestDto productRequestDto) {
+    public ResponseEntity<?> createProduct(@ModelAttribute ProductRequestDto productRequestDto) {
         Optional<Category> categOptional = categoryRepository.findById(productRequestDto.getCateId());
         Optional<Brand> brandOptional = brandRepository.findById(productRequestDto.getBrandId());
         if (categOptional.isPresent() && brandOptional.isPresent()) {
+
             Category category = categOptional.get();
             Brand brand = brandOptional.get();
+
+            try {
+                // Luu tep hinh anh vao thu muc uploads
+                if (productRequestDto.getImage() != null) {
+                    MultipartFile imageFile = productRequestDto.getImage();
+
+                    // String fileName = imageFile.getOriginalFilename();
+                    String originalFileName = imageFile.getOriginalFilename();
+                    String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                    String fileName = "product_" + System.currentTimeMillis() + fileExtension;
+
+                    Path uploadPath = Paths.get(uploadDirectory, fileName);
+                    imageFile.transferTo(uploadPath.toFile());
+
+                    // Luu ten tep vao productRequestDto
+                    productRequestDto.setProImage(fileName);
+                }
+            } catch (IOException e) {
+                return new ResponseEntity<>(new MessageResponse("Failed to upload image"), HttpStatus.NOT_FOUND);
+            }
+
+
             Product newProduct = new Product();
 
             newProduct.setCategory(category);
@@ -61,6 +101,7 @@ public class ProductController {
             newProduct.setProStatus(1);
             newProduct.setProCreatedAt(LocalDateTime.now());
             newProduct.setProUpdatedAt(LocalDateTime.now());
+            newProduct.setProImage(productRequestDto.getProImage());
 
             productRepository.save(newProduct);
             return ResponseEntity.ok(new MessageResponse("Add product successfully!"));
@@ -70,7 +111,7 @@ public class ProductController {
     }
 
     @PutMapping("/{proId}")
-    public ResponseEntity<?> updateProduct(@PathVariable Integer proId, @RequestBody ProductRequestDto productRequestDto) {
+    public ResponseEntity<?> updateProduct(@PathVariable Integer proId, @ModelAttribute ProductRequestDto productRequestDto) {
         Optional<Product> proOptional = productRepository.findById(proId);
         Optional<Category> cateOptional = categoryRepository.findById(productRequestDto.getCateId());
         Optional<Brand> brandOptional = brandRepository.findById(productRequestDto.getBrandId());
@@ -80,9 +121,37 @@ public class ProductController {
             Category category = cateOptional.get();
             Brand brand = brandOptional.get();
 
+            try {
+                // Luu tep hinh anh vao thu muc uploads
+                if (productRequestDto.getImage() != null) {
+                    MultipartFile imageFile = productRequestDto.getImage();
+
+                    // String fileName = imageFile.getOriginalFilename();
+                    String originalFileName = imageFile.getOriginalFilename();
+                    String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                    String fileName = "product_" + System.currentTimeMillis() + fileExtension;
+
+                    Path uploadPath = Paths.get(uploadDirectory, fileName);
+                    imageFile.transferTo(uploadPath.toFile());
+
+                    // Luu ten tep vao productRequestDto
+                    productRequestDto.setProImage(fileName);
+
+                    // Delete Old Image
+                    String oldImageFileName = product.getProImage();
+                    if (oldImageFileName != null) {
+                        Path oldImagePath = Paths.get(uploadDirectory, oldImageFileName);
+                        Files.delete(oldImagePath);
+                    }
+                }
+            } catch (IOException e) {
+                
+            }
+
             product.setCategory(category);
             product.setBrand(brand);
             product.setProName(productRequestDto.getProName());
+            product.setProImage(productRequestDto.getProImage());
             product.setProPrice(productRequestDto.getProPrice());
             product.setProDesc(productRequestDto.getProDesc());
             product.setProQuantity(productRequestDto.getProQuantity());
@@ -118,5 +187,23 @@ public class ProductController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/images/{imageName}")
+    @ResponseBody
+    public ResponseEntity<Resource> getImage(@PathVariable String imageName) {
+        Path imagePath = Paths.get(uploadDirectory, imageName);
+        Resource imageResource;
+        try {
+            imageResource = new UrlResource(imagePath.toUri());
+            if (imageResource.exists() && imageResource.isReadable()) {
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG_VALUE)
+                        .body(imageResource);
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.notFound().build();
     }
 }

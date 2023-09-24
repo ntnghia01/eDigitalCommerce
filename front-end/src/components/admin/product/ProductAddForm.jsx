@@ -12,12 +12,26 @@ import MuiAlert from "@mui/material/Alert";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
+import { styled } from '@mui/material/styles';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../../slices/categorySlice";
 import { fetchBrands } from "../../../slices/brandSlice";
 import { addProduct, fetchProducts } from "../../../slices/productSlice";
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -63,6 +77,7 @@ export default function ProductAddForm() {
   const [proQuantity, setProQuantity] = React.useState("0");
   const [proCategory, setProCategory] = React.useState();
   const [proBrand, setProBrand] = React.useState();
+  const [image, setImage] = React.useState();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -73,17 +88,21 @@ export default function ProductAddForm() {
       proQuantity: proQuantity,
       cateId: proCategory,
       brandId: proBrand,
+      proImage: image.name,
+      image: image
     };
+    console.log(newProduct);
     dispatch(addProduct(newProduct))
       .then(() => {
         dispatch(fetchProducts());
         handleOpenSnackbar();
         console.log("Thêm sản phẩm thành công!");
+        setOpen(false);
       })
       .catch((error) => {
         console.log("Thêm thất bại: " + error);
       });
-    setOpen(false);
+    
   };
 
   return (
@@ -185,7 +204,12 @@ export default function ProductAddForm() {
                 ))}
             </Select>
           </FormControl>
+          <Button component="label" variant="contained" style={{marginTop: 20}} startIcon={<CloudUploadIcon />}>
+            Upload hình ảnh
+            <VisuallyHiddenInput type="file" onChange={(e) => { setImage(e.target.files[0]); }}/>
+          </Button>
         </DialogContent>
+        
         <DialogActions>
           <Button onClick={handleSubmit}>Xác nhận</Button>
           <Button onClick={handleClose}>Hủy</Button>

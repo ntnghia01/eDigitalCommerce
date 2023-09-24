@@ -18,16 +18,68 @@ export const fetchProducts = createAsyncThunk (
 export const addProduct = createAsyncThunk (
     'product/add',
     async (productData) => {
-        const response = await axios.post(prefixAPI + '/api/product', productData);
-        return response.data;
+        const formData = new FormData();
+
+        // Đưa dữ liệu sản phẩm vào FormData
+        formData.append('proName', productData.proName);
+        formData.append('proPrice', productData.proPrice);
+        formData.append('proDesc', productData.proDesc);
+        formData.append('proQuantity', productData.proQuantity);
+        formData.append('cateId', productData.cateId);
+        formData.append('brandId', productData.brandId);
+        formData.append('proImage', productData.proImage);
+
+        // Kiểm tra xem có tệp hình ảnh được chọn không
+        if (productData.image) {
+            formData.append('image', productData.image);
+        }
+
+        try {
+            const response = await fetch(prefixAPI + '/api/product', {
+            method: 'POST',
+            body: formData,
+            });
+
+            const data = await response.json();
+
+            return data;
+        } catch (error) {
+            throw error;
+        }
     }
 );
 
 export const editProduct = createAsyncThunk (
     'product/edit',
     async ({proId, productData}) => {
-        const response = await axios.put(prefixAPI + `/api/product/${proId}`, productData);
-        return response.data;
+
+        const formData = new FormData();
+
+        // Đưa dữ liệu sản phẩm vào FormData
+        formData.append('proName', productData.proName);
+        formData.append('proPrice', productData.proPrice);
+        formData.append('proDesc', productData.proDesc);
+        formData.append('proQuantity', productData.proQuantity);
+        formData.append('cateId', productData.cateId);
+        formData.append('brandId', productData.brandId);
+        formData.append('proImage', productData.proImage);
+        formData.append('proStatus', productData.proStatus);
+
+        // Kiểm tra xem có tệp hình ảnh được chọn không
+        if (productData.image != undefined) {
+            formData.append('image', productData.image);
+        }
+        try {
+            const response = await fetch(prefixAPI + `/api/product/${proId}`, {
+                method: 'PUT',
+                body: formData,
+            });
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            throw error;
+        }
     }
 );
 

@@ -63,6 +63,8 @@ import AdminDashboard from "./dashboard/Dashboard";
 import Brands from "./brands";
 import Supplier from "./supplier";
 import Product from "./product";
+import Import from "./import";
+import Order from "./order";
 
 // import '../../../public/avatar.png'
 
@@ -179,11 +181,16 @@ function Admin() {
             <MenuItem
               icon={<ImportExportIcon />}
               style={{ fontSize: "0.99rem" }}
+              component={<Link to="/admin/import" />}
             >
               {" "}
               Quản Lý Nhập/Xuất{" "}
             </MenuItem>
-            <MenuItem icon={<InventoryIcon />} style={{ fontSize: "0.99rem" }}>
+            <MenuItem 
+              icon={<InventoryIcon />} 
+              style={{ fontSize: "0.99rem" }}
+              component={<Link to="/admin/order" />}
+            >
               {" "}
               Quản Lý Đơn Hàng{" "}
             </MenuItem>
@@ -225,6 +232,8 @@ function Admin() {
             <Route path="/" element={<Test />}></Route>
             <Route path="/admin/supplier" element={<Supplier />} />
             <Route path="/admin/product" element={<Product />} />
+            <Route path="/admin/import" element={<Import />} />
+            <Route path="/admin/order" element={<Order />} />
           </Routes>
         </div>
       </div>

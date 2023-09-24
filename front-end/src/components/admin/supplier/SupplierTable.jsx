@@ -17,11 +17,6 @@ import {
   TableRow,
 } from "@mui/material";
 
-
-
-import ComfirmDeleteBrand from "../../../components/admin/brand/ConfirmDeleteBrand";
-import BrandEditForm from "../../../components/admin/brand/BrandEditForm";
-import { fetchBrands } from "../../../slices/brandSlice";
 import { fetchSuppliers } from "../../../slices/supplierSlice";
 import SupplierEditForm from "./SupplierEditForm";
 import ConfirmDeleteSupplier from "./ConfirmDeleteSupplier";
@@ -83,7 +78,7 @@ export default function SuppierTable() {
                   <TableCell align="left">{supplier.supplierAddress}</TableCell>
                   <TableCell align="left">
                     {supplier.supplierStatus == 1 ? 
-                    <Typography sx={{backgroundColor:'#4caf50', color:'white', paddingLeft: '1rem', borderRadius: '5rem'}}>Đang hoạt động</Typography>
+                    <Typography sx={{backgroundColor:'#4caf50', color:'white', paddingLeft: '1rem', borderRadius: '5rem'}}>Hoạt động</Typography>
                     : supplier.supplierStatus == 0 ?
                     <Typography sx={{backgroundColor:'orange', color:'white', paddingLeft: '1rem', borderRadius: '5rem'}}>Vô hiệu hóa</Typography>
                     : <Typography sx={{backgroundColor:'#ff3d00', color:'white', paddingLeft: '1rem', borderRadius: '5rem'}}>Đã xóa</Typography>
@@ -92,7 +87,7 @@ export default function SuppierTable() {
                   <TableCell align="right">{formatDateTime(supplier.supplierCreatedAt)}</TableCell>
                   <TableCell align="right">{formatDateTime(supplier.supplierUpdatedAt)}</TableCell>
                   <TableCell align="left">
-                    <Stack direction="row" spacing={2}>
+                    <Stack  spacing={2}>
                       <SupplierEditForm data={{id: supplier.supplierId, name: supplier.supplierName, email: supplier.supplierEmail, phone: supplier.supplierPhone, address: supplier.supplierAddress, status: supplier.supplierStatus}} />
                       <ConfirmDeleteSupplier deleteID={supplier.supplierId}/>
                     </Stack>
