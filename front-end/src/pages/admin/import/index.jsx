@@ -16,6 +16,8 @@ import SuppierTable from "../../../components/admin/supplier/SupplierTable";
 import SupplierAddForm from "../../../components/admin/supplier/SupplierAddForm";
 import ProductTable from "../../../components/admin/product/ProductTable";
 import ProductAddForm from "../../../components/admin/product/ProductAddForm";
+import ImportTable from "../../../components/admin/import/ImportTable";
+import ImportAddForm from "../../../components/admin/import/ImportAddForm";
 
 function Import() {
   return (
@@ -31,7 +33,7 @@ function Import() {
             justifyContent="flex-start"
             alignItems="center"
           >
-            <ProductAddForm />
+            <ImportAddForm />
           </Grid>
           <Grid
             item
@@ -51,7 +53,7 @@ function Import() {
             </Button>
           </Grid>
         </Grid>
-        {/* <ProductTable /> */}
+        <ImportTable />
       </div>
     </>
   );
