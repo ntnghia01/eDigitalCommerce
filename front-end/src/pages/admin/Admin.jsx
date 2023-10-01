@@ -8,7 +8,6 @@ import {
   Link,
   useNavigate,
 } from "react-router-dom";
-import Test from "../../components/test";
 
 import { useSelector } from "react-redux";
 
@@ -34,11 +33,9 @@ import {
   Menu,
   MenuItem,
   SubMenu,
-  sidebarClasses,
 } from "react-pro-sidebar";
 
 // Icons
-import DashboardIcon from "@mui/icons-material/Dashboard";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import NumbersIcon from "@mui/icons-material/Numbers";
 import CategoryIcon from "@mui/icons-material/Category";
@@ -49,10 +46,6 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 import PreviewIcon from "@mui/icons-material/Preview";
 import CommentIcon from "@mui/icons-material/Comment";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
-import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
-import SaveIcon from "@mui/icons-material/Save";
-import PrintIcon from "@mui/icons-material/Print";
-import ShareIcon from "@mui/icons-material/Share";
 import FactoryIcon from "@mui/icons-material/Factory";
 
 import Categories from "./categories";
@@ -65,6 +58,7 @@ import Supplier from "./supplier";
 import Product from "./product";
 import Import from "./import";
 import Order from "./order";
+import AdminLoginPage from "./login";
 
 // import '../../../public/avatar.png'
 
@@ -225,15 +219,15 @@ function Admin() {
         <div style={{ width: "100%", padding: 20 }}>
           <AdminTopBar />
           <Routes>
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            <Route path="/admin/categories" element={<Categories />} />
-            <Route path="/admin/brands" element={<Brands />} />
+            {/* <Route path="/admin/login" element={<AdminLoginPage />} /> */}
+            <Route path="/dashboard" element={<AdminDashboard />} />
+            <Route path="/categories" element={<Categories />} />
+            <Route path="/brands" element={<Brands />} />
             <Route path="/add-category" element={<AddCategoryForm />} />
-            <Route path="/" element={<Test />}></Route>
-            <Route path="/admin/supplier" element={<Supplier />} />
-            <Route path="/admin/product" element={<Product />} />
-            <Route path="/admin/import" element={<Import />} />
-            <Route path="/admin/order" element={<Order />} />
+            <Route path="/supplier" element={<Supplier />} />
+            <Route path="/product" element={<Product />} />
+            <Route path="/import" element={<Import />} />
+            <Route path="/order" element={<Order />} />
           </Routes>
         </div>
       </div>

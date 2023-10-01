@@ -100,4 +100,22 @@ public class CustomerController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    // @PostMapping("/login")
+    // public ResponseEntity<?> customerLogin(@RequestBody CustomerRequestDto customerRequestDto) {
+    //     Customer newCustomer = new Customer();
+
+    //     newCustomer.setCustomerPhone(customerRequestDto.getCustomerPhone());
+    //     newCustomer.setCustomerPassword(customerRequestDto.getCustomerPassword());
+    //     newCustomer.setCustomerName(customerRequestDto.getCustomerName());
+    //     newCustomer.setCustomerSex(customerRequestDto.getCustomerSex());
+    //     newCustomer.setCustomerEmail(customerRequestDto.getCustomerEmail());
+    //     newCustomer.setCustomerBirthday(customerRequestDto.getCustomerBirthday());
+    //     newCustomer.setCustomerStatus(1);
+    //     newCustomer.setCustomerCreatedAt(LocalDateTime.now());
+    //     newCustomer.setCustomerUpdatedAt(LocalDateTime.now());
+
+    //     customerRepository.save(newCustomer);
+    //     return ResponseEntity.ok(new MessageResponse("Add customer successfully!"));
+    // }
 }

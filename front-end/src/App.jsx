@@ -8,6 +8,10 @@ import { useSelector } from 'react-redux'
 
 import * as React from 'react';
 import Admin from './pages/admin/Admin'
+import AdminLoginPage from './pages/admin/login';
+import CustomerPage from './pages/customer/Customer';
+import CustomerLoginPage from './pages/customer/login';
+import CustomerSignupPage from './pages/customer/signup';
 
 
 function App() {
@@ -17,7 +21,14 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <Admin></Admin>
+        {/* <Admin></Admin> */}
+        <Routes>
+          <Route path='/*' element={<CustomerPage />}></Route>
+          <Route path='/login' element={<CustomerLoginPage />}></Route>
+          <Route path='/signup' element={<CustomerSignupPage />}></Route>
+          <Route path='/admin/*' element={<Admin />}></Route>
+          <Route path="/admin/login" element={<AdminLoginPage />} />
+        </Routes>
       </BrowserRouter>
     </>
   );
