@@ -17,6 +17,17 @@ export const customerSignup = createAsyncThunk (
     }
 )
 
+export const customerLogin = createAsyncThunk (
+    'customer/login',
+    async (loginData) => {
+        const response = await axios.post(prefixAPI + '/api/auth/signin', loginData);
+        console.log(response.data);
+        sessionStorage.setItem("customerID", response.data.userId);
+        sessionStorage.setItem("customerToken", response.data.accessToken);
+        return response.data;
+    }
+)
+
 const customerSlice = createSlice ({
     name: 'customer',
     initialState,

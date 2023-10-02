@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 import LoginIcon from "@mui/icons-material/Login";
 import Paper from "@mui/material/Paper";
+import { useDispatch } from "react-redux";
+import { customerLogin } from "../../../slices/customerSlice";
 
 export default function CustomerLoginPage() {
   const [username, setUsername] = useState();
@@ -12,6 +14,25 @@ export default function CustomerLoginPage() {
   const navigate = useNavigate();
   const redirect = () => {
     navigate('/signup');
+  }
+
+  const dispatch = useDispatch();
+
+  const handleSubmit = (e) => {
+    const loginData = {
+      username: username,
+      password: password
+    }
+    console.log(loginData);
+    dispatch(customerLogin(loginData))
+      .then(() => {
+        if (sessionStorage.getItem("customerID")) {
+          navigate('/');
+        } else {
+          alert("Sai TK hoặc MK")
+        }
+        console.log("Đăng nhập thành công");
+      })
   }
 
   return (
@@ -44,6 +65,7 @@ export default function CustomerLoginPage() {
             variant="contained"
             color="primary"
             type="button"
+            onClick={handleSubmit}
           >
             Đăng nhập
           </Button>
