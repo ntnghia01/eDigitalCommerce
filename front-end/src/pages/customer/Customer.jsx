@@ -2,7 +2,11 @@ import CustomerTopBar from "../../components/customer/CustomerTopBar";
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import ProductListComponent from "../../components/customer/product/ProductListComponent";
+import ProductListComponent from "./ProductListComponent";
+import ProductDetail from "./ProductDetail";
+import { BrowserRouter, Route, Routes, Link } from 'react-router-dom';
+import CustomerLoginPage from "./login";
+import CustomerSignupPage from "./signup";
 
 export default function CustomerPage () {
     return (
@@ -12,7 +16,16 @@ export default function CustomerPage () {
             <Grid item xs={2}></Grid>
             <Grid item xs={8} sx={{backgroundColor: 'white'}} style={{paddingLeft: 0}}>
                 <CustomerTopBar />
-                <ProductListComponent />
+                
+                
+                <Routes>
+                    <Route path="/" element={<ProductListComponent />} />
+                    <Route path='/login' element={<CustomerLoginPage />}></Route>
+                    <Route path='/signup' element={<CustomerSignupPage />}></Route>
+                    <Route path="/product/detail/:proId" element={<ProductDetail />} />
+
+                </Routes>
+                
             </Grid>
             <Grid item xs={2}></Grid>
             </Grid>

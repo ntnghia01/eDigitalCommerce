@@ -23,6 +23,7 @@ export const customerLogin = createAsyncThunk (
         const response = await axios.post(prefixAPI + '/api/auth/signin', loginData);
         console.log(response.data);
         sessionStorage.setItem("customerID", response.data.userId);
+        sessionStorage.setItem("customerName", response.data.name);
         sessionStorage.setItem("customerToken", response.data.accessToken);
         return response.data;
     }

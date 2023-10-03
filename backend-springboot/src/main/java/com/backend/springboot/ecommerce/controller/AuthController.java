@@ -1,10 +1,12 @@
 package com.backend.springboot.ecommerce.controller;
 
+import com.backend.springboot.ecommerce.entity.Cart;
 import com.backend.springboot.ecommerce.entity.Customer;
 import com.backend.springboot.ecommerce.payload.request.AuthRequestDto;
 import com.backend.springboot.ecommerce.payload.request.CustomerRequestDto;
 import com.backend.springboot.ecommerce.payload.response.AuthResponse;
 import com.backend.springboot.ecommerce.payload.response.MessageResponse;
+import com.backend.springboot.ecommerce.repository.CartRepository;
 import com.backend.springboot.ecommerce.repository.CustomerRepository;
 import com.backend.springboot.ecommerce.security.jwt.JwtUtils;
 import com.backend.springboot.ecommerce.service.UserDetailsImpl;
@@ -34,6 +36,9 @@ public class AuthController {
 
   @Autowired
   CustomerRepository customerRepository;
+
+  @Autowired
+  private CartRepository cartRepository;
 
   @Autowired
   PasswordEncoder encoder;
@@ -104,7 +109,13 @@ System.out.println(authentication);
     newCustomer.setCustomerCreatedAt(LocalDateTime.now());
     newCustomer.setCustomerUpdatedAt(LocalDateTime.now());
 
-    customerRepository.save(newCustomer);
+    Customer customer = customerRepository.save(newCustomer);
+    System.out.println(customer);
+    Cart cart = new Cart();
+    cart.setCustomer(customer);
+    cart.setCartCreatedAt(LocalDateTime.now());
+    cart.setCartUpdatedAt(LocalDateTime.now());
+    cartRepository.save(cart);
 
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }

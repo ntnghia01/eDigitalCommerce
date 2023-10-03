@@ -1,4 +1,7 @@
 import * as React from "react";
+import { useNavigate } from "react-router-dom";
+
+
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -63,6 +66,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 export default function CustomerTopBar() {
+
+  const customerLogin = sessionStorage.getItem("customerName");
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -78,8 +83,17 @@ export default function CustomerTopBar() {
   };
 
   const handleCloseUserMenu = () => {
+    sessionStorage.removeItem('customerID');
+    sessionStorage.removeItem('customerName');
+    sessionStorage.removeItem('customerToken');
+    
     setAnchorElUser(null);
   };
+
+  const navigate = useNavigate();
+  const navi = () => {
+    navigate('/login');
+  }
 
   return (
     <>
@@ -219,9 +233,10 @@ export default function CustomerTopBar() {
               </IconButton>
             </Box>
             {/* <Box sx={{ flexGrow: 1 }} /> */}
-            <Box sx={{ flexGrow: 0, marginLeft: 2 }}>
+            {customerLogin ? <Box sx={{ flexGrow: 0, marginLeft: 2 }}>
+            {customerLogin}
               <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, marginLeft: 1 }}>
                   <Avatar alt="Remy Sharp" src={`../../../public/avar.jpg`} />
                 </IconButton>
               </Tooltip>
@@ -247,7 +262,19 @@ export default function CustomerTopBar() {
                   </MenuItem>
                 ))}
               </Menu>
+
             </Box>
+            :
+            <Box style={{cursor:'grab'}} sx={{ flexGrow: 0, marginLeft: 2 }} onClick={navi}>
+              Đăng nhập
+              <IconButton sx={{ p: 0, marginLeft: 1 }}>
+                  <Avatar alt="Remy Sharp" src={`../../../public/avatar.png`} />
+                </IconButton>
+            </Box>
+            }
+            
+            
+            
           </Toolbar>
         </Container>
       </AppBar>

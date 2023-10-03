@@ -12,4 +12,7 @@ import com.backend.springboot.ecommerce.entity.Product;
 public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("SELECT p FROM Product p WHERE p.proStatus <> -1")
     List<Product> findAllProduct();
+
+    @Query("SELECT p FROM Product p WHERE p.proStatus = 1")
+    List<Product> findAllProductAvailable();
 }

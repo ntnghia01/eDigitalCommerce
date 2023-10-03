@@ -6,6 +6,7 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
+import BorderColorIcon from '@mui/icons-material/BorderColor';
 import { useState } from "react";
 
 import LoginIcon from "@mui/icons-material/Login";
@@ -53,7 +54,7 @@ export default function CustomerSignupPage() {
 
   return (
     <>
-      <Paper elevation={3}>
+      <Paper elevation={3} sx={{padding: 5}}>
         <h1>Đăng ký</h1>
         <Stack spacing={2}>
           <TextField
@@ -124,7 +125,7 @@ export default function CustomerSignupPage() {
             }}
           />
           <Button
-            startIcon={<LoginIcon />}
+            startIcon={<BorderColorIcon />}
             variant="contained"
             color="success"
             type="button"

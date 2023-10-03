@@ -60,6 +60,12 @@ public class ProductController {
         return new ResponseEntity<>(productList, HttpStatus.OK);
     }
 
+    @GetMapping("/available")
+    public ResponseEntity<List<Product>> getAllProductAvailable() {
+        List<Product> productList = productRepository.findAllProductAvailable();
+        return new ResponseEntity<>(productList, HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<?> createProduct(@ModelAttribute ProductRequestDto productRequestDto) {
         Optional<Category> categOptional = categoryRepository.findById(productRequestDto.getCateId());

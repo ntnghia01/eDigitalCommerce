@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.springboot.ecommerce.entity.Cart;
 import com.backend.springboot.ecommerce.entity.Customer;
 import com.backend.springboot.ecommerce.payload.request.CustomerRequestDto;
 import com.backend.springboot.ecommerce.payload.response.MessageResponse;
+import com.backend.springboot.ecommerce.repository.CartRepository;
 import com.backend.springboot.ecommerce.repository.CustomerRepository;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -29,6 +31,9 @@ public class CustomerController {
     
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private CartRepository cartRepository;
 
     @GetMapping
     public ResponseEntity<List<Customer>> getAllCustomer() {
@@ -61,7 +66,13 @@ public class CustomerController {
         newCustomer.setCustomerCreatedAt(LocalDateTime.now());
         newCustomer.setCustomerUpdatedAt(LocalDateTime.now());
 
-        customerRepository.save(newCustomer);
+        Customer customer = customerRepository.save(newCustomer);
+
+        // Create Cart for Customer
+        Cart cart = new Cart();
+        cart.setCustomer(customer);
+        cartRepository.save(cart);
+
         return ResponseEntity.ok(new MessageResponse("Add customer successfully!"));
     }
 

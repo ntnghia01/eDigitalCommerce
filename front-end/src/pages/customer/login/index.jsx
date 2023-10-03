@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import LoginIcon from "@mui/icons-material/Login";
+import BorderColorIcon from '@mui/icons-material/BorderColor';
 import Paper from "@mui/material/Paper";
 import { useDispatch } from "react-redux";
 import { customerLogin } from "../../../slices/customerSlice";
@@ -37,7 +38,7 @@ export default function CustomerLoginPage() {
 
   return (
     <>
-      <Paper elevation={3}>
+      <Paper elevation={3} sx={{padding: 5}}>
         <h1>Đăng nhập</h1>
         <Stack spacing={2}>
           <TextField
@@ -70,7 +71,7 @@ export default function CustomerLoginPage() {
             Đăng nhập
           </Button>
           <Button
-            startIcon={<LoginIcon />}
+            startIcon={<BorderColorIcon />}
             variant="contained"
             color="success"
             type="button"

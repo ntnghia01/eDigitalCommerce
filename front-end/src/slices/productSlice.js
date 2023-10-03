@@ -5,6 +5,7 @@ const prefixAPI = 'http://localhost:9004';
 
 const initialState = {
     products: [],
+    product: {}
 }
 
 export const fetchProducts = createAsyncThunk (
@@ -14,6 +15,23 @@ export const fetchProducts = createAsyncThunk (
         return response.data;
     }
 );
+
+export const fetchAvailableProducts = createAsyncThunk (
+    'product/available',
+    async () => {
+        const response = await axios.get(prefixAPI + '/api/product/available');
+        return response.data;
+    }
+)
+
+export const getProductDetail = createAsyncThunk (
+    'product/detail',
+    async (proId) => {
+        const response = await axios.get(prefixAPI + `/api/product/${proId}`);
+        // console.log(response.data);
+        return response.data;
+    }
+)
 
 export const addProduct = createAsyncThunk (
     'product/add',
@@ -99,6 +117,12 @@ const productSlice = createSlice ({
         builder
             .addCase(fetchProducts.fulfilled, (state, action) => {
                 state.products = action.payload;
+            })
+            .addCase(fetchAvailableProducts.fulfilled, (state, action) => {
+                state.products = action.payload;
+            })
+            .addCase(getProductDetail.fulfilled, (state, action) => {
+                state.product = action.payload;
             })
     }
 });
