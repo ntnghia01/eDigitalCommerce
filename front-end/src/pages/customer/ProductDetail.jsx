@@ -5,7 +5,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getProductDetail } from "../../slices/productSlice";
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import { Button, CardMedia, Stack } from "@mui/material";
+import { Button, CardMedia, Stack, TextField } from "@mui/material";
 import { emphasize, styled } from '@mui/material/styles';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Chip from '@mui/material/Chip';
@@ -13,6 +13,10 @@ import HomeIcon from '@mui/icons-material/Home';
 import Typography from '@mui/material/Typography';
 import PaymentIcon from '@mui/icons-material/Payment';
 import Rating from '@mui/material/Rating';
+import MuiAlert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+import { addToCart } from "../../slices/cartSlice";
+import { useState } from "react";
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     const backgroundColor =
@@ -55,7 +59,22 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
 export default function ProductDetail () {
+
+    const [openSnackbar, setOpenSnackbar] = React.useState(false);
+    const handleOpenSnackbar = () => {
+        setOpenSnackbar(true);
+      };
+      const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setOpenSnackbar(false);
+      };
 
     const dispatch = useDispatch();
 
@@ -70,6 +89,23 @@ export default function ProductDetail () {
                 // console.log(product);
             });
     }, [dispatch])
+
+    const [cartDetailQuantity, setCartDetailQuantity] = useState('1');
+
+    const handleAddToCart = (proId) => {
+        const cartDetailData = {
+            proId: proId,
+            cartDetailQuantity: cartDetailQuantity,
+            customerId: sessionStorage.getItem('customerID')
+        }
+        dispatch(addToCart(cartDetailData))
+            .then(() => {
+                console.log('Thêm vào giỏ thành công');
+                handleOpenSnackbar();
+            })
+        console.log('re-render');
+
+    }
     
 
     return (
@@ -101,12 +137,26 @@ export default function ProductDetail () {
                     <Typography variant="h5" gutterBottom>Số lượng còn lại: {product.proQuantity}</Typography>
                     <Rating name="read-only" value={4} readOnly />
                     <Typography variant="h5" gutterBottom>Mô tả: {product.proDesc}</Typography>
+                    <TextField
+                        margin="dense"
+                        id="quantity"
+                        label="Nhập số lượng muốn mua"
+                        type="number"
+                        variant="filled"
+                        onChange={e => {setCartDetailQuantity(e.target.value)}}
+                    />
                     <Button variant="outlined" startIcon={<PaymentIcon />}>Mua ngay</Button>
-                    <Button variant="outlined" startIcon={<PaymentIcon />}>Thêm vào giỏ hàng</Button>
+                    <Button variant="outlined" onClick={()=>handleAddToCart(product.proId)} startIcon={<PaymentIcon />}>Thêm vào giỏ hàng</Button>
                 </Stack>
                 </Grid>
             </Grid>
         </Box>
+        
+        <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleCloseSnackbar}>
+                <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%', color: 'white' }}>
+                Thêm vào giỏ hàng thành công!
+                </Alert>
+            </Snackbar>
         </>
     )
 }

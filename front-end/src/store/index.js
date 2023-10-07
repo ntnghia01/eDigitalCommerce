@@ -9,6 +9,7 @@ import categorySlice from '../slices/categorySlice';
 import supplierSlice from '../slices/supplierSlice';
 import productSlice from '../slices/productSlice';
 import importSlice from '../slices/importSlice';
+import cartSlice from '../slices/cartSlice';
 
 
 // const store = createStore(rootReducer, applyMiddleware(thunk));
@@ -19,7 +20,8 @@ const store = configureStore ({
         brand: brandSlice,
         supplier: supplierSlice,
         product: productSlice,
-        import: importSlice
+        import: importSlice,
+        cart: cartSlice
     },
 });
 

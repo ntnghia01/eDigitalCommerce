@@ -8,4 +8,5 @@ public class CartDetailRequestDto {
     private Integer cartId;
     private Integer proId;
     private Integer cartDetailQuantity;
+    private Integer customerId;
 }
