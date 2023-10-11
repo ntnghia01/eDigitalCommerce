@@ -1,11 +1,15 @@
 package com.backend.springboot.ecommerce.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +24,7 @@ import com.backend.springboot.ecommerce.repository.CartDetailRepository;
 import com.backend.springboot.ecommerce.repository.CartRepository;
 import com.backend.springboot.ecommerce.repository.ProductRepository;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/cart")
 public class CartController {
@@ -31,6 +35,12 @@ public class CartController {
     private CartDetailRepository cartDetailRepository;
     @Autowired
     private ProductRepository productRepository;
+
+    @GetMapping
+    public ResponseEntity<List<CartDetail>> getAllCartDetail() {
+        List<CartDetail> cartDetails = cartDetailRepository.findAll();
+        return new ResponseEntity<>(cartDetails, HttpStatus.OK);
+    }
 
     @PostMapping("/cartdetail")
     public ResponseEntity<?> createCartDetail(@RequestBody CartDetailRequestDto cartDetailRequestDto) {
@@ -58,6 +68,34 @@ public class CartController {
         } else {
             return new ResponseEntity<>(new MessageResponse("Cart or Product not found"), HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/{customerId}")
+    public ResponseEntity<List<CartDetail>> getCartDetailByCustomerID(@PathVariable Integer customerId) {
+        List<CartDetail> cartDetails = cartDetailRepository.findCartDetailByCustomerID(customerId);
+        return new ResponseEntity<List<CartDetail>>(cartDetails, HttpStatus.OK);
+    }
+
+    @PostMapping("/updateQuantity")
+    public ResponseEntity<?> updateCartDetailQuantity(@RequestBody CartDetailRequestDto cartDetailRequestDto) {
+        Optional<CartDetail> cartDetailOptional = cartDetailRepository.findById(cartDetailRequestDto.getCartDetailId());
+        CartDetail cartDetail = cartDetailOptional.get();
+        cartDetail.setCartDetailQuantity(cartDetailRequestDto.getCartDetailQuantity());
+        cartDetailRepository.save(cartDetail);
+        return ResponseEntity.ok(new MessageResponse("Update cart detail successfully!"));
+    }
+
+    @DeleteMapping("/cartdetail/{cartDetailId}")
+    public ResponseEntity<?> deleteCartDetail(@PathVariable Integer cartDetailId) {
+        Optional<CartDetail> cartDetailOptional = cartDetailRepository.findById(cartDetailId);
+        if (cartDetailOptional.isPresent()) {
+            CartDetail cartDetail = cartDetailOptional.get();
+            cartDetailRepository.delete(cartDetail);
+            return ResponseEntity.ok(new MessageResponse("Delete product in cart successfully"));
+        } else {
+            return new ResponseEntity<>(new MessageResponse("Product in cart not existed"), HttpStatus.NOT_FOUND);
+        }
+        
     }
 
 }

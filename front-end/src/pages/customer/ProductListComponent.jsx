@@ -17,7 +17,7 @@ import Rating from '@mui/material/Rating';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAvailableProducts, fetchProducts } from "../../slices/productSlice";
 import { useState } from "react";
-import { addToCart } from "../../slices/cartSlice";
+import { addToCart, countCartDetail } from "../../slices/cartSlice";
 
 function formatNumberWithCommas(input) {
     // Kiểm tra xem đầu vào có phải là một số nguyên không
@@ -72,6 +72,8 @@ export default function ProductListComponent () {
             .then(() => {
                 console.log('Thêm vào giỏ thành công');
                 handleOpenSnackbar();
+                
+                dispatch(countCartDetail(sessionStorage.getItem("customerID")));
             })
         console.log('re-render');
 

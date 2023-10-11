@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-
+import { useColorScheme } from "@mui/material/styles";
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -18,11 +18,18 @@ import AdbIcon from "@mui/icons-material/Adb";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import Badge from '@mui/material/Badge';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import HistoryIcon from '@mui/icons-material/History';
+import MailIcon from "@mui/icons-material/Mail";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import Badge from "@mui/material/Badge";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import HistoryIcon from "@mui/icons-material/History";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import MicIcon from '@mui/icons-material/Mic';
+import { useEffect } from "react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { countCartDetail } from "../../slices/cartSlice";
 
 const pages = ["Trang chủ", "Giới thiệu", "Liên hệ"];
 const settings = ["Thông tin cá nhân", "Tài khoản", "Cài đặt", "Đăng xuất"];
@@ -66,6 +73,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 export default function CustomerTopBar() {
+  const { mode, setMode } = useColorScheme();
 
   const customerLogin = sessionStorage.getItem("customerName");
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -83,16 +91,72 @@ export default function CustomerTopBar() {
   };
 
   const handleCloseUserMenu = () => {
-    sessionStorage.removeItem('customerID');
-    sessionStorage.removeItem('customerName');
-    sessionStorage.removeItem('customerToken');
-    
+    sessionStorage.removeItem("customerID");
+    sessionStorage.removeItem("customerName");
+    sessionStorage.removeItem("customerToken");
+
     setAnchorElUser(null);
   };
 
   const navigate = useNavigate();
   const navi = () => {
-    navigate('/login');
+    navigate("/login");
+  };
+
+  const [inputValue, setInputChat] = useState('');
+  const [recognition, setRecognition] = useState();
+  const [isListening, setIsListening] = useState();
+
+  const changeValueTest = (e) => {
+    e.preventdefault;
+    setInputChat(e.target.value);
+  }
+
+  const dispatch = useDispatch();
+
+  const countCart = useSelector((state) => state.cart.countCart);
+
+  useEffect(() => {
+    const SpeechRecognition = 
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition ||
+    window.mozSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      alert(
+        "Trình duyệt của bạn không hỗ trợ chuyển đổi giọng nói thành văn bản."
+      );
+      return;
+    }
+
+    const recognitionInstance = new SpeechRecognition();
+    recognitionInstance.lang = "vi-VN";
+ 
+    recognitionInstance.onresult = (event) => {
+      const { transcript } = event.results[0][0];
+      // console.log(event.results[0][0]);
+      setInputChat(transcript);
+      setIsListening(false);
+    };
+
+    setRecognition(recognitionInstance);
+    
+    dispatch(countCartDetail(sessionStorage.getItem("customerID")));
+  },[])
+  // useEffect(()=>{
+  //   dispatch(countCartDetail(sessionStorage.getItem("customerID")));
+  //   console.log(countCart);
+  // },[countCart])
+  const startListening = () => {
+    if(recognition )
+      if(!isListening){
+        
+        setIsListening(true);
+        recognition.start();
+      } else {
+        setIsListening(false);
+        recognition.stop();
+      }
   }
 
   return (
@@ -105,7 +169,7 @@ export default function CustomerTopBar() {
               variant="h6"
               noWrap
               component="a"
-              href="#app-bar-with-responsive-menu"
+              href="/"
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
@@ -175,7 +239,7 @@ export default function CustomerTopBar() {
               LOGO
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              {pages.map((page) => (
+              {/* {pages.map((page) => (
                 <Button
                   key={page}
                   onClick={handleCloseNavMenu}
@@ -183,7 +247,15 @@ export default function CustomerTopBar() {
                 >
                   {page}
                 </Button>
-              ))}
+              ))} */}
+              <Button
+                  key="home"
+                  onClick={() => {navigate('/');}}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                  
+                >
+                  Trang chủ
+                </Button>
             </Box>
             <Search>
               <SearchIconWrapper>
@@ -192,21 +264,40 @@ export default function CustomerTopBar() {
               <StyledInputBase
                 placeholder="Tìm kiếm..."
                 inputProps={{ "aria-label": "search" }}
+                value={inputValue}
+                onChange={(e) => changeValueTest(e)}
               />
-            </Search>
-            <Box sx={{ display: { xs: "none", md: "flex" } }}>
+              {/* <Button variant="contained" color="error" onClick={() => startListening()}>
+                  Mic
+                </Button> */}
                 <IconButton
                 size="large"
-                aria-label="show 4 new mails"
-                color="inherit"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={() => startListening()}
+                color={isListening ? "error" : "inherit"}
+
               >
-                <Badge badgeContent={4} color="error">
+                <MicIcon />
+              </IconButton>
+            </Search>
+            <Box sx={{ display: { xs: "none", md: "flex" } }}>
+              <IconButton
+                size="large"
+                aria-label="show 4 new cart"
+                color="inherit"
+                onClick={() =>
+                  navigate(`/cart/${sessionStorage.getItem("customerID")}`)
+                }
+              >
+                <Badge badgeContent={countCart} color="error" >
                   <ShoppingCartIcon />
                 </Badge>
               </IconButton>
               <IconButton
                 size="large"
-                aria-label="show 4 new mails"
+                aria-label="show 4 new history"
                 color="inherit"
               >
                 <Badge badgeContent={3} color="error">
@@ -231,50 +322,74 @@ export default function CustomerTopBar() {
                   <NotificationsIcon />
                 </Badge>
               </IconButton>
+              <IconButton
+                size="large"
+                aria-label="show 17 new mode"
+                color="inherit"
+                onClick={() => {
+                  setMode(mode === "light" ? "dark" : "light");
+                }}
+              >
+                {mode === "light" ? (
+                  <DarkModeIcon
+                    style={{ cursor: "pointer" }}
+                  />
+                ) : (
+                  <LightModeIcon
+                    style={{ cursor: "pointer" }}
+                  />
+                )}
+              </IconButton>
             </Box>
             {/* <Box sx={{ flexGrow: 1 }} /> */}
-            {customerLogin ? <Box sx={{ flexGrow: 0, marginLeft: 2 }}>
-            {customerLogin}
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, marginLeft: 1 }}>
-                  <Avatar alt="Remy Sharp" src={`../../../public/avar.jpg`} />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
+            {/* <Tooltip title="Dark mode"> */}
 
-            </Box>
-            :
-            <Box style={{cursor:'grab'}} sx={{ flexGrow: 0, marginLeft: 2 }} onClick={navi}>
-              Đăng nhập
-              <IconButton sx={{ p: 0, marginLeft: 1 }}>
+            {customerLogin ? (
+              <Box sx={{ flexGrow: 0, marginLeft: 2 }}>
+                {customerLogin}
+                <Tooltip title="Open settings">
+                  <IconButton
+                    onClick={handleOpenUserMenu}
+                    sx={{ p: 0, marginLeft: 1 }}
+                  >
+                    <Avatar alt="Remy Sharp" src={`../../../public/avar.jpg`} />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+            ) : (
+              <Box
+                style={{ cursor: "grab" }}
+                sx={{ flexGrow: 0, marginLeft: 2 }}
+                onClick={navi}
+              >
+                Đăng nhập
+                <IconButton sx={{ p: 0, marginLeft: 1 }}>
                   <Avatar alt="Remy Sharp" src={`../../../public/avatar.png`} />
                 </IconButton>
-            </Box>
-            }
-            
-            
-            
+              </Box>
+            )}
           </Toolbar>
         </Container>
       </AppBar>

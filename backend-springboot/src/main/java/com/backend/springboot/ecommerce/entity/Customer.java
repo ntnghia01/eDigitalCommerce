@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -38,8 +40,10 @@ public class Customer implements Serializable {
     private Date customerBirthday;
     @Column (name = "customer_status", nullable = false)
     private Integer customerStatus;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column (name = "customer_created_at", nullable = false)
     private LocalDateTime customerCreatedAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column (name = "customer_updated_at", nullable = false)
     private LocalDateTime customerUpdatedAt;
 
