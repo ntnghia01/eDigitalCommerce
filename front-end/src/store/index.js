@@ -10,12 +10,14 @@ import supplierSlice from '../slices/supplierSlice';
 import productSlice from '../slices/productSlice';
 import importSlice from '../slices/importSlice';
 import cartSlice from '../slices/cartSlice';
+import customerSlice from '../slices/customerSlice';
 
 
 // const store = createStore(rootReducer, applyMiddleware(thunk));
 const store = configureStore ({
     reducer: {
         // categories: categoryReducer,
+        customer: customerSlice,
         categories: categorySlice,
         brand: brandSlice,
         supplier: supplierSlice,

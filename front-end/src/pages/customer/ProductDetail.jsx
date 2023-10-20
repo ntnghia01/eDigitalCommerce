@@ -15,6 +15,7 @@ import PaymentIcon from "@mui/icons-material/Payment";
 import Rating from "@mui/material/Rating";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { addToCart, countCartDetail } from "../../slices/cartSlice";
 import { useState } from "react";
 
@@ -157,7 +158,7 @@ export default function ProductDetail() {
               <Button
                 variant="outlined"
                 onClick={() => handleAddToCart(product.proId)}
-                startIcon={<PaymentIcon />}
+                startIcon={<ShoppingCartIcon />}
               >
                 Thêm vào giỏ hàng
               </Button>

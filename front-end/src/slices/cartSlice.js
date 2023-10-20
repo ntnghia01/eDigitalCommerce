@@ -6,7 +6,9 @@ const prefixAPI = 'http://localhost:9004';
 
 const initialState = {
     cart: [],
-    countCart: null
+    countCart: null,
+    totalCart: null,
+    calcCartData: {}
 }
 
 export const addToCart = createAsyncThunk (
@@ -50,6 +52,28 @@ export const countCartDetail = createAsyncThunk (
     }
 )
 
+export const calcTotalCart = createAsyncThunk (
+    'cart/total',
+    async (customerId) => {
+        const response = await axios.get(prefixAPI + `/api/cart/${customerId}`);
+        let total=0;
+        response.data.map((cartDetail) => {
+            total += (cartDetail.product.proPrice*cartDetail.cartDetailQuantity);
+            // console.log('total:' + total);
+            // console.log(response.data);
+        })
+        return total;
+    }
+)
+
+export const calcCart = createAsyncThunk (
+    'cart/calc',
+    async (customerId) => {
+        const response = await axios.get(prefixAPI + `/api/cart/calculate/${customerId}`);
+        return response.data;
+    }
+)
+
 const cartSlice = createSlice ({
     name: 'cart',
     initialState,
@@ -61,6 +85,12 @@ const cartSlice = createSlice ({
             })
             .addCase(countCartDetail.fulfilled, (state, action) => {
                 state.countCart = action.payload;
+            })
+            .addCase(calcTotalCart.fulfilled, (state, action) => {
+                state.totalCart = action.payload;
+            })
+            .addCase(calcCart.fulfilled, (state, action) => {
+                state.calcCartData = action.payload;
             })
     }
 });

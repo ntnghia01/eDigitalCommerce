@@ -19,6 +19,7 @@ import com.backend.springboot.ecommerce.entity.Cart;
 import com.backend.springboot.ecommerce.entity.CartDetail;
 import com.backend.springboot.ecommerce.entity.Product;
 import com.backend.springboot.ecommerce.payload.request.CartDetailRequestDto;
+import com.backend.springboot.ecommerce.payload.response.CartResponseDto;
 import com.backend.springboot.ecommerce.payload.response.MessageResponse;
 import com.backend.springboot.ecommerce.repository.CartDetailRepository;
 import com.backend.springboot.ecommerce.repository.CartRepository;
@@ -96,6 +97,28 @@ public class CartController {
             return new ResponseEntity<>(new MessageResponse("Product in cart not existed"), HttpStatus.NOT_FOUND);
         }
         
+    }
+
+    @GetMapping("/calculate/{customerId}")
+    public ResponseEntity<?> calculateCart (@PathVariable Integer customerId) {
+        List<CartDetail> cartDetails = cartDetailRepository.findCartDetailByCustomerID(customerId);
+
+        int total = 0;
+        int quantityItem = 0;
+        int totalQuantityItem = 0;
+
+        for (CartDetail cartDetail : cartDetails) {
+            total += cartDetail.getProduct().getProPrice()*cartDetail.getCartDetailQuantity(); // Cộng giá của từng CartDetail vào tổng giá
+            quantityItem ++;
+            totalQuantityItem += cartDetail.getCartDetailQuantity();
+        }
+
+        CartResponseDto cartResponseDto = new CartResponseDto();
+        cartResponseDto.setTotalMoney(total);
+        cartResponseDto.setQuantityItem(quantityItem);
+        cartResponseDto.setTotalQuantityItem(totalQuantityItem);
+        
+        return ResponseEntity.ok(cartResponseDto);
     }
 
 }

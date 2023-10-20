@@ -30,6 +30,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { countCartDetail } from "../../slices/cartSlice";
+import { deleteCustomerInfo } from "../../slices/customerSlice";
 
 const pages = ["Trang chủ", "Giới thiệu", "Liên hệ"];
 const settings = ["Thông tin cá nhân", "Tài khoản", "Cài đặt", "Đăng xuất"];
@@ -90,12 +91,15 @@ export default function CustomerTopBar() {
     setAnchorElNav(null);
   };
 
+  const dispatch = useDispatch();
+
   const handleCloseUserMenu = () => {
     sessionStorage.removeItem("customerID");
     sessionStorage.removeItem("customerName");
     sessionStorage.removeItem("customerToken");
 
     setAnchorElUser(null);
+    dispatch(deleteCustomerInfo());
   };
 
   const navigate = useNavigate();
@@ -112,7 +116,7 @@ export default function CustomerTopBar() {
     setInputChat(e.target.value);
   }
 
-  const dispatch = useDispatch();
+  
 
   const countCart = useSelector((state) => state.cart.countCart);
 

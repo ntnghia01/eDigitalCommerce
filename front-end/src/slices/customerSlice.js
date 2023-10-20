@@ -29,6 +29,23 @@ export const customerLogin = createAsyncThunk (
     }
 )
 
+export const getCustomerInfo = createAsyncThunk (
+    'customer/getInfo',
+    async (customerId) => {
+        const response = await axios.get(prefixAPI + `/api/customer/${customerId}`);
+        return response.data;
+    }
+)
+
+export const deleteCustomerInfo = createAsyncThunk (
+    'customer/deleteInfo',
+    async () => {
+        return null;
+    }
+)
+
+
+
 const customerSlice = createSlice ({
     name: 'customer',
     initialState,
@@ -37,6 +54,12 @@ const customerSlice = createSlice ({
         builder
             .addCase(customerSignup.fulfilled, (state, action) => {
                 console.log(action.payload); // khong co tac dung
+            })
+            .addCase(getCustomerInfo.fulfilled, (state, action) => {
+                state.customer = action.payload;
+            })
+            .addCase(deleteCustomerInfo.fulfilled, (state,action) => {
+                state.customer = action.payload;
             })
     }
 })

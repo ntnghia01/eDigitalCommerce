@@ -42,6 +42,11 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   });
 
 export default function ProductListComponent () {
+
+    const customer = useSelector((state) => state.customer.customer);
+    // console.log(customer);
+
+
     const [openSnackbar, setOpenSnackbar] = React.useState(false);
     const handleOpenSnackbar = () => {
         setOpenSnackbar(true);

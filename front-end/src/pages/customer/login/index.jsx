@@ -5,8 +5,9 @@ import { useNavigate } from "react-router-dom";
 import LoginIcon from "@mui/icons-material/Login";
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import Paper from "@mui/material/Paper";
-import { useDispatch } from "react-redux";
-import { customerLogin } from "../../../slices/customerSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { customerLogin, getCustomerInfo } from "../../../slices/customerSlice";
+import { countCartDetail } from "../../../slices/cartSlice";
 
 export default function CustomerLoginPage() {
   const [username, setUsername] = useState();
@@ -16,6 +17,9 @@ export default function CustomerLoginPage() {
   const redirect = () => {
     navigate('/signup');
   }
+
+  const customer = useSelector((state) => state.customer.customer);
+  // console.log(customer); //null
 
   const dispatch = useDispatch();
 
@@ -29,11 +33,19 @@ export default function CustomerLoginPage() {
       .then(() => {
         if (sessionStorage.getItem("customerID")) {
           navigate('/');
+          dispatch(countCartDetail(sessionStorage.getItem("customerID")));
+          dispatch(getCustomerInfo(sessionStorage.getItem("customerID")));
         } else {
           alert("Sai TK hoặc MK")
         }
         console.log("Đăng nhập thành công");
       })
+  }
+
+  const handleEnterKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleSubmit();
+    }
   }
 
   return (
@@ -57,6 +69,7 @@ export default function CustomerLoginPage() {
             label="Mật khẩu"
             type="password"
             variant="outlined"
+            onKeyUp={handleEnterKeyPress}
             onChange={(e) => {
               setPassword(e.target.value);
             }}

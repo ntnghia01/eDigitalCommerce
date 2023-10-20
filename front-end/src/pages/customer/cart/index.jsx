@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 // import Redux
 import { useSelector, useDispatch } from "react-redux";
-import { countCartDetail, deleteCartDetail, fetchCartDetail, updateCartDetailQuantity } from "../../../slices/cartSlice";
+import { countCartDetail, deleteCartDetail, fetchCartDetail, updateCartDetailQuantity, calcTotalCart, calcCart } from "../../../slices/cartSlice";
 
 // MUI
 import Box from "@mui/material/Box";
@@ -11,17 +11,16 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import { IconButton, Stack, TextField } from "@mui/material";
-import Fab from '@mui/material/Fab';
-import AddIcon from '@mui/icons-material/Add';
 import { emphasize, styled } from '@mui/material/styles';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Chip from '@mui/material/Chip';
 import HomeIcon from '@mui/icons-material/Home';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from "react";
-import ProductListComponent from "../ProductListComponent";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     const backgroundColor =
@@ -86,9 +85,11 @@ export default function Cart() {
   const { customerId } = useParams();
 
   const cart = useSelector((state) => state.cart.cart);
+  const calcCartData = useSelector((state) => state.cart.calcCartData);
 
   useEffect(() => {
     dispatch(fetchCartDetail(customerId));
+    dispatch(calcCart(customerId));
     // console.log(cart);
     return () => {
         console.log("unmount");
@@ -105,6 +106,8 @@ export default function Cart() {
     dispatch(updateCartDetailQuantity(updateCartDetailQuantityData))
       .then(() => {
         dispatch(fetchCartDetail(customerId));
+        
+        dispatch(calcCart(customerId)).then(() => {console.log(total);});
         handleOpenSnackbar();
       })
   }
@@ -123,6 +126,7 @@ export default function Cart() {
       handleOpenSnackbar();
       
       dispatch(countCartDetail(sessionStorage.getItem("customerID")));
+      dispatch(calcCart(customerId));
      })
   }
 
@@ -136,7 +140,10 @@ export default function Cart() {
             label="Trang chủ"
             icon={<HomeIcon fontSize="small" />}
             />
-            <StyledBreadcrumb component="a" href="#" label="Giỏ hàng" />
+            <StyledBreadcrumb 
+            label="Giỏ hàng"
+            component="a" 
+            icon={<ShoppingCartIcon fontSize="small" />}  />
         </Breadcrumbs>
         <Box sx={{ flexGrow: 1, padding: 2 }}>
           <Paper elevation={0} sx={{ padding: 2 }}>
@@ -232,6 +239,15 @@ export default function Cart() {
           </Paper>
         </Box>
       ))}
+      <Box sx={{ flexGrow: 1, padding: 2, textAlign: 'right' }}>
+        <h2>Tổng tiền (VAT): {calcCartData.totalMoney} VNĐ</h2>
+        <h2>Số mặt hàng: {calcCartData.quantityItem}</h2>
+        <h2>Tổng số lượng: {calcCartData.totalQuantityItem}</h2>
+        <Button onClick={() => navigate(`/checkout/${customerId}`)} variant="contained" size="large" startIcon={<ShoppingCartCheckoutIcon />}>
+                  Thanh toán giỏ hàng
+                </Button>
+      </Box>
+      
       <Snackbar
         open={openSnackbar}
         autoHideDuration={3000}
