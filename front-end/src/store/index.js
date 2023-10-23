@@ -11,6 +11,7 @@ import productSlice from '../slices/productSlice';
 import importSlice from '../slices/importSlice';
 import cartSlice from '../slices/cartSlice';
 import customerSlice from '../slices/customerSlice';
+import addressSlice from '../slices/addressSlice';
 
 
 // const store = createStore(rootReducer, applyMiddleware(thunk));
@@ -23,7 +24,8 @@ const store = configureStore ({
         supplier: supplierSlice,
         product: productSlice,
         import: importSlice,
-        cart: cartSlice
+        cart: cartSlice,
+        address: addressSlice
     },
 });
 

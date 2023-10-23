@@ -8,6 +8,7 @@ public class AddressRequestDto {
     private String addressName;
     private String addressPhone;
     private String addressFull;
-    private String addressStatus;
+    private Integer addressStatus;
     private Integer customer;
+    private Integer customerId;
 }

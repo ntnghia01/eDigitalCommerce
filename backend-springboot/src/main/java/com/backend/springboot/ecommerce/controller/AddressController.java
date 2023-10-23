@@ -38,12 +38,26 @@ public class AddressController {
         List<Address> addresses = addressRepository.findAll();
         return new ResponseEntity<List<Address>>(addresses, HttpStatus.OK);
     }
+    
+    @GetMapping("/{addressId}")
+    public ResponseEntity<Address> getAddress(@PathVariable Integer addressId) {
+        Optional<Address> addressOptional = addressRepository.findById(addressId);
+        if (addressOptional.isPresent()) {
+            Address address = addressOptional.get();
+            return new ResponseEntity<>(address, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        
+    }
 
-    @GetMapping("/{customerId}")
+    @GetMapping("/customer/{customerId}")
     public ResponseEntity<List<Address>> getAddressByCustomerID(@PathVariable Integer customerId) {
         List<Address> addresses = addressRepository.findByCustomerID(customerId);
         return new ResponseEntity<List<Address>>(addresses, HttpStatus.OK);
     }
+
+    
 
     @PostMapping
     public ResponseEntity<?> createAddress(@RequestBody AddressRequestDto addressRequestDto) {
@@ -56,7 +70,18 @@ public class AddressController {
             newAddress.setAddressName(addressRequestDto.getAddressName());
             newAddress.setAddressPhone(addressRequestDto.getAddressPhone());
             newAddress.setAddressFull(addressRequestDto.getAddressFull());
-            newAddress.setAddressStatus(1);
+            if (addressRequestDto.getAddressStatus() == 2) {
+                newAddress.setAddressStatus(2);
+                
+                Optional<Address> addressDefaultedOptional = addressRepository.findDefaultAddressByCustomerID(addressRequestDto.getCustomer());
+                if (addressDefaultedOptional.isPresent()) {
+                    Address addressDefaulted = addressDefaultedOptional.get();
+                    addressDefaulted.setAddressStatus(1);
+                }
+            } else {
+                newAddress.setAddressStatus(1);
+            }
+            
             newAddress.setAddressCreatedAt(LocalDateTime.now());
             newAddress.setAddressUpdatedAt(LocalDateTime.now());
 
@@ -76,6 +101,18 @@ public class AddressController {
             existingAddress.setAddressName(addressRequestDto.getAddressName());
             existingAddress.setAddressPhone(addressRequestDto.getAddressPhone());
             existingAddress.setAddressFull(addressRequestDto.getAddressFull());
+            if (addressRequestDto.getAddressStatus() == 2) {
+                existingAddress.setAddressStatus(2);
+                
+                Optional<Address> addressActivingOptional = addressRepository.findDefaultAddressByCustomerID(addressRequestDto.getCustomerId());
+                if (addressActivingOptional.isPresent()) {
+                    Address addressActiving = addressActivingOptional.get();
+                    addressActiving.setAddressStatus(1);
+                }
+                
+            } else {
+                existingAddress.setAddressStatus(1);
+            }
             addressRepository.save(existingAddress);
             return ResponseEntity.ok(new MessageResponse("Update address successfully!"));
         } else {
@@ -94,5 +131,17 @@ public class AddressController {
         } else {
             return new ResponseEntity<>(new MessageResponse("Address not exist!"), HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/default/{customerId}")
+    public ResponseEntity<Address> getDefaultAddress(@PathVariable Integer customerId) {
+        Optional<Address> addressOptional = addressRepository.findDefaultAddressByCustomerID(customerId);
+        if (addressOptional.isPresent()) {
+            Address address = addressOptional.get();
+            return new ResponseEntity<>(address, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        
     }
 }
