@@ -107,7 +107,7 @@ export default function Cart() {
       .then(() => {
         dispatch(fetchCartDetail(customerId));
         
-        dispatch(calcCart(customerId)).then(() => {console.log(total);});
+        dispatch(calcCart(customerId)).then(() => {});
         handleOpenSnackbar();
       })
   }
@@ -240,7 +240,7 @@ export default function Cart() {
         </Box>
       ))}
       <Box sx={{ flexGrow: 1, padding: 2, textAlign: 'right' }}>
-        <h2>Tổng tiền (VAT): {calcCartData.totalMoney} VNĐ</h2>
+        <h2>Tổng tiền (VAT): {formatNumberWithCommas(calcCartData.totalMoney)} VNĐ</h2>
         <h2>Số mặt hàng: {calcCartData.quantityItem}</h2>
         <h2>Tổng số lượng: {calcCartData.totalQuantityItem}</h2>
         <Button onClick={() => navigate(`/checkout/${customerId}`)} variant="contained" size="large" startIcon={<ShoppingCartCheckoutIcon />}>

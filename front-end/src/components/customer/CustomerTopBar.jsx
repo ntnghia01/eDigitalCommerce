@@ -26,6 +26,7 @@ import HistoryIcon from "@mui/icons-material/History";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import MicIcon from '@mui/icons-material/Mic';
+import LinearProgress from '@mui/material/LinearProgress';
 import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -397,6 +398,9 @@ export default function CustomerTopBar() {
           </Toolbar>
         </Container>
       </AppBar>
+      {/* <Box sx={{ width: '100%' }}>
+      <LinearProgress />
+    </Box> */}
     </>
   );
 }

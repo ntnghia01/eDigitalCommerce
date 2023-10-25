@@ -17,7 +17,8 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import IconButton from "@mui/material/IconButton";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
-import { fetchCartDetail } from "../../../slices/cartSlice";
+import PaymentIcon from '@mui/icons-material/Payment';
+import { calcCart, fetchCartDetail } from "../../../slices/cartSlice";
 import AddAddressComponent from "../../../components/customer/address/AddAddressComponent";
 import {
   fetchAddresses,
@@ -29,6 +30,14 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { useState } from "react";
 import EditAddressComponent from "../../../components/customer/address/EditAddressComponent";
+import { fetchPayments } from "../../../slices/paymentSlice";
+import { createOrder } from "../../../slices/orderSlice";
+
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor =
@@ -88,12 +97,16 @@ export default function CheckoutPage() {
     dispatch(fetchCartDetail(sessionStorage.getItem("customerID")));
     dispatch(fetchAddresses(sessionStorage.getItem("customerID")));
     dispatch(getDefaultAddress(sessionStorage.getItem("customerID")));
+    dispatch(fetchPayments());
+    dispatch(calcCart(sessionStorage.getItem("customerID")));
   }, [dispatch]);
 
   const customer = useSelector((state) => state.customer.customer);
   const addresses = useSelector((state) => state.address.addresses);
   const cart = useSelector((state) => state.cart.cart);
   const defaultAddress = useSelector((state) => state.address.defaultAddress);
+  const payments = useSelector((state) => state.payment.payments);
+  const calcCartData = useSelector((state) => state.cart.calcCartData);
   // console.log(defaultAddress);
 
   const [openSuccessSnackbar, setOpenSuccessSnackbar] = React.useState(false);
@@ -110,22 +123,67 @@ export default function CheckoutPage() {
   };
 
   const [addressActive, setAddressActive] = useState({});
-
-  const handleSetAddressActive = (addressData) => {
-    setAddressActive(addressData);
-  }
+  const [paymentActive, setPaymentActive] = useState({
+    paymentId: "",
+  });
+  // const [orderTotalAmount, setOrderTotalAmount] = useState(parseInt(calcCartData.totalMoney + 25000));
+  const [orderNote, setOrderNote] = useState();
 
   const handleDispatchAddress = () => {
     dispatch(fetchAddresses(sessionStorage.getItem("customerID")));
     dispatch(getDefaultAddress(sessionStorage.getItem("customerID")));
-  }
+    console.log("check");
+    dispatch(calcCart(sessionStorage.getItem("customerID")));
+  };
   useEffect(() => {
     // Lắng nghe sự thay đổi của defaultAddress và cập nhật addressActive
     setAddressActive(defaultAddress);
   }, [defaultAddress]);
-  
-  // console.log('actived: #' + addressActive);
 
+  // console.log('actived: #' + addressActive);
+  // const handleSetPaymentActive
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSubmit = (e) => {
+    // console.log("check");
+    // e.preventDefault();
+    const orderData = {
+      customerId: sessionStorage.getItem("customerID"),
+      paymentId: paymentActive.paymentId,
+      orderName: addressActive.addressName,
+      orderPhone: addressActive.addressPhone,
+      orderAddress: addressActive.addressFull,
+      orderNote: orderNote,
+      orderFee: 25000,
+      orderTotalAmount: parseInt(calcCartData.totalMoney) + 25000,
+    }
+    console.log(orderData);
+    
+    dispatch(createOrder(orderData)).then(() => {
+      console.log("order sending");
+      dispatch(getCustomerInfo(sessionStorage.getItem("customerID")));
+      dispatch(fetchCartDetail(sessionStorage.getItem("customerID")));
+      dispatch(fetchAddresses(sessionStorage.getItem("customerID")));
+      dispatch(getDefaultAddress(sessionStorage.getItem("customerID")));
+      dispatch(fetchPayments());
+      dispatch(calcCart(sessionStorage.getItem("customerID")));
+      handleClickOpen();
+      setTimeout(() => {
+        handleClose();
+      }, 5000);
+    });
+console.log("check");
+    
+  }
   return (
     <>
       <Breadcrumbs aria-label="breadcrumb" sx={{ margin: 3 }}>
@@ -160,8 +218,8 @@ export default function CheckoutPage() {
             spacing={2}
             direction="row"
             justifyContent="center"
-          // alignItems="center"
-          //   spacing={10}
+            // alignItems="center"
+            //   spacing={10}
           >
             <Grid
               item
@@ -184,14 +242,17 @@ export default function CheckoutPage() {
                       key={address.addressId}
                       item
                       xs={6}
-                    // sx={{maxWidth: '100px'}}
-                    style={{cursor: "pointer"}}
-                    onClick={() => setAddressActive(address)}
+                      // sx={{maxWidth: '100px'}}
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setAddressActive(address)}
                     >
                       <Box
                         sx={{
                           p: 2,
-                          border: address.addressId == addressActive.addressId ? "2px solid blue" : "1px solid grey",
+                          border:
+                            address.addressId == addressActive.addressId
+                              ? "2px solid blue"
+                              : "1px solid grey",
                           borderRadius: 5,
                           // ,maxWidth: '200px'
                         }}
@@ -200,7 +261,11 @@ export default function CheckoutPage() {
                           badgeContent={
                             <CheckCircleIcon sx={{ color: "blue" }} />
                           }
-                          invisible={address.addressId == addressActive.addressId ? false : true}
+                          invisible={
+                            address.addressId == addressActive.addressId
+                              ? false
+                              : true
+                          }
                         >
                           <Stack spacing={0}>
                             <div>
@@ -245,6 +310,7 @@ export default function CheckoutPage() {
                       id="outlined-basic"
                       label="Ghi chú"
                       variant="outlined"
+                      onChange={(e) => setOrderNote(e.target.value)}
                     />
                   </Stack>
                 </Box>
@@ -258,56 +324,48 @@ export default function CheckoutPage() {
                   justifyContent="center"
                   alignItems="center"
                 >
-                  <Grid
-                    item
-                    xs={6}
-                  // sx={{maxWidth: '100px'}}
-                  >
-                    <Box
-                      sx={{
-                        p: 2,
-                        border: "2px solid blue",
-                        borderRadius: 5,
-                        // ,maxWidth: '200px'
-                        height: "100%",
-                      }}
+                  {payments.map((payment) => (
+                    <Grid
+                      key={payment.paymentId}
+                      item
+                      xs={6}
+                      // sx={{maxWidth: '100px'}}
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setPaymentActive(payment)}
                     >
-                      <Badge
-                        badgeContent={
-                          <CheckCircleIcon sx={{ color: "blue" }} />
-                        }
-                        invisible={false}
-                        sx={{ width: "100%", height: "100%" }}
+                      <Box
+                        sx={{
+                          p: 2,
+                          // border: "2px solid blue",
+                          border:
+                            payment.paymentId == paymentActive.paymentId
+                              ? "2px solid blue"
+                              : "1px solid grey",
+                          borderRadius: 5,
+                          // ,maxWidth: '200px'
+                          height: "100%",
+                        }}
                       >
-                        <Stack spacing={0} sx={{ width: "180%" }}>
-                          <div>Thanh toán khi nhận hàng</div>
-                          <div>Thanh toán khi nhận hàng trực tiếp</div>
-                        </Stack>
-                      </Badge>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Box
-                      sx={{ p: 2, border: "1px solid grey", borderRadius: 5 }}
-                    >
-                      <Stack spacing={0}>
-                        <div>Thanh toán qua VN-PAY</div>
-                        <div>Thanh toán qua VNPAY-QR, Internet Banking</div>
-                      </Stack>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Box
-                      sx={{ p: 2, border: "1px solid grey", borderRadius: 5 }}
-                    >
-                      <Stack spacing={0}>
-                        <div>Thanh toán qua ứng dụng ngân hàng</div>
-                        <div>
-                          Agribank, Vietcombank, Vietinbank, MB Bank, HD Bank
-                        </div>
-                      </Stack>
-                    </Box>
-                  </Grid>
+                        <Badge
+                          badgeContent={
+                            <CheckCircleIcon sx={{ color: "blue" }} />
+                          }
+                          // invisible={false}
+                          invisible={
+                            payment.paymentId == paymentActive.paymentId
+                              ? false
+                              : true
+                          }
+                          sx={{ width: "100%", height: "100%" }}
+                        >
+                          <Stack spacing={0} sx={{ width: "180%" }}>
+                            <div>{payment.paymentName}</div>
+                            <div>{payment.paymentExplain}</div>
+                          </Stack>
+                        </Badge>
+                      </Box>
+                    </Grid>
+                  ))}
                 </Grid>
               </Paper>
             </Grid>
@@ -323,7 +381,7 @@ export default function CheckoutPage() {
                       direction="row"
                       justifyContent="center"
                       alignItems="center"
-                    //   spacing={10}
+                      //   spacing={10}
                     >
                       <Grid item xs={4} sx={{ textAlign: "center" }}>
                         <img
@@ -346,6 +404,51 @@ export default function CheckoutPage() {
                   ))}
                 </Stack>
               </Paper>
+              <Paper
+                elevation={3}
+                sx={{ padding: 2, marginTop: 2 }}
+                spacing={3}
+              >
+                <Stack spacing={2}>
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    spacing={2}
+                  >
+                    <h3>Tổng tạm tính</h3>
+                    <div>{formatNumberWithCommas(calcCartData.totalMoney)} VNĐ</div>
+                  </Stack>
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    spacing={2}
+                  >
+                    <h4>Phí vận chuyển</h4>
+                    <div>25.000 VNĐ</div>
+                  </Stack>
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    spacing={2}
+                  >
+                    <h3>Thành tiền</h3>
+                    <div>{formatNumberWithCommas(parseInt(calcCartData.totalMoney))} VNĐ</div>
+                  </Stack>
+                  {/* <div>wefewf</div> */}
+                  <Stack
+                    direction="row"
+                    justifyContent="flex-end"
+                    alignItems="flex-start"
+                    // spacing={2}
+                  >
+                    <div style={{fontSize: 15}}>(Đã bao gồm VAT)</div>
+                  </Stack>
+                  <Button variant="contained" size="large"startIcon={<PaymentIcon />} onClick={() => handleSubmit()}>THANH TOÁN</Button>
+                </Stack>
+              </Paper>
             </Grid>
           </Grid>
         </Paper>
@@ -363,6 +466,22 @@ export default function CheckoutPage() {
           {contentSnackbar}
         </Alert>
       </Snackbar>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <Stack direction="column"
+          justifyContent="center"
+          alignItems="center"
+          spacing={2}
+          sx={{padding: 3}}>
+          <img src="../../../../public/success.gif" alt="" style={{maxWidth: '10rem'}}/>
+          <h1>ĐẶT HÀNG THÀNH CÔNG</h1>
+        </Stack>
+        
+      </Dialog>
     </>
   );
 }
