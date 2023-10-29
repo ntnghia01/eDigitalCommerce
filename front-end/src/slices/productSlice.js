@@ -109,6 +109,15 @@ export const deleteProduct = createAsyncThunk (
     }
 )
 
+export const searchProductByName = createAsyncThunk (
+    'product/searchByName',
+    async (searchData) => {
+        const response = await axios.post(prefixAPI + '/api/product/search', searchData);
+        console.log("ok");
+        return response.data;
+    }
+)
+
 const productSlice = createSlice ({
     name: 'products',
     initialState,
@@ -123,6 +132,9 @@ const productSlice = createSlice ({
             })
             .addCase(getProductDetail.fulfilled, (state, action) => {
                 state.product = action.payload;
+            })
+            .addCase(searchProductByName.fulfilled, (state, action) => {
+                state.products = action.payload;
             })
     }
 });

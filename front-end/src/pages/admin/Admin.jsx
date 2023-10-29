@@ -25,6 +25,9 @@ import {
 import HomeIcon from "@mui/icons-material/Home";
 import Typography from "@mui/material/Typography";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import TwoWheelerIcon from '@mui/icons-material/TwoWheeler';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import Person3Icon from '@mui/icons-material/Person3';
 
 import { useColorScheme } from "@mui/material/styles";
 
@@ -57,8 +60,11 @@ import Brands from "./brands";
 import Supplier from "./supplier";
 import Product from "./product";
 import Import from "./import";
-import Order from "./order";
+import Order from "./order/OrderPage";
 import AdminLoginPage from "./login";
+import ShipperAccountPage from "./account/ShipperAccountPage";
+import CustomerAccountPage from "./account/CustomerAccountPage";
+import AdminAccountPage from "./account/AdminAccountPage";
 
 // import '../../../public/avatar.png'
 
@@ -203,15 +209,14 @@ function Admin() {
             >
               <MenuItem
                 rootStyles={{ background: "none" }}
-                onClick={() => {
-                  navigate("/");
-                }}
-                icon={<BarChartIcon />}
+                component={<Link to="/admin/account/shipper" />}
+                icon={<TwoWheelerIcon />}
               >
                 {" "}
-                Thống Kê Theo Biểu Đồ{" "}
+                Shipper{" "}
               </MenuItem>
-              <MenuItem icon={<NumbersIcon />}> Thống Kê Số Liệu </MenuItem>
+              <MenuItem icon={<Person3Icon />} component={<Link to="/admin/account/customer" />}> Khách  hàng </MenuItem>
+              <MenuItem icon={<SupportAgentIcon />} component={<Link to="/admin/account/admin" />}> Quản trị viên </MenuItem>
             </SubMenu>
           </Menu>
         </Sidebar>
@@ -228,6 +233,9 @@ function Admin() {
             <Route path="/product" element={<Product />} />
             <Route path="/import" element={<Import />} />
             <Route path="/order" element={<Order />} />
+            <Route path="/account/shipper" element={<ShipperAccountPage />} />
+            <Route path="/account/customer" element={<CustomerAccountPage />} />
+            <Route path="/account/admin" element={<AdminAccountPage />} />
           </Routes>
         </div>
       </div>

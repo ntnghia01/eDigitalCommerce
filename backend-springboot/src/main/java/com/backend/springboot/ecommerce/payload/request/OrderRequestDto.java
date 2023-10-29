@@ -25,6 +25,6 @@ public class OrderRequestDto {
     private LocalDateTime orderShipped;
     private LocalDateTime orderPaid;
     private LocalDateTime orderCompleted;
-    private LocalDateTime orderReturned;
+    private LocalDateTime orderCancelled;
     private Integer orderStatus;
 }

@@ -20,32 +20,20 @@ import { useState } from "react";
 import { addToCart, countCartDetail } from "../../slices/cartSlice";
 
 function formatNumberWithCommas(input) {
-    // Kiểm tra xem đầu vào có phải là một số nguyên không
-    if (typeof input === 'number' && Number.isInteger(input)) {
-        // Chuyển số nguyên thành chuỗi
-        input = input.toString();
-    }
-    // Kiểm tra xem đầu vào có phải là một chuỗi không
-    if (typeof input !== 'string') {
-        return "Invalid input";
-    }
-    // Kiểm tra xem chuỗi có chứa chỉ chứa số không
-    if (!/^\d+$/.test(input)) {
-        return "Invalid input";
-    }
-    // Sử dụng regular expression để thêm dấu chấm sau mỗi 3 chữ số từ phải sang trái
+    if (typeof input === 'number' && Number.isInteger(input)) {input = input.toString();}
+    if (typeof input !== 'string') {return "Invalid input";}
+    if (!/^\d+$/.test(input)) {return "Invalid input";}
     return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
+});
 
 export default function ProductListComponent () {
 
     const customer = useSelector((state) => state.customer.customer);
     // console.log(customer);
-
 
     const [openSnackbar, setOpenSnackbar] = React.useState(false);
     const handleOpenSnackbar = () => {

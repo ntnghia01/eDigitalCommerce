@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 // import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -212,4 +213,18 @@ public class ProductController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @PostMapping("/search")
+    public ResponseEntity<List<Product>> searchProductByName(@RequestBody ProductRequestDto searchData) {
+        // List<Product> productList = productRepository.findProductByName(searchData);
+        // return new ResponseEntity<>(productList, HttpStatus.OK);
+        List<Product> productList;
+        if (searchData.getProName() == "") {
+            productList = productRepository.findAllProductAvailable(); // Lấy tất cả sản phẩm nếu searchData rỗng
+        } else {
+            productList = productRepository.findProductByName(searchData.getProName());
+        }
+        return new ResponseEntity<>(productList, HttpStatus.OK);
+    }
+
 }

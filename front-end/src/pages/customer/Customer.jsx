@@ -16,6 +16,7 @@ import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
 import SaveIcon from "@mui/icons-material/Save";
 import PrintIcon from "@mui/icons-material/Print";
 import ShareIcon from "@mui/icons-material/Share";
+import OrderHistoryPage from "./history/OrderHistoryPage";
 
 const actions = [
   { icon: <FileCopyIcon />, name: "Copy" },
@@ -48,6 +49,7 @@ export default function CustomerPage() {
               />
               <Route path="/cart/:customerId" element={<Cart />} />
               <Route path="/checkout/:customerId" element={<CheckoutPage />} />
+              <Route path="/history/:customerId" element={<OrderHistoryPage />} />
             </Routes>
           </Grid>
           <Grid item xs={2}></Grid>

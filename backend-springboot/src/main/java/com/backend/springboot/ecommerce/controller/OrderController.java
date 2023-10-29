@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +23,7 @@ import com.backend.springboot.ecommerce.entity.Customer;
 import com.backend.springboot.ecommerce.entity.Order;
 import com.backend.springboot.ecommerce.entity.OrderDetail;
 import com.backend.springboot.ecommerce.entity.Payment;
+import com.backend.springboot.ecommerce.entity.Shipper;
 import com.backend.springboot.ecommerce.payload.request.OrderRequestDto;
 import com.backend.springboot.ecommerce.payload.response.MessageResponse;
 import com.backend.springboot.ecommerce.repository.CartDetailRepository;
@@ -28,6 +31,7 @@ import com.backend.springboot.ecommerce.repository.CustomerRepository;
 import com.backend.springboot.ecommerce.repository.OrderDetailRepository;
 import com.backend.springboot.ecommerce.repository.OrderRepository;
 import com.backend.springboot.ecommerce.repository.PaymentRepository;
+import com.backend.springboot.ecommerce.repository.ShipperRepository;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -38,8 +42,8 @@ public class OrderController {
     private OrderRepository orderRepository;
     @Autowired
     private CustomerRepository customerRepository;
-    // @Autowired
-    // private ShipperRepository shipperRepository;
+    @Autowired
+    private ShipperRepository shipperRepository;
     @Autowired
     private PaymentRepository paymentRepository;
     // @Autowired
@@ -55,6 +59,18 @@ public class OrderController {
         return new ResponseEntity<List<Order>>(orders, HttpStatus.OK);
     }
 
+    @GetMapping("/{orderId}")
+    public ResponseEntity<List<OrderDetail>> getOrderDetailByOrderId(@PathVariable Integer orderId) {
+        List<OrderDetail> orderDetails = orderDetailRepository.findOrderDetailByOrderId(orderId);
+        return new ResponseEntity<List<OrderDetail>>(orderDetails, HttpStatus.OK);
+    }
+
+    @GetMapping("/history/{customerId}")
+    public ResponseEntity<List<Order>> getOrderByCustomerId(@PathVariable Integer customerId) {
+        List<Order> orders = orderRepository.findOrderByCustomerID(customerId);
+        return new ResponseEntity<List<Order>>(orders, HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<?> createOrder(@RequestBody OrderRequestDto orderRequestDto) {
         Optional<Customer> customerOptional = customerRepository.findById(orderRequestDto.getCustomerId());
@@ -67,7 +83,7 @@ public class OrderController {
             Order newOrder = new Order();
             // Dòng gán giá trị uuid cho thuộc tính orderCode
             // UUID code = UUID.randomUUID();
-            String code = customer.getCustomerId() + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+            String code = customer.getCustomerId() + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
             newOrder.setOrderCode(code);
             newOrder.setCustomer(customer);
             newOrder.setPayment(payment);
@@ -104,6 +120,24 @@ public class OrderController {
             return ResponseEntity.ok(new MessageResponse("Create order successfully!!!"));
         } else {
             return new ResponseEntity<>(new MessageResponse("Customer or Payment not found!"), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/confirm/{orderId}")
+    public ResponseEntity<?> confirmOrder(@PathVariable Integer orderId, @RequestBody OrderRequestDto orderRequestDto) {
+        Optional<Shipper> shipperOptional = shipperRepository.findById(orderRequestDto.getShipperId());
+        Optional<Order> orderOptional = orderRepository.findById(orderId);
+        if (shipperOptional.isPresent() && orderOptional.isPresent()) {
+            Order order = orderOptional.get();
+            Shipper shipper = shipperOptional.get();
+            order.setShipper(shipper);
+            order.setOrderConfirmed(LocalDateTime.now());
+            order.setOrderStatus(2);
+            Order savedOrder = orderRepository.save(order);
+            System.out.println("Saved Order: " + savedOrder);
+            return ResponseEntity.ok(new MessageResponse("Confirm Order successfully!"));
+        } else {
+            return new ResponseEntity<>(new MessageResponse("Order or Shipper not found!"), HttpStatus.NOT_FOUND);
         }
     }
 

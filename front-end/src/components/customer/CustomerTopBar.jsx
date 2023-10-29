@@ -32,6 +32,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { countCartDetail } from "../../slices/cartSlice";
 import { deleteCustomerInfo } from "../../slices/customerSlice";
+import { searchProductByName } from "../../slices/productSlice";
 
 const pages = ["Trang chủ", "Giới thiệu", "Liên hệ"];
 const settings = ["Thông tin cá nhân", "Tài khoản", "Cài đặt", "Đăng xuất"];
@@ -76,7 +77,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 export default function CustomerTopBar() {
   const { mode, setMode } = useColorScheme();
-
+  console.log("check topbar render");
   const customerLogin = sessionStorage.getItem("customerName");
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -115,7 +116,13 @@ export default function CustomerTopBar() {
   const changeValueTest = (e) => {
     e.preventdefault;
     setInputChat(e.target.value);
+    console.log(e.target.value);
+    const searchData = {proName: e.target.value}
+    dispatch(searchProductByName(searchData));
   }
+  const products = useSelector((state) => state.product.products);
+
+  console.log(products);
 
   
 
@@ -141,6 +148,8 @@ export default function CustomerTopBar() {
       const { transcript } = event.results[0][0];
       // console.log(event.results[0][0]);
       setInputChat(transcript);
+      const searchData = {proName: transcript}
+      dispatch(searchProductByName(searchData));
       setIsListening(false);
     };
 
@@ -304,6 +313,9 @@ export default function CustomerTopBar() {
                 size="large"
                 aria-label="show 4 new history"
                 color="inherit"
+                onClick={() =>
+                  navigate(`/history/${sessionStorage.getItem("customerID")}`)
+                }
               >
                 <Badge badgeContent={3} color="error">
                   <HistoryIcon />

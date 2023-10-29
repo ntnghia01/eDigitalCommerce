@@ -77,8 +77,8 @@ public class Order {
     private LocalDateTime orderCompleted;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column (name = "order_returned", nullable = true)
-    private LocalDateTime orderReturned;
+    @Column (name = "order_cancelled", nullable = true)
+    private LocalDateTime orderCancelled;
 
     @Column (name = "order_status", nullable = false)
     private Integer orderStatus;

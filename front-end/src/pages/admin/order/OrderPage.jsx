@@ -14,7 +14,7 @@ import BrandAddForm from "../../../components/admin/brand/BrandAddForm";
 import BrandTable from "../../../components/admin/brand/BrandTable";
 import SuppierTable from "../../../components/admin/supplier/SupplierTable";
 import SupplierAddForm from "../../../components/admin/supplier/SupplierAddForm";
-import ProductTable from "../../../components/admin/product/ProductTable";
+import OrderTable from "../../../components/admin/order/OrderTable";
 import ProductAddForm from "../../../components/admin/product/ProductAddForm";
 
 function Order() {
@@ -51,7 +51,7 @@ function Order() {
             </Button>
           </Grid>
         </Grid>
-        {/* <ProductTable /> */}
+        <OrderTable />
       </div>
     </>
   );

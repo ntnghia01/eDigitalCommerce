@@ -14,6 +14,7 @@ import customerSlice from '../slices/customerSlice';
 import addressSlice from '../slices/addressSlice';
 import paymentSlice from '../slices/paymentSlice';
 import orderSlice from '../slices/orderSlice';
+import shipperSlice from '../slices/shipperSlice';
 
 
 // const store = createStore(rootReducer, applyMiddleware(thunk));
@@ -29,7 +30,8 @@ const store = configureStore ({
         cart: cartSlice,
         address: addressSlice,
         payment: paymentSlice,
-        order: orderSlice
+        order: orderSlice,
+        shipper: shipperSlice
     },
 });
 
