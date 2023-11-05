@@ -2,11 +2,15 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const prefixAPI = 'http://localhost:9004';
+const myToken = 'c5d043f1-7706-11ee-96dc-de6f804954c9';
 
 const initialState = {
     addresses: [],
     address: {},
-    defaultAddress: {}
+    defaultAddress: {},
+    addressProvince: [],
+    addressDistrict: [],
+    addressWard: []
 }
 
 export const fetchAddresses = createAsyncThunk (
@@ -55,7 +59,69 @@ export const getDefaultAddress = createAsyncThunk (
         const response = await axios.get(prefixAPI + `/api/address/default/${customerId}`);
         return response.data;
     }
-)
+);
+
+export const fetchAddressProvince = createAsyncThunk(
+    'address/fetchAddressProvince',
+    async (_, thunkAPI) => {
+      try {
+        const myToken = 'c5d043f1-7706-11ee-96dc-de6f804954c9';
+        const response = await axios.get("https://online-gateway.ghn.vn/shiip/public-api/master-data/province", {
+            headers: {
+                'token': myToken,
+                'Content-Type': 'application/json'
+              }
+        });
+        return response.data.data;
+      } catch (error) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+    }
+  );
+
+export const fetchAddressDistrictByProvinceID = createAsyncThunk(
+    'address/fetchAddressDistrictByProvinceID',
+    async (provinceId, thunkAPI) => {
+      try {
+        const myToken = 'c5d043f1-7706-11ee-96dc-de6f804954c9';
+        const response = await axios.get("https://online-gateway.ghn.vn/shiip/public-api/master-data/district", {
+            headers: {
+                'token': myToken,
+                'Content-Type': 'application/json'
+            },
+            params: {
+                province_id: provinceId
+            }
+        });
+        return response.data.data;
+      } catch (error) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+    }
+  );
+
+  export const fetchAddressWardByDistrictID = createAsyncThunk(
+    'address/fetchAddressWardByDistrictID',
+    async (districtId, thunkAPI) => {
+      try {
+        const myToken = 'c5d043f1-7706-11ee-96dc-de6f804954c9';
+        const response = await axios.get("https://online-gateway.ghn.vn/shiip/public-api/master-data/ward", {
+            headers: {
+                'token': myToken,
+                'Content-Type': 'application/json'
+            },
+            params: {
+                district_id: districtId
+            }
+        });
+        return response.data.data;
+      } catch (error) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+    }
+  );
+  
+  
 
 const addressSlice = createSlice ({
     name: 'address',
@@ -74,6 +140,24 @@ const addressSlice = createSlice ({
             })
             .addCase(getDefaultAddress.fulfilled, (state, action) => {
                 state.defaultAddress = action.payload;
+            })
+            .addCase(fetchAddressProvince.fulfilled, (state, action) => {
+                state.addressProvince = action.payload;
+            })
+            .addCase(fetchAddressProvince.rejected, (state, action) => {
+                console.error('Error fetching address province:', action.error.message);
+            })
+            .addCase(fetchAddressDistrictByProvinceID.fulfilled, (state, action) => {
+                state.addressDistrict = action.payload;
+            })
+            .addCase(fetchAddressDistrictByProvinceID.rejected, (state, action) => {
+                console.error('Error fetching address district:', action.error.message);
+            })
+            .addCase(fetchAddressWardByDistrictID.fulfilled, (state, action) => {
+                state.addressWard = action.payload;
+            })
+            .addCase(fetchAddressWardByDistrictID.rejected, (state, action) => {
+                console.error('Error fetching address ward:', action.error.message);
             })
     }
 })

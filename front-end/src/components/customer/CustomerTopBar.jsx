@@ -77,7 +77,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 export default function CustomerTopBar() {
   const { mode, setMode } = useColorScheme();
-  console.log("check topbar render");
+  // console.log("check topbar render");
   const customerLogin = sessionStorage.getItem("customerName");
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -122,7 +122,7 @@ export default function CustomerTopBar() {
   }
   const products = useSelector((state) => state.product.products);
 
-  console.log(products);
+  // console.log(products);
 
   
 

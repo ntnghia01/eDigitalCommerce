@@ -259,13 +259,7 @@ console.log("check");
                               <EditAddressComponent
                                 editID={address.addressId}
                                 handleSnackbar={handleOpenSuccessSnackbar}
-                                address={{
-                                  addressId: address.addressId,
-                                  addressName: address.addressName,
-                                  addressPhone: address.addressPhone,
-                                  addressFull: address.addressFull,
-                                  addressStatus: address.addressStatus,
-                                }}
+                                address={address}
                               />
                               <ConfirmDeleteAddress
                                 deleteID={address.addressId}

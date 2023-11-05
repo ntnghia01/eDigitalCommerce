@@ -57,6 +57,9 @@ export default function EditAddressComponent(props) {
     addressName: address.addressName,
     addressPhone: address.addressPhone,
     addressFull: address.addressFull,
+    provinceId: address.provinceId,
+    districtId: address.districtId,
+    wardCode: address.wardCode,
     addressStatus: address.addressStatus,
   });
 

@@ -37,6 +37,15 @@ public class Address implements Serializable {
     @Column (name = "address_full", nullable = true)
     private String addressFull;
 
+    @Column (name = "province_id", nullable = true)
+    private Integer provinceId;
+
+    @Column (name = "district_id", nullable = true)
+    private Integer districtId;
+
+    @Column (name = "ward_code", nullable = true)
+    private String wardCode;
+
     @Column (name = "address_status", nullable = true)
     private Integer addressStatus;
     

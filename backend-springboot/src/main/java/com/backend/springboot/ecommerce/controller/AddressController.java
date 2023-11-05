@@ -70,6 +70,9 @@ public class AddressController {
             newAddress.setAddressName(addressRequestDto.getAddressName());
             newAddress.setAddressPhone(addressRequestDto.getAddressPhone());
             newAddress.setAddressFull(addressRequestDto.getAddressFull());
+            newAddress.setProvinceId(addressRequestDto.getProvinceId());
+            newAddress.setDistrictId(addressRequestDto.getDistrictId());
+            newAddress.setWardCode(addressRequestDto.getWardCode());
             if (addressRequestDto.getAddressStatus() == 2) {
                 newAddress.setAddressStatus(2);
                 
@@ -101,6 +104,8 @@ public class AddressController {
             existingAddress.setAddressName(addressRequestDto.getAddressName());
             existingAddress.setAddressPhone(addressRequestDto.getAddressPhone());
             existingAddress.setAddressFull(addressRequestDto.getAddressFull());
+            existingAddress.setDistrictId(addressRequestDto.getDistrictId());
+            existingAddress.setWardCode(addressRequestDto.getWardCode());
             if (addressRequestDto.getAddressStatus() == 2) {
                 existingAddress.setAddressStatus(2);
                 

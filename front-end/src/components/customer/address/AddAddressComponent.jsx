@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Box, Grid, IconButton, Stack } from "@mui/material";
+import { Box, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, Stack } from "@mui/material";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
@@ -17,7 +17,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { addAddress, fetchAddresses } from "../../../slices/addressSlice";
+import { addAddress, fetchAddressDistrictByProvinceID, fetchAddressProvince, fetchAddressWardByDistrictID, fetchAddresses } from "../../../slices/addressSlice";
 import { useState } from "react";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -29,6 +29,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 export default function AddAddressComponent(props) {
+  // console.log("check render AddAddressComponent");
 
   const dispatch = useDispatch();
 
@@ -45,7 +46,9 @@ export default function AddAddressComponent(props) {
     addressName: "",
     addressPhone: "",
     addressFull: "",
-    addressStatus: 1
+    addressStatus: 1,
+    districtId: 0,
+    wardCode: ""
   });
 
   const {handleSnackbar} = props;
@@ -59,6 +62,66 @@ export default function AddAddressComponent(props) {
   };
 
   const {handleSetAddressActive} = props;
+
+  useEffect(() => {
+    dispatch(fetchAddressProvince());
+  },[dispatch])
+
+  const provinces = useSelector((state) => state.address.addressProvince);
+  const [addressProvince, setAddressProvince] = useState();
+  const [addressDistrict, setAddressDistrict] = useState();
+  const [addressWard, setAddressWard] = useState();
+  const [addressStreetNumber, setAddressStreetNumber] = useState();
+  const [addressFull, setAddressFull] = useState();
+
+  const handleSetAddressProvince = (e) => {
+    setAddressProvince(e);
+    // setAddressProvince(e);
+    dispatch(fetchAddressDistrictByProvinceID(e));
+  }
+
+  const handleSetAddressDistrict = (e) => {
+    setAddressDistrict(e);
+    dispatch(fetchAddressWardByDistrictID(e));
+  }
+
+  // Func to update addressFull when changed values
+  const updateAddressFull = () => {
+    if (
+      provinces.length > 0 && 
+      districts.length > 0 && 
+      wards.length > 0 && 
+      addressProvince && 
+      addressDistrict && 
+      addressWard && 
+      addressStreetNumber
+    ) {
+      const addressProvinceName = provinces.find(province => province.ProvinceID === addressProvince);
+      const addressDistrictName = districts.find(district => district.DistrictID === addressDistrict);
+      const addressWardName = wards.find(ward => ward.WardCode === addressWard);
+      if (addressProvinceName && addressDistrictName && addressWardName) {
+        const fullAddress = `${addressStreetNumber}, ${addressWardName.WardName}, ${addressDistrictName.DistrictName}, ${addressProvinceName.ProvinceName}`;
+        setAddressData({
+          ...addressData,
+          addressFull: fullAddress,
+          districtId: addressDistrict,
+          wardCode: addressWard
+        });
+      }
+    }
+  };
+  
+
+  const districts = useSelector((state) => state.address.addressDistrict);
+  const wards = useSelector((state) => state.address.addressWard);
+  // Sử dụng useEffect để gọi hàm cập nhật addressFull khi các giá trị thay đổi
+  useEffect(() => {
+    updateAddressFull();
+  }, [provinces, districts, wards, addressStreetNumber, addressWard, addressDistrict, addressProvince]);
+
+
+
+  // console.log(addressProvince);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -149,7 +212,7 @@ export default function AddAddressComponent(props) {
             name="addressPhone"
             onChange={e => {handleInputChange(e)}}
           />
-          <TextField
+          {/* <TextField
             autoFocus
             margin="dense"
             id="addressFull"
@@ -159,6 +222,67 @@ export default function AddAddressComponent(props) {
             variant="standard"
             name="addressFull"
             onChange={e => {handleInputChange(e)}}
+          /> */}
+          <FormControl fullWidth sx={{mt: 3}}>
+            <InputLabel id="demo-simple-select-label">Tỉnh</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              defaultValue=""
+              label="Province"
+              onChange={(e) => {
+                handleSetAddressProvince(e.target.value);
+              }}
+            >
+              {provinces.map((province) => (
+                    <MenuItem key={province.ProvinceID} value={province.ProvinceID} 
+                    // onClick={()=>{handleSetProvinceName(province.ProvinceName)}}
+                    >{province.ProvinceName}</MenuItem>
+                ))}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth sx={{mt: 3}}>
+            <InputLabel id="demo-simple-select-label">Quận / Huyện</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              defaultValue=""
+              label="District"
+              onChange={(e) => {
+                handleSetAddressDistrict(e.target.value);
+              }}
+            >
+              {districts.map((district) => (
+                    <MenuItem key={district.DistrictID} value={district.DistrictID}>{district.DistrictName}</MenuItem>
+                ))}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth sx={{mt: 3}}>
+            <InputLabel id="demo-simple-select-label">Xã / Phường</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              defaultValue=""
+              label="Ward"
+              onChange={(e) => {
+                setAddressWard(e.target.value);
+              }}
+            >
+              {wards.map((ward) => (
+                    <MenuItem key={ward.WardCode} value={ward.WardCode}>{ward.WardName}</MenuItem>
+                ))}
+            </Select>
+          </FormControl>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="addressStreetNumber"
+            label="Địa chỉ cụ thể"
+            type="text"
+            fullWidth
+            variant="standard"
+            name="addressStreetNumber"
+            onChange={e => {setAddressStreetNumber(e.target.value)}}
           />
           <FormGroup onMouseDown={() => handleIsDefault()}>
             <FormControlLabel

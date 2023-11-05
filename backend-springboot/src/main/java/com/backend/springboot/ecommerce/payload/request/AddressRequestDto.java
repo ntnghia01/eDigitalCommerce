@@ -11,4 +11,7 @@ public class AddressRequestDto {
     private Integer addressStatus;
     private Integer customer;
     private Integer customerId;
+    private Integer provinceId;
+    private Integer districtId;
+    private String wardCode;
 }
