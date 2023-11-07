@@ -104,6 +104,7 @@ public class AddressController {
             existingAddress.setAddressName(addressRequestDto.getAddressName());
             existingAddress.setAddressPhone(addressRequestDto.getAddressPhone());
             existingAddress.setAddressFull(addressRequestDto.getAddressFull());
+            existingAddress.setProvinceId(addressRequestDto.getProvinceId());
             existingAddress.setDistrictId(addressRequestDto.getDistrictId());
             existingAddress.setWardCode(addressRequestDto.getWardCode());
             if (addressRequestDto.getAddressStatus() == 2) {

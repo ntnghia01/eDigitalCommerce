@@ -47,6 +47,7 @@ export default function AddAddressComponent(props) {
     addressPhone: "",
     addressFull: "",
     addressStatus: 1,
+    provinceId: 0,
     districtId: 0,
     wardCode: ""
   });
@@ -104,6 +105,7 @@ export default function AddAddressComponent(props) {
         setAddressData({
           ...addressData,
           addressFull: fullAddress,
+          provinceId: addressProvince,
           districtId: addressDistrict,
           wardCode: addressWard
         });

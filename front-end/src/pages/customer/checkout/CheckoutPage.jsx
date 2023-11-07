@@ -21,6 +21,7 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import { calcCart, fetchCartDetail } from "../../../slices/cartSlice";
 import AddAddressComponent from "../../../components/customer/address/AddAddressComponent";
 import {
+  calculateFee,
   fetchAddresses,
   getDefaultAddress,
 } from "../../../slices/addressSlice";
@@ -75,6 +76,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 export default function CheckoutPage() {
+  console.log("Check render CheckoutPage");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -85,6 +87,8 @@ export default function CheckoutPage() {
     dispatch(getDefaultAddress(sessionStorage.getItem("customerID")));
     dispatch(fetchPayments());
     dispatch(calcCart(sessionStorage.getItem("customerID")));
+    console.log(addressActive.districtId, addressActive.wardCode);
+    dispatch(calculateFee({districtId: addressActive.districtId, wardCode: addressActive.wardCode}));
   }, [dispatch]);
 
   const customer = useSelector((state) => state.customer.customer);
@@ -124,7 +128,17 @@ export default function CheckoutPage() {
   useEffect(() => {
     // Lắng nghe sự thay đổi của defaultAddress và cập nhật addressActive
     setAddressActive(defaultAddress);
+    console.log(defaultAddress.districtId, defaultAddress.wardCode);
+    dispatch(calculateFee({districtId: defaultAddress.districtId, wardCode: defaultAddress.wardCode}));
   }, [defaultAddress]);
+
+  useEffect(() => {
+    console.log(addressActive.districtId, addressActive.wardCode);
+    dispatch(calculateFee({districtId: addressActive.districtId, wardCode: addressActive.wardCode}));
+  }, [addressActive]);
+
+  const calculateShipFee = useSelector((state) => state.address.calculateShipFee);
+  console.log(calculateShipFee);
 
   // console.log('actived: #' + addressActive);
   // const handleSetPaymentActive
@@ -149,7 +163,7 @@ export default function CheckoutPage() {
       orderPhone: addressActive.addressPhone,
       orderAddress: addressActive.addressFull,
       orderNote: orderNote,
-      orderShipFee: 25000,
+      orderShipFee: calculateShipFee,
       orderTotalAmount: parseInt(calcCartData.totalMoney) + 25000,
     }
     console.log(orderData);
@@ -406,7 +420,7 @@ console.log("check");
                     spacing={2}
                   >
                     <h4>Phí vận chuyển</h4>
-                    <div>25.000 VNĐ</div>
+                    <div>{formatNumberWithCommas(calculateShipFee)} VNĐ</div>
                   </Stack>
                   <Stack
                     direction="row"

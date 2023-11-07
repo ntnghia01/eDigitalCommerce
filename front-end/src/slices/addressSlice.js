@@ -10,7 +10,8 @@ const initialState = {
     defaultAddress: {},
     addressProvince: [],
     addressDistrict: [],
-    addressWard: []
+    addressWard: [],
+    calculateShipFee: 0
 }
 
 export const fetchAddresses = createAsyncThunk (
@@ -100,26 +101,109 @@ export const fetchAddressDistrictByProvinceID = createAsyncThunk(
     }
   );
 
-  export const fetchAddressWardByDistrictID = createAsyncThunk(
+export const fetchAddressWardByDistrictID = createAsyncThunk(
     'address/fetchAddressWardByDistrictID',
     async (districtId, thunkAPI) => {
-      try {
-        const myToken = 'c5d043f1-7706-11ee-96dc-de6f804954c9';
-        const response = await axios.get("https://online-gateway.ghn.vn/shiip/public-api/master-data/ward", {
-            headers: {
-                'token': myToken,
-                'Content-Type': 'application/json'
-            },
-            params: {
-                district_id: districtId
-            }
-        });
-        return response.data.data;
-      } catch (error) {
-        return thunkAPI.rejectWithValue(error.message);
-      }
+        try {
+            const myToken = 'c5d043f1-7706-11ee-96dc-de6f804954c9';
+            const response = await axios.get("https://online-gateway.ghn.vn/shiip/public-api/master-data/ward", {
+                headers: {
+                    'token': myToken,
+                    'Content-Type': 'application/json'
+                },
+                params: {
+                    district_id: districtId
+                }
+            });
+            return response.data.data;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.message);
+        }
     }
-  );
+);
+
+export const calculateFeee = createAsyncThunk(
+    'address/calculateFee',
+    async ({districtId, wardCode}, thunkAPI) => {
+        try {
+            const myToken = 'c5d043f1-7706-11ee-96dc-de6f804954c9';
+            const response = await axios.post("https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee", 
+            {
+                "from_district_id":1572,
+                "from_ward_code":"550113",
+                "service_id":53323,
+                "service_type_id":null,
+                "to_district_id": 2264,
+                "to_ward_code": "90816",
+                "height":50,
+                "length":20,
+                "weight":200,
+                "width":20,
+                "insurance_value":10000,
+                "cod_failed_amount":2000,
+                "coupon": null
+            },
+            {
+                headers: {
+                    'Token': myToken,
+                    'Content-Type': 'application/json',
+                    'ShopId': '4664671',
+                    'Content-Type': 'text/plain'
+                }
+            });
+            return response.data.data.total;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.message);
+        }
+    }
+);
+
+export const calculateFee = createAsyncThunk(
+    'address/calculateFee',
+    async ({ districtId, wardCode }, thunkAPI) => {
+        if (districtId==1572 && wardCode=="550113") {
+            return 0;
+        }
+        try {
+            const myToken = 'c5d043f1-7706-11ee-96dc-de6f804954c9';
+            const apiUrl = "https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee";
+
+            const requestHeaders = {
+                'Content-Type': 'application/json',
+                'token': myToken,
+                'ShopId': '4664671',
+            };
+
+            const requestBody = {
+                "from_district_id": 1572,
+                "from_ward_code": "550113",
+                "service_id": null,
+                "service_type_id": 2,
+                "to_district_id": districtId,
+                "to_ward_code": wardCode,
+                "height":50,
+                "length":20,
+                "weight":200,
+                "width":20,
+                "insurance_value": 10000,
+                "cod_failed_amount": 2000,
+                "coupon": null
+            };
+
+            const response = await axios({
+                method: 'POST',
+                url: apiUrl,
+                headers: requestHeaders,
+                data: JSON.stringify(requestBody)
+            });
+
+            return response.data.data.total;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.message);
+        }
+    }
+);
+
   
   
 
@@ -158,6 +242,12 @@ const addressSlice = createSlice ({
             })
             .addCase(fetchAddressWardByDistrictID.rejected, (state, action) => {
                 console.error('Error fetching address ward:', action.error.message);
+            })
+            .addCase(calculateFee.fulfilled, (state, action) => {
+                state.calculateShipFee = action.payload;
+            })
+            .addCase(calculateFee.rejected, (state, action) => {
+                console.error('Error calculate fee:', action.error.message);
             })
     }
 })

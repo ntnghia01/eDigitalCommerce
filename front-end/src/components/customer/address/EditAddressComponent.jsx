@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Box, Grid, IconButton, Stack } from "@mui/material";
+import { Box, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, Stack } from "@mui/material";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
@@ -20,6 +20,9 @@ import { useEffect } from "react";
 import {
   addAddress,
   editAddress,
+  fetchAddressDistrictByProvinceID,
+  fetchAddressProvince,
+  fetchAddressWardByDistrictID,
   fetchAddresses,
   getAddress,
 } from "../../../slices/addressSlice";
@@ -30,15 +33,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
-
 export default function EditAddressComponent(props) {
   const { editID } = props;
   const { handleSnackbar } = props;
   const { address } = props;
-//   console.log(address);
+  // console.log("Check render EditAddressComponent");
 
   const dispatch = useDispatch();
 
@@ -50,10 +49,8 @@ export default function EditAddressComponent(props) {
     setOpen(false);
   };
 
-  
-
   const [addressData, setAddressData] = useState({
-    customerId: sessionStorage.getItem('customerID'),
+    customerId: sessionStorage.getItem("customerID"),
     addressName: address.addressName,
     addressPhone: address.addressPhone,
     addressFull: address.addressFull,
@@ -80,29 +77,91 @@ export default function EditAddressComponent(props) {
       setIsDefault(2);
       setAddressData({
         ...addressData,
-        ['addressStatus']: 2,
+        ["addressStatus"]: 2,
       });
     } else {
       setIsDefault(1);
       setAddressData({
         ...addressData,
-        ['addressStatus']: 1,
+        ["addressStatus"]: 1,
       });
     }
+  };
+
+  useEffect(() => {
+    dispatch(fetchAddressProvince());
+    dispatch(fetchAddressDistrictByProvinceID(address.provinceId));
+    dispatch(fetchAddressWardByDistrictID(address.districtId));
+  },[dispatch])
+
+  const provinces = useSelector((state) => state.address.addressProvince);
+  const [addressProvince, setAddressProvince] = useState(address.provinceId);
+  const [addressDistrict, setAddressDistrict] = useState(address.districtId);
+  const [addressWard, setAddressWard] = useState(address.wardCode);
+  const [addressStreetNumber, setAddressStreetNumber] = useState();
+  const [addressFull, setAddressFull] = useState();
+
+  const handleSetAddressProvince = (e) => {
+    setAddressProvince(e);
+    dispatch(fetchAddressDistrictByProvinceID(e));
   }
+
+  const handleSetAddressDistrict = (e) => {
+    setAddressDistrict(e);
+    dispatch(fetchAddressWardByDistrictID(e));
+  }
+
+  // Func to update addressFull when changed values
+  const updateAddressFull = () => {
+    if (
+      provinces.length > 0 && 
+      districts.length > 0 && 
+      wards.length > 0 && 
+      addressProvince && 
+      addressDistrict && 
+      addressWard && 
+      addressStreetNumber
+    ) {
+      const addressProvinceName = provinces.find(province => province.ProvinceID === addressProvince);
+      const addressDistrictName = districts.find(district => district.DistrictID === addressDistrict);
+      const addressWardName = wards.find(ward => ward.WardCode === addressWard);
+      if (addressProvinceName && addressDistrictName && addressWardName) {
+        const fullAddress = `${addressStreetNumber}, ${addressWardName.WardName}, ${addressDistrictName.DistrictName}, ${addressProvinceName.ProvinceName}`;
+        setAddressData({
+          ...addressData,
+          addressFull: fullAddress,
+          provinceId: addressProvince,
+          districtId: addressDistrict,
+          wardCode: addressWard
+        });
+      }
+    }
+  };
+
+  const districts = useSelector((state) => state.address.addressDistrict);
+  const wards = useSelector((state) => state.address.addressWard);
+
+    // Sử dụng useEffect để gọi hàm cập nhật addressFull khi các giá trị thay đổi
+    // useEffect(() => {
+    //   updateAddressFull();
+    // }, [provinces, districts, wards, addressStreetNumber, addressWard, addressDistrict, addressProvince]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(addressData);
-    dispatch(editAddress({addressId: editID, addressData: addressData})).then(() => {
-      handleSnackbar("Cập nhật địa chỉ thành công!");
-      dispatch(fetchAddresses(sessionStorage.getItem("customerID")));
-      console.log("Edit address successfully");
-      handleClose();
-    });
+    // console.log(addressData);
+    dispatch(editAddress({ addressId: editID, addressData: addressData })).then(
+      () => {
+        handleSnackbar("Cập nhật địa chỉ thành công!");
+        dispatch(fetchAddresses(sessionStorage.getItem("customerID")));
+        console.log("Edit address successfully");
+        handleClose();
+      }
+    );
   };
 
-  const [isChecked, setIsChecked] = useState(parseInt(address.addressStatus) === 2)
+  const [isChecked, setIsChecked] = useState(
+    parseInt(address.addressStatus) === 2
+  );
 
   return (
     <>
@@ -149,6 +208,7 @@ export default function EditAddressComponent(props) {
             }}
           />
           <TextField
+            disabled
             autoFocus
             margin="dense"
             id="addressFull"
@@ -167,8 +227,8 @@ export default function EditAddressComponent(props) {
               control={
                 <Checkbox name="addressStatus" defaultChecked={isChecked} />
               }
-                label={`Địa chỉ mặc định`}
-            //   label={addAddress.addressStatus}
+              label={`Địa chỉ mặc định`}
+              //   label={addAddress.addressStatus}
             />
           </FormGroup>
         </DialogContent>
