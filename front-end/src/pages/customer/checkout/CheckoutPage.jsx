@@ -31,7 +31,7 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { useState } from "react";
 import EditAddressComponent from "../../../components/customer/address/EditAddressComponent";
-import { fetchPayments } from "../../../slices/paymentSlice";
+import { fetchPayments, payWithVNPay } from "../../../slices/paymentSlice";
 import { createOrder } from "../../../slices/orderSlice";
 
 import Dialog from '@mui/material/Dialog';
@@ -167,21 +167,47 @@ export default function CheckoutPage() {
       orderTotalAmount: parseInt(calcCartData.totalMoney) + 25000,
     }
     console.log(orderData);
+
+    if (paymentActive.paymentId == 1) {
+      console.log("cash on delivery");
+      dispatch(createOrder(orderData)).then(() => {
+        dispatch(getCustomerInfo(sessionStorage.getItem("customerID")));
+        dispatch(fetchCartDetail(sessionStorage.getItem("customerID")));
+        dispatch(fetchAddresses(sessionStorage.getItem("customerID")));
+        dispatch(getDefaultAddress(sessionStorage.getItem("customerID")));
+        dispatch(fetchPayments());
+        dispatch(calcCart(sessionStorage.getItem("customerID")));
+        handleClickOpen();
+        setTimeout(() => {
+            handleClose();
+          }, 5000);
+      });
+    } else {
+      sessionStorage.setItem("paymentId", orderData.paymentId);
+      sessionStorage.setItem("orderName", orderData.orderName);
+      sessionStorage.setItem("orderPhone", orderData.orderPhone);
+      sessionStorage.setItem("orderAddress", orderData.orderAddress);
+      sessionStorage.setItem("orderNote", orderData.orderNote);
+      sessionStorage.setItem("orderShipFee", orderData.orderShipFee);
+      sessionStorage.setItem("orderTotalAmount", orderData.orderTotalAmount);
+      console.log("VNPay");
+      const vnpayData = {
+        amount: orderData.orderTotalAmount,
+        orderInfo: "thanh toan vnpay"
+      }
+      dispatch(payWithVNPay(vnpayData)).then(() => {
+        console.log("Redirect to VNPay page");
+        // sessionStorage.removeItem("paymentId", orderData.paymentId);
+        // sessionStorage.removeItem("orderName", orderData.orderName);
+        // sessionStorage.removeItem("orderPhone", orderData.orderPhone);
+        // sessionStorage.removeItem("orderAddress", orderData.orderAddress);
+        // sessionStorage.removeItem("orderNote", orderData.orderNote);
+        // sessionStorage.removeItem("orderShipFee", orderData.orderShipFee);
+        // sessionStorage.removeItem("orderTotalAmount", orderData.orderTotalAmount);
+      })
+    }
     
-    dispatch(createOrder(orderData)).then(() => {
-      console.log("order sending");
-      dispatch(getCustomerInfo(sessionStorage.getItem("customerID")));
-      dispatch(fetchCartDetail(sessionStorage.getItem("customerID")));
-      dispatch(fetchAddresses(sessionStorage.getItem("customerID")));
-      dispatch(getDefaultAddress(sessionStorage.getItem("customerID")));
-      dispatch(fetchPayments());
-      dispatch(calcCart(sessionStorage.getItem("customerID")));
-      handleClickOpen();
-      setTimeout(() => {
-        handleClose();
-      }, 5000);
-    });
-console.log("check");
+  console.log("check");
     
   }
   return (
@@ -304,6 +330,7 @@ console.log("check");
                       id="outlined-basic"
                       label="Ghi chú"
                       variant="outlined"
+                      defaultValue={orderNote}
                       onChange={(e) => setOrderNote(e.target.value)}
                     />
                   </Stack>

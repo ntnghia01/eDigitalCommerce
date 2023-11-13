@@ -47,7 +47,7 @@ export const countCartDetail = createAsyncThunk (
     'cart/count',
     async (customerId) => {
         const response = await axios.get(prefixAPI + `/api/cart/${customerId}`);
-        // console.log(response.data.length);
+        console.log(response.data.length);
         return response.data.length;
     }
 )

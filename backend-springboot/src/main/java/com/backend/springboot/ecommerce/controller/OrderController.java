@@ -26,6 +26,7 @@ import com.backend.springboot.ecommerce.entity.Payment;
 import com.backend.springboot.ecommerce.entity.Shipper;
 import com.backend.springboot.ecommerce.payload.request.OrderRequestDto;
 import com.backend.springboot.ecommerce.payload.response.MessageResponse;
+import com.backend.springboot.ecommerce.payload.response.OrderResponseDto;
 import com.backend.springboot.ecommerce.repository.CartDetailRepository;
 import com.backend.springboot.ecommerce.repository.CustomerRepository;
 import com.backend.springboot.ecommerce.repository.OrderDetailRepository;
@@ -101,6 +102,10 @@ public class OrderController {
             newOrder.setOrderCreatedAt(LocalDateTime.now());
             newOrder.setOrderUpdatedAt(LocalDateTime.now());
 
+            if (orderRequestDto.getPaymentId() == 2) {
+                newOrder.setOrderPaid(LocalDateTime.now());
+            }
+
             Order savedOrder = orderRepository.save(newOrder);
             List<CartDetail> cartDetails = cartDetailRepository.findCartDetailByCustomerID(orderRequestDto.getCustomerId());
 
@@ -139,6 +144,23 @@ public class OrderController {
         } else {
             return new ResponseEntity<>(new MessageResponse("Order or Shipper not found!"), HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/count/{customerId}")
+    public ResponseEntity<?> countOrder (@PathVariable Integer customerId) {
+        List<Order> orders = orderRepository.findOrderByCustomerID(customerId);
+
+        int count = 0;
+
+        for (Order order : orders) {
+            System.out.println(order.getOrderCode());
+            count ++;
+        }
+
+        OrderResponseDto orderResponseDto = new OrderResponseDto();
+        orderResponseDto.setOrderCount(count);
+        
+        return ResponseEntity.ok(orderResponseDto);
     }
 
 

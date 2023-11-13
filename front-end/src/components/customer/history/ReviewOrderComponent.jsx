@@ -31,7 +31,6 @@ export default function ReviewOrderComponent (props) {
             <DialogTitle>{"Đánh giá"}</DialogTitle>
             <DialogContent>
                 Đang xây dựng
-            
                 {/* <FormControl fullWidth sx={{mt: 3, width: '34rem'}}>
                     <InputLabel id="demo-simple-select-label">Nhà Cung Cấp</InputLabel>
                     <Select

@@ -93,9 +93,6 @@ public class AuthController {
     return ResponseEntity.ok(new AuthResponse(jwt, userDetails.getCustomerId(), userDetails.getUsername(), userDetails.getCustomerName()));
   }
 
-
-
-
   @PostMapping("/signup")
   public ResponseEntity<?> registerUser(@Valid @RequestBody CustomerRequestDto customerRequestDto) {
     if (customerRepository.existsByCustomerPhone(customerRequestDto.getCustomerPhone())) {
@@ -149,6 +146,7 @@ public class AuthController {
   //   SecurityContextHolder.clearContext();
   //   return ResponseEntity.ok(new MessageResponse("You've been signed out!"));
   // }
+
   @PostMapping("/shipper/signup")
   public ResponseEntity<?> createShipperAccount(@Valid @RequestBody ShipperRequestDto shipperRequestDto) {
     if (shipperRepository.existsByShipperUsername(shipperRequestDto.getShipperUsername())) {

@@ -26,23 +26,35 @@ public class Customer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer customerId;
+
+    @Column (name = "user_role", nullable = false)
+    private Integer userRole;
+
     @Column (name = "customer_phone", nullable = false)
     private String customerPhone;
+
     @Column (name = "customer_password", nullable = false)
     private String customerPassword;
+
     @Column (name = "customer_name", nullable = false)
     private String customerName;
+
     @Column (name = "customer_sex", nullable = true)
     private Integer customerSex;
+
     @Column (name = "customer_email", nullable = true)
     private String customerEmail;
+
     @Column (name = "customer_birthday", nullable = true)
     private Date customerBirthday;
+
     @Column (name = "customer_status", nullable = false)
     private Integer customerStatus;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column (name = "customer_created_at", nullable = false)
     private LocalDateTime customerCreatedAt;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column (name = "customer_updated_at", nullable = false)
     private LocalDateTime customerUpdatedAt;

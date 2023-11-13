@@ -33,6 +33,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { countCartDetail } from "../../slices/cartSlice";
 import { deleteCustomerInfo } from "../../slices/customerSlice";
 import { searchProductByName } from "../../slices/productSlice";
+import { getOrderCountByCustomerId } from "../../slices/orderSlice";
 
 const pages = ["Trang chủ", "Giới thiệu", "Liên hệ"];
 const settings = ["Thông tin cá nhân", "Tài khoản", "Cài đặt", "Đăng xuất"];
@@ -77,7 +78,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 export default function CustomerTopBar() {
   const { mode, setMode } = useColorScheme();
-  // console.log("check topbar render");
+  console.log("check topbar render");
   const customerLogin = sessionStorage.getItem("customerName");
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -122,11 +123,8 @@ export default function CustomerTopBar() {
   }
   const products = useSelector((state) => state.product.products);
 
-  // console.log(products);
-
-  
-
   const countCart = useSelector((state) => state.cart.countCart);
+  const countOrder = useSelector((state) => state.order.orderCount);
 
   useEffect(() => {
     const SpeechRecognition = 
@@ -156,11 +154,15 @@ export default function CustomerTopBar() {
     setRecognition(recognitionInstance);
     
     dispatch(countCartDetail(sessionStorage.getItem("customerID")));
+    dispatch(getOrderCountByCustomerId(sessionStorage.getItem("customerID")));
   },[])
-  // useEffect(()=>{
-  //   dispatch(countCartDetail(sessionStorage.getItem("customerID")));
-  //   console.log(countCart);
-  // },[countCart])
+
+  useEffect(() => {
+    dispatch(countCartDetail(sessionStorage.getItem("customerID")));
+    dispatch(getOrderCountByCustomerId(sessionStorage.getItem("customerID")));
+  },[])
+
+
   const startListening = () => {
     if(recognition )
       if(!isListening){
@@ -317,7 +319,7 @@ export default function CustomerTopBar() {
                   navigate(`/history/${sessionStorage.getItem("customerID")}`)
                 }
               >
-                <Badge badgeContent={3} color="error">
+                <Badge badgeContent={countOrder} color="error">
                   <HistoryIcon />
                 </Badge>
               </IconButton>

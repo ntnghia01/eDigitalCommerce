@@ -8,6 +8,7 @@ import Paper from "@mui/material/Paper";
 import { useDispatch, useSelector } from "react-redux";
 import { customerLogin, getCustomerInfo } from "../../../slices/customerSlice";
 import { countCartDetail } from "../../../slices/cartSlice";
+import { getOrderCountByCustomerId } from "../../../slices/orderSlice";
 
 export default function CustomerLoginPage() {
   const [username, setUsername] = useState();
@@ -34,6 +35,7 @@ export default function CustomerLoginPage() {
         if (sessionStorage.getItem("customerID")) {
           navigate('/');
           dispatch(countCartDetail(sessionStorage.getItem("customerID")));
+          dispatch(getOrderCountByCustomerId(sessionStorage.getItem("customerID")));
           dispatch(getCustomerInfo(sessionStorage.getItem("customerID")));
         } else {
           alert("Sai TK hoặc MK")

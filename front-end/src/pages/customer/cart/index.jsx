@@ -130,6 +130,8 @@ export default function Cart() {
      })
   }
 
+  const countCart = useSelector((state) => state.cart.countCart);
+
   return (
     <>
     <Breadcrumbs aria-label="breadcrumb" sx={{margin: 3}}>
@@ -243,9 +245,17 @@ export default function Cart() {
         <h2>Tổng tiền (VAT): {formatNumberWithCommas(calcCartData.totalMoney)} VNĐ</h2>
         <h2>Số mặt hàng: {calcCartData.quantityItem}</h2>
         <h2>Tổng số lượng: {calcCartData.totalQuantityItem}</h2>
-        <Button onClick={() => navigate(`/checkout/${customerId}`)} variant="contained" size="large" startIcon={<ShoppingCartCheckoutIcon />}>
-                  Thanh toán giỏ hàng
-                </Button>
+        {countCart > 0 ? (
+          <Button onClick={() => navigate(`/checkout/${customerId}`)} variant="contained" size="large" startIcon={<ShoppingCartCheckoutIcon />}>
+            Thanh toán giỏ hàng
+          </Button>
+        )
+        : <Button disabled variant="contained" size="large" startIcon={<ShoppingCartCheckoutIcon />}>
+            Thanh toán giỏ hàng
+          </Button>
+      
+      }
+        
       </Box>
       
       <Snackbar

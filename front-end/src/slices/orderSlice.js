@@ -6,7 +6,8 @@ const prefixAPI = 'http://localhost:9004';
 const initialState = {
     orders: [],
     orderDetails: [],
-    orderHistory: []
+    orderHistory: [],
+    orderCount: 0
 }
 
 export const createOrder = createAsyncThunk (
@@ -50,6 +51,15 @@ export const getOrderByCustomerId = createAsyncThunk (
     }
 );
 
+export const getOrderCountByCustomerId = createAsyncThunk (
+    'order/getOrderCountByCustomerId',
+    async (customerId) => {
+        const response = await axios.get(prefixAPI + `/api/order/count/${customerId}`);
+        console.log(response.data.orderCount);
+        return response.data.orderCount;
+    }
+);
+
 const orderSlice = createSlice ({
     name: 'order',
     initialState,
@@ -67,6 +77,9 @@ const orderSlice = createSlice ({
             })
             .addCase(getOrderByCustomerId.fulfilled, (state, action) => {
                 state.orderHistory = action.payload;
+            })
+            .addCase(getOrderCountByCustomerId.fulfilled, (state, action) => {
+                state.orderCount = action.payload;
             })
     }
 })
