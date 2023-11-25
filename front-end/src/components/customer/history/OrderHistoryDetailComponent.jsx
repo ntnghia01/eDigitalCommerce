@@ -126,7 +126,7 @@ export default function OrderHistoryDetailComponent (props) {
           >
             <Grid item xs={6}>
               <Stack spacing={2}>
-                <div>Tên khách hàng: {order.customer.customerName}</div>
+                <div>Tên khách hàng: {order.user.userName}</div>
                 <div>Hình thức thanh toán: {order.payment.paymentName}</div>
                 <div>Mã đơn hàng: {order.orderCode}</div>
                 <div>Thời gian đặt hàng: {formatDateTime(order.orderTime)}</div>

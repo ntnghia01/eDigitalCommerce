@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.springboot.ecommerce.entity.Comment;
-import com.backend.springboot.ecommerce.entity.Customer;
+import com.backend.springboot.ecommerce.entity.User;
 import com.backend.springboot.ecommerce.entity.Product;
 import com.backend.springboot.ecommerce.payload.request.CommentRequestDto;
 import com.backend.springboot.ecommerce.payload.response.MessageResponse;
 import com.backend.springboot.ecommerce.repository.CommentRepository;
-import com.backend.springboot.ecommerce.repository.CustomerRepository;
+import com.backend.springboot.ecommerce.repository.UserRepository;
 import com.backend.springboot.ecommerce.repository.ProductRepository;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -34,7 +34,7 @@ public class CommentController {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
-    private CustomerRepository customerRepository;
+    private UserRepository customerRepository;
 
     @GetMapping
     public ResponseEntity<List<Comment>> getAllComment() {
@@ -45,14 +45,14 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<?> createComment(@RequestBody CommentRequestDto commentRequestDto) {
         Optional<Product> productOptional = productRepository.findById(commentRequestDto.getProduct());
-        Optional<Customer> customerOptional = customerRepository.findById(commentRequestDto.getCustomer());
+        Optional<User> customerOptional = customerRepository.findById(commentRequestDto.getCustomer());
 
         if (productOptional.isPresent() && customerOptional.isPresent()) {
             Product product = productOptional.get();
-            Customer customer = customerOptional.get();
+            User customer = customerOptional.get();
             Comment newComment = new Comment();
             newComment.setProduct(product);
-            newComment.setCustomer(customer);
+            newComment.setUser(customer);
             newComment.setCmtTime(LocalDateTime.now());
             newComment.setCmtContent(commentRequestDto.getCmtContent());
             newComment.setCmtStatus(1);

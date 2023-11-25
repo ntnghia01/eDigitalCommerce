@@ -71,7 +71,7 @@ export default function ImportTable() {
                 >
                   <TableCell component="th" scope="row">{import1.importId}</TableCell>
                   <TableCell align="left">{import1.supplier.supplierName}</TableCell>
-                  <TableCell align="left">{import1.admin.adminName}</TableCell>
+                  <TableCell align="left">{import1.user.userName}</TableCell>
                   <TableCell align="right">{import1.importDate}</TableCell>
                   <TableCell align="left">{import1.importTotal}</TableCell>
                   <TableCell align="left">

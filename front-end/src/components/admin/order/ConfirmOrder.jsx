@@ -91,6 +91,7 @@ export default function ConfirmOrder(props) {
 
   const handleSubmit = (e) => {
     const confirmData = {
+      adminId: sessionStorage.getItem("adminID"),
       shipperId: confirmShipper
     };
     console.log(confirmData);
@@ -104,7 +105,7 @@ export default function ConfirmOrder(props) {
 
   return (
     <>
-      <Button startIcon={<RecommendIcon />} variant="contained" onClick={() => {handleClickOpen();}}>Xác nhận đơn hàng</Button>
+      <Button startIcon={<RecommendIcon />} variant="contained" onClick={() => {handleClickOpen();}} disabled={order.orderConfirmed == null ? false : true}>Xác nhận đơn hàng</Button>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -131,7 +132,7 @@ export default function ConfirmOrder(props) {
               }}
             >
                 {shippers.map((shipper) => (
-                    <MenuItem key={shipper.shipperId} value={shipper.shipperId}>{shipper.shipperName} - {shipper.shipperPhone}</MenuItem>
+                    <MenuItem key={shipper.userId} value={shipper.userId}>{shipper.userName} - {shipper.userPhone}</MenuItem>
                 ))}
             </Select>
           </FormControl>

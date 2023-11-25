@@ -1,5 +1,6 @@
 package com.backend.springboot.ecommerce.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -21,7 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "tbl_order")
-public class Order {
+public class Order implements Serializable  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -92,12 +93,12 @@ public class Order {
     private LocalDateTime orderUpdatedAt;
 
     @ManyToOne
-    @JoinColumn (name = "customer_id", nullable = true)
-    private Customer customer;
+    @JoinColumn (name = "user_id", nullable = true)
+    private User user;
 
     @ManyToOne
     @JoinColumn (name = "shipper_id", nullable = true)
-    private Shipper shipper;
+    private User shipper;
 
     @ManyToOne
     @JoinColumn (name = "payment_id", nullable = true)
@@ -105,6 +106,6 @@ public class Order {
 
     @ManyToOne
     @JoinColumn (name = "admin_id", nullable = true)
-    private Admin admin;
+    private User admin;
 
 }

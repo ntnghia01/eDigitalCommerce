@@ -9,6 +9,6 @@ import org.springframework.data.repository.query.Param;
 import com.backend.springboot.ecommerce.entity.Order;
 
 public interface OrderRepository extends JpaRepository<Order, Integer> {
-    @Query("SELECT o FROM Order o WHERE o.customer.customerId = :customerId")
+    @Query("SELECT o FROM Order o WHERE o.user.userId = :customerId")
     List<Order> findOrderByCustomerID(@Param("customerId") int customerId);
 }

@@ -127,7 +127,7 @@ export default function OrderDetail(props) {
           >
             <Grid item xs={6}>
               <Stack spacing={2}>
-                <div>Tên khách hàng: {order.customer.customerName}</div>
+                <div>Tên khách hàng: {order.user.userName}</div>
                 <div>
                   Tên người giao:{" "}
                   {order.shipper != null ? order.shipper.shipperName : "Trống"}

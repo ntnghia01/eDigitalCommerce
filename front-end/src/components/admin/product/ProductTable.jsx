@@ -36,6 +36,14 @@ const formatDateTime = (oriDateTime) => {
     return newDateTime;
 }
 
+function formatNumberWithCommas(input) {
+  if (typeof input === "number" && Number.isInteger(input))
+    input = input.toString();
+  if (typeof input !== "string") return "Invalid input";
+  if (!/^\d+$/.test(input)) return "Invalid input";
+  return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
 const uploadDirectory = "D:/Projects/eDigitalCommerce/backend-springboot/src/main/java/com/backend/springboot/ecommerce/uploads/";
 
 export default function ProductTable() {
@@ -79,7 +87,7 @@ export default function ProductTable() {
                   <TableCell component="th" scope="row">{product.proId}</TableCell>
                   <TableCell align="left">{product.proName}</TableCell>
                   <TableCell align="left"><img src={`http://localhost:9004/api/product/images/${product.proImage}`} alt="" style={{width: "100px", height: "100px"}}/></TableCell>
-                  <TableCell align="right">{product.proPrice}</TableCell>
+                  <TableCell align="right">{formatNumberWithCommas(product.proPrice)}</TableCell>
                   <TableCell align="left">{product.proDesc}</TableCell>
                   <TableCell align="right">{product.proQuantity}</TableCell>
                   <TableCell align="left">{product.category.cateName}</TableCell>

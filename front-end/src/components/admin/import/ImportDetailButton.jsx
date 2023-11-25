@@ -23,6 +23,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+function formatNumberWithCommas(input) {
+  if (typeof input === "number" && Number.isInteger(input))
+    input = input.toString();
+  if (typeof input !== "string") return "Invalid input";
+  if (!/^\d+$/.test(input)) return "Invalid input";
+  return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
 export default function ImportDetailButton(props) {
   const dispatch = useDispatch();
 
@@ -79,7 +87,7 @@ export default function ImportDetailButton(props) {
                       {importDetail.product.proName}
                     </TableCell>
                     <TableCell align="left">
-                      {importDetail.importDetailPrice}
+                      {formatNumberWithCommas(importDetail.importDetailPrice)}
                     </TableCell>
                     <TableCell align="right">
                       {importDetail.importDetailQuantity}

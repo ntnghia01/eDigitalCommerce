@@ -1,7 +1,7 @@
 package com.backend.springboot.ecommerce.service;
 
-import com.backend.springboot.ecommerce.entity.Customer;
-import com.backend.springboot.ecommerce.repository.CustomerRepository;
+import com.backend.springboot.ecommerce.entity.User;
+import com.backend.springboot.ecommerce.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,18 +15,18 @@ import java.util.Optional;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
   @Autowired
-  CustomerRepository customerRepository;
+  UserRepository userRepository;
 
   @Override
   @Transactional
-  public UserDetails loadUserByUsername(String customerPhone) throws UsernameNotFoundException {
-    Customer customer = customerRepository.findByCustomerPhone(customerPhone)
-        .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy tài khoản với sdt là: " + customerPhone));
-    return UserDetailsImpl.build(customer);
+  public UserDetails loadUserByUsername(String userPhone) throws UsernameNotFoundException {
+    User user = userRepository.findByUserPhone(userPhone)
+        .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy tài khoản với sdt là: " + userPhone));
+    return UserDetailsImpl.build(user);
   }
 
-  public Optional<Customer> getByCustomer(String customerPhone){
-    return customerRepository.findByCustomerPhone(customerPhone);
+  public Optional<User> getByUser(String userPhone){
+    return userRepository.findByUserPhone(userPhone);
   }
 
 }

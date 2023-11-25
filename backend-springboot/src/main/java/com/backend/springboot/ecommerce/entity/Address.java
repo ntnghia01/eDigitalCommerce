@@ -58,6 +58,6 @@ public class Address implements Serializable {
     private LocalDateTime addressUpdatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
-    private Customer customer;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

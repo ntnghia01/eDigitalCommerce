@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.springboot.ecommerce.entity.CartDetail;
-import com.backend.springboot.ecommerce.entity.Customer;
+import com.backend.springboot.ecommerce.entity.User;
 import com.backend.springboot.ecommerce.entity.Order;
 import com.backend.springboot.ecommerce.entity.OrderDetail;
 import com.backend.springboot.ecommerce.entity.Payment;
@@ -28,7 +28,7 @@ import com.backend.springboot.ecommerce.payload.request.OrderRequestDto;
 import com.backend.springboot.ecommerce.payload.response.MessageResponse;
 import com.backend.springboot.ecommerce.payload.response.OrderResponseDto;
 import com.backend.springboot.ecommerce.repository.CartDetailRepository;
-import com.backend.springboot.ecommerce.repository.CustomerRepository;
+import com.backend.springboot.ecommerce.repository.UserRepository;
 import com.backend.springboot.ecommerce.repository.OrderDetailRepository;
 import com.backend.springboot.ecommerce.repository.OrderRepository;
 import com.backend.springboot.ecommerce.repository.PaymentRepository;
@@ -42,7 +42,7 @@ public class OrderController {
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
-    private CustomerRepository customerRepository;
+    private UserRepository customerRepository;
     @Autowired
     private ShipperRepository shipperRepository;
     @Autowired
@@ -74,19 +74,19 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<?> createOrder(@RequestBody OrderRequestDto orderRequestDto) {
-        Optional<Customer> customerOptional = customerRepository.findById(orderRequestDto.getCustomerId());
+        Optional<User> customerOptional = customerRepository.findById(orderRequestDto.getCustomerId());
         Optional<Payment> paymeOptional = paymentRepository.findById(orderRequestDto.getPaymentId());
 
         if (customerOptional.isPresent() && paymeOptional.isPresent()) {
-            Customer customer = customerOptional.get();
+            User customer = customerOptional.get();
             Payment payment = paymeOptional.get();
 
             Order newOrder = new Order();
             // Dòng gán giá trị uuid cho thuộc tính orderCode
             // UUID code = UUID.randomUUID();
-            String code = customer.getCustomerId() + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+            String code = customer.getUserId() + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
             newOrder.setOrderCode(code);
-            newOrder.setCustomer(customer);
+            newOrder.setUser(customer);
             newOrder.setPayment(payment);
             newOrder.setOrderTime(LocalDateTime.now());
             newOrder.setOrderName(orderRequestDto.getOrderName());
@@ -130,11 +130,14 @@ public class OrderController {
 
     @PutMapping("/confirm/{orderId}")
     public ResponseEntity<?> confirmOrder(@PathVariable Integer orderId, @RequestBody OrderRequestDto orderRequestDto) {
-        Optional<Shipper> shipperOptional = shipperRepository.findById(orderRequestDto.getShipperId());
+        Optional<User> adminOptional = customerRepository.findById(orderRequestDto.getAdminId());
+        Optional<User> shipperOptional = customerRepository.findById(orderRequestDto.getShipperId());
         Optional<Order> orderOptional = orderRepository.findById(orderId);
         if (shipperOptional.isPresent() && orderOptional.isPresent()) {
             Order order = orderOptional.get();
-            Shipper shipper = shipperOptional.get();
+            User admin = adminOptional.get();
+            User shipper = shipperOptional.get();
+            order.setAdmin(admin);
             order.setShipper(shipper);
             order.setOrderConfirmed(LocalDateTime.now());
             order.setOrderStatus(2);

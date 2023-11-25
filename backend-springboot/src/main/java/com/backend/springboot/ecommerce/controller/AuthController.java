@@ -1,15 +1,15 @@
 package com.backend.springboot.ecommerce.controller;
 
 import com.backend.springboot.ecommerce.entity.Cart;
-import com.backend.springboot.ecommerce.entity.Customer;
+import com.backend.springboot.ecommerce.entity.User;
 import com.backend.springboot.ecommerce.entity.Shipper;
 import com.backend.springboot.ecommerce.payload.request.AuthRequestDto;
-import com.backend.springboot.ecommerce.payload.request.CustomerRequestDto;
+import com.backend.springboot.ecommerce.payload.request.UserRequestDto;
 import com.backend.springboot.ecommerce.payload.request.ShipperRequestDto;
 import com.backend.springboot.ecommerce.payload.response.AuthResponse;
 import com.backend.springboot.ecommerce.payload.response.MessageResponse;
 import com.backend.springboot.ecommerce.repository.CartRepository;
-import com.backend.springboot.ecommerce.repository.CustomerRepository;
+import com.backend.springboot.ecommerce.repository.UserRepository;
 import com.backend.springboot.ecommerce.repository.ShipperRepository;
 import com.backend.springboot.ecommerce.security.jwt.JwtUtils;
 import com.backend.springboot.ecommerce.service.ShipperDetailsImpl;
@@ -40,7 +40,7 @@ public class AuthController {
   AuthenticationManager authenticationManager;
 
   @Autowired
-  CustomerRepository customerRepository;
+  UserRepository customerRepository;
 
   @Autowired
   private CartRepository cartRepository;
@@ -63,22 +63,22 @@ public class AuthController {
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody AuthRequestDto authRequestDto) {
 
-    Optional<Customer> customer = userService.getByCustomer(authRequestDto.getUsername());
-    if (!customerRepository.existsByCustomerPhone(authRequestDto.getUsername())) {
+    Optional<User> customer = userService.getByUser(authRequestDto.getUsername());
+    if (!customerRepository.existsByUserPhone(authRequestDto.getUsername())) {
       return new ResponseEntity<>(new MessageResponse("INVALID_USERNAME"), HttpStatus.BAD_REQUEST);
     }
 
     //tạo chuỗi mật khẩu cộng với ngayTao trong TaiKhoan
-    String matKhau = authRequestDto.getPassword() + customer.get().getCustomerCreatedAt().toLocalDate().toString();
+    String matKhau = authRequestDto.getPassword() + customer.get().getUserCreatedAt().toLocalDate().toString();
     // System.out.println("'"+matKhau+"'");
     // System.out.println("'"+customer.get().getCustomerPassword()+"'");
 
     //kiểm tra mật khẩu
-    if (!encoder.matches(matKhau, customer.get().getCustomerPassword())) {
+    if (!encoder.matches(matKhau, customer.get().getUserPassword())) {
       return new ResponseEntity<>(new MessageResponse("INVALID_PASSWORD"), HttpStatus.BAD_REQUEST);
     }
     System.out.println("Password is: " + encoder.encode(matKhau));
-    System.out.println("Password is: " + customer.get().getCustomerPassword());
+    System.out.println("Password is: " + customer.get().getUserPassword());
     Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(authRequestDto.getUsername(), matKhau));
     System.out.println(authentication);
@@ -90,12 +90,12 @@ public class AuthController {
    
     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
     // Gửi token về cho client
-    return ResponseEntity.ok(new AuthResponse(jwt, userDetails.getCustomerId(), userDetails.getUsername(), userDetails.getCustomerName()));
+    return ResponseEntity.ok(new AuthResponse(jwt, userDetails.getUserId(), userDetails.getUsername(), userDetails.getUserPhone()));
   }
 
   @PostMapping("/signup")
-  public ResponseEntity<?> registerUser(@Valid @RequestBody CustomerRequestDto customerRequestDto) {
-    if (customerRepository.existsByCustomerPhone(customerRequestDto.getCustomerPhone())) {
+  public ResponseEntity<?> registerUser(@Valid @RequestBody UserRequestDto customerRequestDto) {
+    if (customerRepository.existsByUserPhone(customerRequestDto.getUserPhone())) {
       return ResponseEntity
               .badRequest()
               .body(new MessageResponse("Error: Customer's Phone is already taken!"));
@@ -104,24 +104,25 @@ public class AuthController {
     LocalDate ngayHienTai = LocalDate.now();
 
     // Cộng chuỗi thời gian hiện tại với mật khẩu
-    String matKhau = customerRequestDto.getCustomerPassword() + ngayHienTai.toString();
+    String matKhau = customerRequestDto.getUserPassword() + ngayHienTai.toString();
 
     // Tạo tài khoản mới
-    Customer newCustomer = new Customer();
-    newCustomer.setCustomerPhone(customerRequestDto.getCustomerPhone());
-    newCustomer.setCustomerPassword(encoder.encode(matKhau));
-    newCustomer.setCustomerName(customerRequestDto.getCustomerName());
-    newCustomer.setCustomerSex(customerRequestDto.getCustomerSex());
-    newCustomer.setCustomerEmail(customerRequestDto.getCustomerEmail());
-    newCustomer.setCustomerBirthday(customerRequestDto.getCustomerBirthday());
-    newCustomer.setCustomerStatus(1);
-    newCustomer.setCustomerCreatedAt(LocalDateTime.now());
-    newCustomer.setCustomerUpdatedAt(LocalDateTime.now());
+    User newCustomer = new User();
+    newCustomer.setUserRole(customerRequestDto.getUserRole());
+    newCustomer.setUserPhone(customerRequestDto.getUserPhone());
+    newCustomer.setUserPassword(encoder.encode(matKhau));
+    newCustomer.setUserName(customerRequestDto.getUserName());
+    newCustomer.setUserSex(customerRequestDto.getUserSex());
+    newCustomer.setUserEmail(customerRequestDto.getUserEmail());
+    newCustomer.setUserBirthday(customerRequestDto.getUserBirthday());
+    newCustomer.setUserStatus(1);
+    newCustomer.setUserCreatedAt(LocalDateTime.now());
+    newCustomer.setUserUpdatedAt(LocalDateTime.now());
 
-    Customer customer = customerRepository.save(newCustomer);
+    User customer = customerRepository.save(newCustomer);
     System.out.println(customer);
     Cart cart = new Cart();
-    cart.setCustomer(customer);
+    cart.setUser(customer);
     cart.setCartCreatedAt(LocalDateTime.now());
     cart.setCartUpdatedAt(LocalDateTime.now());
     cartRepository.save(cart);
@@ -131,9 +132,9 @@ public class AuthController {
 
   @PostMapping("/test")
   public ResponseEntity<?> test(@RequestBody AuthRequestDto authRequestDto) {
-    Optional<Customer> cusOptional = customerRepository.findByCustomerPhone(authRequestDto.getUsername());
+    Optional<User> cusOptional = customerRepository.findByUserPhone(authRequestDto.getUsername());
     if (cusOptional.isPresent()) {
-      Customer cus = cusOptional.get();
+      User cus = cusOptional.get();
       return new ResponseEntity<>(cus, HttpStatus.OK);
     } else  {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);

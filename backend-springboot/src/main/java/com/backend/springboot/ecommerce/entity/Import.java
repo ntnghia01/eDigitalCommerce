@@ -45,6 +45,6 @@ public class Import implements Serializable{
     private Supplier supplier;
 
     @ManyToOne
-    @JoinColumn (name = "admin_id", nullable = true)
-    private Admin admin;
+    @JoinColumn (name = "user_id", nullable = true)
+    private User user;
 }

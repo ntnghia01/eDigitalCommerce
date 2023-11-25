@@ -1,7 +1,7 @@
 package com.backend.springboot.ecommerce.service;
 
 
-import com.backend.springboot.ecommerce.entity.Customer;
+import com.backend.springboot.ecommerce.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,29 +18,29 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tbl_customer")
+@Table(name = "tbl_user")
 public class UserDetailsImpl implements UserDetails {
   private static final long serialVersionUID = 1L;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer customerId;
-  @Column(name = "customer_phone", nullable = false)
-  private String customerPhone;
-  @Column(name = "customer_password", nullable = false)
-  private String customerPassword;
-  @Column(name = "customer_name", nullable = false)
-  private String customerName;
+  private Integer userId;
+  @Column(name = "user_phone", nullable = false)
+  private String userPhone;
+  @Column(name = "user_password", nullable = false)
+  private String userPassword;
+  @Column(name = "user_name", nullable = false)
+  private String userName;
   @JsonIgnore
   @Transient
   private Collection<? extends GrantedAuthority> authorities;
 
-  public static UserDetailsImpl build(Customer customer) {
+  public static UserDetailsImpl build(User user) {
     List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
     return new UserDetailsImpl(
-        customer.getCustomerId(),
-        customer.getCustomerPhone(),
-        customer.getCustomerPassword(),
-        customer.getCustomerName(),
+        user.getUserId(),
+        user.getUserPhone(),
+        user.getUserPassword(),
+        user.getUserName(),
             authorities);
   }
 
@@ -51,12 +51,12 @@ public class UserDetailsImpl implements UserDetails {
 
   @Override
   public String getUsername() {
-    return customerPhone;
+    return userName;
   }
 
   @Override
   public String getPassword() {
-    return customerPassword;
+    return userPassword;
   }
 
   /** ------------------------------------------ */
@@ -87,11 +87,11 @@ public class UserDetailsImpl implements UserDetails {
     if (o == null || getClass() != o.getClass())
       return false;
     UserDetailsImpl user = (UserDetailsImpl) o;
-    return Objects.equals(customerPhone, user.customerPhone);
+    return Objects.equals(userPhone, user.userPhone);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(customerId);
+    return Objects.hash(userId);
   }
 }

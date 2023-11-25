@@ -11,6 +11,6 @@ import com.backend.springboot.ecommerce.entity.Cart;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Integer> {
-    @Query("SELECT c FROM Cart c WHERE c.customer.customerId = :customerId")
+    @Query("SELECT c FROM Cart c WHERE c.user.userId = :customerId")
     Optional<Cart> findCartByCustomerID(@Param("customerId") int customerId);
 }

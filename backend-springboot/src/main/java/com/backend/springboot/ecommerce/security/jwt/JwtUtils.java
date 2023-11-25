@@ -31,7 +31,7 @@ public class JwtUtils {
 
     return Jwts.builder()
             .setSubject(userPrincipal.getUsername())
-            .claim("id", userPrincipal.getCustomerId())
+            .claim("id", userPrincipal.getUserId())
             .setIssuedAt(now)
             .setExpiration(expiryDate)
             .signWith(getSecretKey())
@@ -43,7 +43,7 @@ public class JwtUtils {
     return Keys.hmacShaKeyFor(decodedKey);
   }
 
-  public String getCustomerPhoneFromJwtToken(String token) {
+  public String getUserPhoneFromJwtToken(String token) {
     Jws<Claims> claims = Jwts.parserBuilder()
             .setSigningKey(getSecretKey())
             .build()

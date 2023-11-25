@@ -58,7 +58,7 @@ export default function ImportAddForm() {
   }, [dispatch]);
 
   const [supplierId, setSupplierID] = React.useState();
-  const [adminId, setAdminID] = React.useState(1);
+  const [adminId, setAdminID] = React.useState(sessionStorage.getItem("adminID"));
   let importTotal = 0;
 
   const handleAddDetailClick = () => {
@@ -81,7 +81,7 @@ export default function ImportAddForm() {
 
     const newImport = {
       supplier: supplierId,
-      admin: adminId,
+      userId: adminId,
       importTotal: importTotal
     };
     

@@ -61,10 +61,10 @@ import Supplier from "./supplier";
 import Product from "./product";
 import Import from "./import";
 import Order from "./order/OrderPage";
-import AdminLoginPage from "./login";
 import ShipperAccountPage from "./account/ShipperAccountPage";
 import CustomerAccountPage from "./account/CustomerAccountPage";
 import AdminAccountPage from "./account/AdminAccountPage";
+import AdminLoginPage from "./login/AdminLoginPage";
 
 // import '../../../public/avatar.png'
 
@@ -129,7 +129,8 @@ function Admin() {
                     fontSize: collapse ? "1.5rem" : "2.125rem",
                   }}
                 >
-                  Nghĩa
+                  {sessionStorage.getItem('adminName') ? 
+                    sessionStorage.getItem('adminName') : "Chưa đăng nhập"}
                 </Typography>
                 <Typography
                   variant="h5"
@@ -224,7 +225,7 @@ function Admin() {
         <div style={{ width: "100%", padding: 20 }}>
           <AdminTopBar />
           <Routes>
-            {/* <Route path="/admin/login" element={<AdminLoginPage />} /> */}
+            <Route path="/admin/login" element={<AdminLoginPage />} />
             <Route path="/dashboard" element={<AdminDashboard />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/brands" element={<Brands />} />

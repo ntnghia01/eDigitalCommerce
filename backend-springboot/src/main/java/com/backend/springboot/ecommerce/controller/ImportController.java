@@ -14,15 +14,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.springboot.ecommerce.entity.Admin;
+// import com.backend.springboot.ecommerce.entity.Admin;
 import com.backend.springboot.ecommerce.entity.Import;
 import com.backend.springboot.ecommerce.entity.Supplier;
+import com.backend.springboot.ecommerce.entity.User;
 import com.backend.springboot.ecommerce.payload.request.ImportRequestDto;
 import com.backend.springboot.ecommerce.payload.response.ImportResponseDto;
 import com.backend.springboot.ecommerce.payload.response.MessageResponse;
-import com.backend.springboot.ecommerce.repository.AdminRepository;
+// import com.backend.springboot.ecommerce.repository.AdminRepository;
 import com.backend.springboot.ecommerce.repository.ImportRepository;
 import com.backend.springboot.ecommerce.repository.SupplierRepository;
+import com.backend.springboot.ecommerce.repository.UserRepository;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -32,8 +34,10 @@ public class ImportController {
     private ImportRepository importRepository;
     @Autowired
     private SupplierRepository supplierRepository;
+    // @Autowired
+    // private AdminRepository adminRepository;
     @Autowired
-    private AdminRepository adminRepository;
+    private UserRepository userRepository;
 
     @GetMapping
     public ResponseEntity<List<Import>> getAllImport() {
@@ -44,14 +48,14 @@ public class ImportController {
     @PostMapping
     public ResponseEntity<?> createImport(@RequestBody ImportRequestDto importRequestDto) {
         Optional<Supplier> supplierOptional = supplierRepository.findById(importRequestDto.getSupplier());
-        Optional<Admin> adminOptional = adminRepository.findById(importRequestDto.getAdmin());
+        Optional<User> userOptional = userRepository.findById(importRequestDto.getUserId());
 
-        if (supplierOptional.isPresent() && adminOptional.isPresent()) {
+        if (supplierOptional.isPresent() && userOptional.isPresent()) {
             Supplier supplier = supplierOptional.get();
-            Admin admin = adminOptional.get();
+            User user = userOptional.get();
             Import newImport = new Import();
             newImport.setSupplier(supplier);
-            newImport.setAdmin(admin);
+            newImport.setUser(user);
             newImport.setImportDate(LocalDateTime.now());
             newImport.setImportTotal(importRequestDto.getImportTotal());
             newImport.setImportStatus(1);

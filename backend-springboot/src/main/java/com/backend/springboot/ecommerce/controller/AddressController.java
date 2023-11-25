@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.springboot.ecommerce.entity.Address;
-import com.backend.springboot.ecommerce.entity.Customer;
+import com.backend.springboot.ecommerce.entity.User;
 import com.backend.springboot.ecommerce.payload.request.AddressRequestDto;
 import com.backend.springboot.ecommerce.payload.response.MessageResponse;
 import com.backend.springboot.ecommerce.repository.AddressRepository;
-import com.backend.springboot.ecommerce.repository.CustomerRepository;
+import com.backend.springboot.ecommerce.repository.UserRepository;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -31,7 +31,7 @@ public class AddressController {
     @Autowired
     private AddressRepository addressRepository;
     @Autowired
-    private CustomerRepository customerRepository;
+    private UserRepository customerRepository;
 
     @GetMapping
     public ResponseEntity<List<Address>> getAllAddress() {
@@ -61,12 +61,12 @@ public class AddressController {
 
     @PostMapping
     public ResponseEntity<?> createAddress(@RequestBody AddressRequestDto addressRequestDto) {
-        Optional<Customer> customerOptional = customerRepository.findById(addressRequestDto.getCustomer());
+        Optional<User> customerOptional = customerRepository.findById(addressRequestDto.getCustomer());
 
         if (customerOptional.isPresent()) {
-            Customer customer = customerOptional.get();
+            User customer = customerOptional.get();
             Address newAddress = new Address();
-            newAddress.setCustomer(customer);
+            newAddress.setUser(customer);
             newAddress.setAddressName(addressRequestDto.getAddressName());
             newAddress.setAddressPhone(addressRequestDto.getAddressPhone());
             newAddress.setAddressFull(addressRequestDto.getAddressFull());

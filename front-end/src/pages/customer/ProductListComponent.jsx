@@ -78,7 +78,14 @@ export default function ProductListComponent () {
                 <Grid container rowSpacing={5} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                     {products.map((product) => (
                         <Grid item xs={3} md={3} key={product.proId}>
-                            <Card sx={{ maxWidth: '100%' }}>
+                            <Card sx={{
+                                maxWidth: '100%',
+                                transition: 'transform 0.3s ease-in-out',
+                                '&:hover': {
+                                    transform: 'scale(1.05)',
+                                    cursor: 'pointer',
+                                },
+                            }}>
                                 <CardMedia
                                     sx={{ height: 200, maxWidth: 200 }}
                                     image={`http://localhost:9004/api/product/images/${product.proImage}`}

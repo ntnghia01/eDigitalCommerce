@@ -10,20 +10,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.springboot.ecommerce.entity.Shipper;
-import com.backend.springboot.ecommerce.repository.ShipperRepository;
+import com.backend.springboot.ecommerce.entity.User;
+import com.backend.springboot.ecommerce.repository.UserRepository;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/shipper")
 public class ShipperController {
     
+    // @Autowired
+    // private ShipperRepository shipperRepository;
+
     @Autowired
-    private ShipperRepository shipperRepository;
+    private UserRepository userRepository;
 
     @GetMapping
-    public ResponseEntity<List<Shipper>> getAllShipper() {
-        List<Shipper> shippers = shipperRepository.findAllShippers();
+    public ResponseEntity<List<User>> getAllShipper() {
+        List<User> shippers = userRepository.findAllShipperAvailable();
         return new ResponseEntity<>(shippers, HttpStatus.OK);
     }
 
