@@ -81,12 +81,12 @@ export default function CheckoutPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(getCustomerInfo(sessionStorage.getItem("customerID")));
-    dispatch(fetchCartDetail(sessionStorage.getItem("customerID")));
-    dispatch(fetchAddresses(sessionStorage.getItem("customerID")));
-    dispatch(getDefaultAddress(sessionStorage.getItem("customerID")));
+    dispatch(getCustomerInfo(localStorage.getItem("customerID")));
+    dispatch(fetchCartDetail(localStorage.getItem("customerID")));
+    dispatch(fetchAddresses(localStorage.getItem("customerID")));
+    dispatch(getDefaultAddress(localStorage.getItem("customerID")));
     dispatch(fetchPayments());
-    dispatch(calcCart(sessionStorage.getItem("customerID")));
+    dispatch(calcCart(localStorage.getItem("customerID")));
     console.log(addressActive.districtId, addressActive.wardCode);
     dispatch(calculateFee({districtId: addressActive.districtId, wardCode: addressActive.wardCode}));
   }, [dispatch]);
@@ -120,10 +120,10 @@ export default function CheckoutPage() {
   const [orderNote, setOrderNote] = useState();
 
   const handleDispatchAddress = () => {
-    dispatch(fetchAddresses(sessionStorage.getItem("customerID")));
-    dispatch(getDefaultAddress(sessionStorage.getItem("customerID")));
+    dispatch(fetchAddresses(localStorage.getItem("customerID")));
+    dispatch(getDefaultAddress(localStorage.getItem("customerID")));
     console.log("check");
-    dispatch(calcCart(sessionStorage.getItem("customerID")));
+    dispatch(calcCart(localStorage.getItem("customerID")));
   };
   useEffect(() => {
     // Lắng nghe sự thay đổi của defaultAddress và cập nhật addressActive
@@ -157,53 +157,54 @@ export default function CheckoutPage() {
     // console.log("check");
     // e.preventDefault();
     const orderData = {
-      customerId: sessionStorage.getItem("customerID"),
+      customerId: localStorage.getItem("customerID"),
       paymentId: paymentActive.paymentId,
       orderName: addressActive.addressName,
       orderPhone: addressActive.addressPhone,
       orderAddress: addressActive.addressFull,
       orderNote: orderNote,
       orderShipFee: calculateShipFee,
-      orderTotalAmount: parseInt(calcCartData.totalMoney) + 25000,
+      orderTotalAmount: parseInt(calcCartData.totalMoney + calculateShipFee) ,
     }
     console.log(orderData);
 
     if (paymentActive.paymentId == 1) {
       console.log("cash on delivery");
       dispatch(createOrder(orderData)).then(() => {
-        dispatch(getCustomerInfo(sessionStorage.getItem("customerID")));
-        dispatch(fetchCartDetail(sessionStorage.getItem("customerID")));
-        dispatch(fetchAddresses(sessionStorage.getItem("customerID")));
-        dispatch(getDefaultAddress(sessionStorage.getItem("customerID")));
+        dispatch(getCustomerInfo(localStorage.getItem("customerID")));
+        dispatch(fetchCartDetail(localStorage.getItem("customerID")));
+        dispatch(fetchAddresses(localStorage.getItem("customerID")));
+        dispatch(getDefaultAddress(localStorage.getItem("customerID")));
         dispatch(fetchPayments());
-        dispatch(calcCart(sessionStorage.getItem("customerID")));
+        dispatch(calcCart(localStorage.getItem("customerID")));
         handleClickOpen();
         setTimeout(() => {
             handleClose();
           }, 5000);
       });
     } else {
-      sessionStorage.setItem("paymentId", orderData.paymentId);
-      sessionStorage.setItem("orderName", orderData.orderName);
-      sessionStorage.setItem("orderPhone", orderData.orderPhone);
-      sessionStorage.setItem("orderAddress", orderData.orderAddress);
-      sessionStorage.setItem("orderNote", orderData.orderNote);
-      sessionStorage.setItem("orderShipFee", orderData.orderShipFee);
-      sessionStorage.setItem("orderTotalAmount", orderData.orderTotalAmount);
+      localStorage.setItem("paymentId", orderData.paymentId);
+      localStorage.setItem("orderName", orderData.orderName);
+      localStorage.setItem("orderPhone", orderData.orderPhone);
+      localStorage.setItem("orderAddress", orderData.orderAddress);
+      localStorage.setItem("orderNote", orderData.orderNote);
+      localStorage.setItem("orderShipFee", orderData.orderShipFee);
+      localStorage.setItem("orderTotalAmount", orderData.orderTotalAmount);
       console.log("VNPay");
       const vnpayData = {
         amount: orderData.orderTotalAmount,
         orderInfo: "thanh toan vnpay"
       }
+      console.log(vnpayData);
       dispatch(payWithVNPay(vnpayData)).then(() => {
         console.log("Redirect to VNPay page");
-        // sessionStorage.removeItem("paymentId", orderData.paymentId);
-        // sessionStorage.removeItem("orderName", orderData.orderName);
-        // sessionStorage.removeItem("orderPhone", orderData.orderPhone);
-        // sessionStorage.removeItem("orderAddress", orderData.orderAddress);
-        // sessionStorage.removeItem("orderNote", orderData.orderNote);
-        // sessionStorage.removeItem("orderShipFee", orderData.orderShipFee);
-        // sessionStorage.removeItem("orderTotalAmount", orderData.orderTotalAmount);
+        // localStorage.removeItem("paymentId", orderData.paymentId);
+        // localStorage.removeItem("orderName", orderData.orderName);
+        // localStorage.removeItem("orderPhone", orderData.orderPhone);
+        // localStorage.removeItem("orderAddress", orderData.orderAddress);
+        // localStorage.removeItem("orderNote", orderData.orderNote);
+        // localStorage.removeItem("orderShipFee", orderData.orderShipFee);
+        // localStorage.removeItem("orderTotalAmount", orderData.orderTotalAmount);
       })
     }
     
@@ -456,7 +457,7 @@ export default function CheckoutPage() {
                     spacing={2}
                   >
                     <h3>Thành tiền</h3>
-                    <div>{formatNumberWithCommas(parseInt(calcCartData.totalMoney))} VNĐ</div>
+                    <div>{formatNumberWithCommas(parseInt(calcCartData.totalMoney) + calculateShipFee)} VNĐ</div>
                   </Stack>
                   {/* <div>wefewf</div> */}
                   <Stack

@@ -32,11 +32,11 @@ export default function CustomerLoginPage() {
     console.log(loginData);
     dispatch(customerLogin(loginData))
       .then(() => {
-        if (sessionStorage.getItem("customerID")) {
+        if (localStorage.getItem("customerID")) {
           navigate('/');
-          dispatch(countCartDetail(sessionStorage.getItem("customerID")));
-          dispatch(getOrderCountByCustomerId(sessionStorage.getItem("customerID")));
-          dispatch(getCustomerInfo(sessionStorage.getItem("customerID")));
+          dispatch(countCartDetail(localStorage.getItem("customerID")));
+          dispatch(getOrderCountByCustomerId(localStorage.getItem("customerID")));
+          dispatch(getCustomerInfo(localStorage.getItem("customerID")));
         } else {
           alert("Sai TK hoặc MK")
         }

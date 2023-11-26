@@ -23,16 +23,15 @@ import com.backend.springboot.ecommerce.entity.User;
 import com.backend.springboot.ecommerce.entity.Order;
 import com.backend.springboot.ecommerce.entity.OrderDetail;
 import com.backend.springboot.ecommerce.entity.Payment;
-import com.backend.springboot.ecommerce.entity.Shipper;
 import com.backend.springboot.ecommerce.payload.request.OrderRequestDto;
 import com.backend.springboot.ecommerce.payload.response.MessageResponse;
 import com.backend.springboot.ecommerce.payload.response.OrderResponseDto;
 import com.backend.springboot.ecommerce.repository.CartDetailRepository;
 import com.backend.springboot.ecommerce.repository.UserRepository;
+import com.backend.springboot.ecommerce.service.EmailService;
 import com.backend.springboot.ecommerce.repository.OrderDetailRepository;
 import com.backend.springboot.ecommerce.repository.OrderRepository;
 import com.backend.springboot.ecommerce.repository.PaymentRepository;
-import com.backend.springboot.ecommerce.repository.ShipperRepository;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -44,15 +43,13 @@ public class OrderController {
     @Autowired
     private UserRepository customerRepository;
     @Autowired
-    private ShipperRepository shipperRepository;
-    @Autowired
     private PaymentRepository paymentRepository;
-    // @Autowired
-    // private AdminRepository adminRepository;
     @Autowired
     private CartDetailRepository cartDetailRepository;
     @Autowired
     private OrderDetailRepository orderDetailRepository;
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrder() {
@@ -122,6 +119,21 @@ public class OrderController {
                 System.out.println("Deleted: #" + cartDetail.getCartDetailId());
                 cartDetailRepository.delete(cartDetail);
             }
+
+            // Gửi email chúc mừng khi đặt hàng thành công
+            
+            // String to = customer.getUserEmail(); // Địa chỉ email của người nhận
+            // String subject = "Chúc mừng! Đơn hàng của bạn đã được đặt thành công";
+            // String message = "Xin chào, " + customer.getUserName() + "!<br/><br/>"
+            //         + "Cảm ơn bạn đã đặt hàng tại cửa hàng của chúng tôi. Đơn hàng của bạn đã được nhận và đang được xử lý.<br/><br/>"
+            //         + "Thông tin đơn hàng:<br/>"
+            //         + "Mã đơn hàng: " + savedOrder.getOrderCode() + "<br/>"
+            //         + "Thời gian đặt hàng: " + savedOrder.getOrderTime() + "<br/><br/>"
+            //         + "Xin cảm ơn và chúc bạn một ngày tốt lành!";
+            
+            // // Gửi email khi đặt hàng thành công
+            // emailService.sendEmail2(to, subject, message);
+
             return ResponseEntity.ok(new MessageResponse("Create order successfully!!!"));
         } else {
             return new ResponseEntity<>(new MessageResponse("Customer or Payment not found!"), HttpStatus.NOT_FOUND);
@@ -152,19 +164,53 @@ public class OrderController {
     @GetMapping("/count/{customerId}")
     public ResponseEntity<?> countOrder (@PathVariable Integer customerId) {
         List<Order> orders = orderRepository.findOrderByCustomerID(customerId);
-
         int count = 0;
-
         for (Order order : orders) {
             System.out.println(order.getOrderCode());
             count ++;
         }
-
         OrderResponseDto orderResponseDto = new OrderResponseDto();
         orderResponseDto.setOrderCount(count);
-        
         return ResponseEntity.ok(orderResponseDto);
     }
+
+    @GetMapping("/byShipperId/{shipperId}")
+    public ResponseEntity<?> getOrderByShipperId (@PathVariable Integer shipperId) {
+        List<Order> orders = orderRepository.findOrderByShipperID(shipperId);
+        return new ResponseEntity<List<Order>>(orders, HttpStatus.OK);
+    }
+
+    @PutMapping("/confirmPayment/{orderId}")
+    public ResponseEntity<?> confirmPayment(@PathVariable Integer orderId) {
+        Optional<Order> orderOptional = orderRepository.findById(orderId);
+        if (orderOptional.isPresent()) {
+            Order order = orderOptional.get();
+            order.setOrderPaid(LocalDateTime.now());
+            Order savedOrder = orderRepository.save(order);
+            System.out.println("Order paid: " + savedOrder.getOrderId());
+            return ResponseEntity.ok(new MessageResponse("Paid successfully!"));
+        } else {
+            return new ResponseEntity<>(new MessageResponse("Order not found!"), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/complete/{orderId}")
+    public ResponseEntity<?> completeOrder(@PathVariable Integer orderId) {
+        Optional<Order> orderOptional = orderRepository.findById(orderId);
+        if (orderOptional.isPresent()) {
+            Order order = orderOptional.get();
+            order.setOrderCompleted(LocalDateTime.now());
+            order.setOrderStatus(5);
+            Order savedOrder = orderRepository.save(order);
+            System.out.println("Order completed: " + savedOrder.getOrderId());
+            return ResponseEntity.ok(new MessageResponse("Completed successfully!"));
+        } else {
+            return new ResponseEntity<>(new MessageResponse("Order not found!"), HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+
 
 
 

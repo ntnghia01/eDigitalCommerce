@@ -50,7 +50,7 @@ export default function EditAddressComponent(props) {
   };
 
   const [addressData, setAddressData] = useState({
-    customerId: sessionStorage.getItem("customerID"),
+    customerId: localStorage.getItem("customerID"),
     addressName: address.addressName,
     addressPhone: address.addressPhone,
     addressFull: address.addressFull,
@@ -152,7 +152,7 @@ export default function EditAddressComponent(props) {
     dispatch(editAddress({ addressId: editID, addressData: addressData })).then(
       () => {
         handleSnackbar("Cập nhật địa chỉ thành công!");
-        dispatch(fetchAddresses(sessionStorage.getItem("customerID")));
+        dispatch(fetchAddresses(localStorage.getItem("customerID")));
         console.log("Edit address successfully");
         handleClose();
       }

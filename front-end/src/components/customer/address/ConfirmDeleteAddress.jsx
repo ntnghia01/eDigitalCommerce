@@ -38,7 +38,7 @@ export default function ConfirmDeleteAddress(props) {
     e.preventDefault();
     dispatch(deleteAddress(props.deleteID))
       .then(() => {
-        dispatch(fetchAddresses(sessionStorage.getItem('customerID')));
+        dispatch(fetchAddresses(localStorage.getItem('customerID')));
         setOpen(false);
         handleSnackbar("Xóa thành công!");
         console.log('Delete address successfully');

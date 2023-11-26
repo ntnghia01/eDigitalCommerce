@@ -79,7 +79,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function CustomerTopBar() {
   const { mode, setMode } = useColorScheme();
   console.log("check topbar render");
-  const customerLogin = sessionStorage.getItem("customerName");
+  const customerLogin = localStorage.getItem("customerName");
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -97,9 +97,9 @@ export default function CustomerTopBar() {
   const dispatch = useDispatch();
 
   const handleCloseUserMenu = () => {
-    sessionStorage.removeItem("customerID");
-    sessionStorage.removeItem("customerName");
-    sessionStorage.removeItem("customerToken");
+    localStorage.removeItem("customerID");
+    localStorage.removeItem("customerName");
+    localStorage.removeItem("customerToken");
 
     setAnchorElUser(null);
     dispatch(deleteCustomerInfo());
@@ -153,13 +153,13 @@ export default function CustomerTopBar() {
 
     setRecognition(recognitionInstance);
     
-    dispatch(countCartDetail(sessionStorage.getItem("customerID")));
-    dispatch(getOrderCountByCustomerId(sessionStorage.getItem("customerID")));
+    dispatch(countCartDetail(localStorage.getItem("customerID")));
+    dispatch(getOrderCountByCustomerId(localStorage.getItem("customerID")));
   },[])
 
   useEffect(() => {
-    dispatch(countCartDetail(sessionStorage.getItem("customerID")));
-    dispatch(getOrderCountByCustomerId(sessionStorage.getItem("customerID")));
+    dispatch(countCartDetail(localStorage.getItem("customerID")));
+    dispatch(getOrderCountByCustomerId(localStorage.getItem("customerID")));
   },[])
 
 
@@ -304,7 +304,7 @@ export default function CustomerTopBar() {
                 aria-label="show 4 new cart"
                 color="inherit"
                 onClick={() =>
-                  navigate(`/cart/${sessionStorage.getItem("customerID")}`)
+                  navigate(`/cart/${localStorage.getItem("customerID")}`)
                 }
               >
                 <Badge badgeContent={countCart} color="error" >
@@ -316,7 +316,7 @@ export default function CustomerTopBar() {
                 aria-label="show 4 new history"
                 color="inherit"
                 onClick={() =>
-                  navigate(`/history/${sessionStorage.getItem("customerID")}`)
+                  navigate(`/history/${localStorage.getItem("customerID")}`)
                 }
               >
                 <Badge badgeContent={countOrder} color="error">

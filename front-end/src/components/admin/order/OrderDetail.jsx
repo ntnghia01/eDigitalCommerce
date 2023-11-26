@@ -25,6 +25,7 @@ import { getOrderDetailByOrderId } from "../../../slices/orderSlice";
 import ConfirmPayment from "./ConfirmPayment";
 import ConfirmOrder from "./ConfirmOrder";
 import ConfirmCancel from "./ConfirmCancel";
+import CompleteOrder from "./CompleteOrder";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -125,7 +126,7 @@ export default function OrderDetail(props) {
             alignItems="flex-start"
             //   spacing={10}
           >
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Stack spacing={2}>
                 <div>Tên khách hàng: {order.user.userName}</div>
                 <div>
@@ -184,7 +185,7 @@ export default function OrderDetail(props) {
                 </div>
               </Stack>
             </Grid>
-            <Grid item xs={6} sx={{ borderLeft: 1 }}>
+            <Grid item xs={12} sm={6} sx={{ borderLeft: 1 }}>
               <h3>Thông tin sản phẩm</h3>
               <Stack spacing={3}>
                 {orderDetails.map((orderDetail) => (
@@ -228,8 +229,9 @@ export default function OrderDetail(props) {
                     Trạng thái: {
                     order.orderStatus==1?'Đang chờ xử lý'
                     : order.orderStatus==2? 'Đang chờ giao'
-                    : order.orderStatus==3? 'Đã giao'
-                    : order.orderStatus==4? 'Đã hoàn thành'
+                    : order.orderStatus==3? 'Đang giao'
+                    : order.orderStatus==4? 'Đã giao'
+                    : order.orderStatus==5? 'Đã hoàn thành'
                     : 'Đã hủy'
                     }
                     </h4>
@@ -240,7 +242,8 @@ export default function OrderDetail(props) {
         <DialogActions sx={{ borderTop: 1 }}>
           <ConfirmOrder order={order} />
           <ConfirmPayment order={order} />
-          <Button startIcon={<CheckIcon />} variant="outlined" >Đánh dấu hoàn thành</Button>
+          {/* <Button startIcon={<CheckIcon />} variant="outlined" >Đánh dấu hoàn thành</Button> */}
+          <CompleteOrder order={order} />
           <ConfirmCancel order={order} />
         </DialogActions>
       </Dialog>

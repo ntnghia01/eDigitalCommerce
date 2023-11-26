@@ -14,6 +14,7 @@ import { getOrderByCustomerId } from "../../../slices/orderSlice";
 import OrderHistoryDetailComponent from "../../../components/customer/history/OrderHistoryDetailComponent";
 import CancelOrderComponent from "../../../components/customer/history/CancelOrderComponent";
 import ReviewOrderComponent from "../../../components/customer/history/ReviewOrderComponent";
+import { fetchReviews } from "../../../slices/reviewSlice";
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor =
@@ -64,10 +65,12 @@ export default function OrderHistoryPage() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getOrderByCustomerId(sessionStorage.getItem("customerID")));
+    dispatch(getOrderByCustomerId(localStorage.getItem("customerID")));
+    dispatch(fetchReviews());
   }, [dispatch]);
 
   const orderHistory = useSelector((state) => state.order.orderHistory);
+  const reviews = useSelector((state) => state.review.reviews);
 
   return (
     <>
@@ -132,23 +135,26 @@ export default function OrderHistoryPage() {
                     ) : order.orderStatus == 2 ? (
                       <span style={{ color: "orange" }}>Đang chờ giao</span>
                     ) : order.orderStatus == 3 ? (
-                      "Đã giao"
+                      "Đang giao"
                     ) : order.orderStatus == 4 ? (
-                      "Đã hoàn thành"
-                    ) : (
-                      "Đã hủy"
-                    )}
+                      <span style={{ color: "green" }}>Đã giao</span>
+                    ) : order.orderStatus == 5 ? (
+                      <span style={{ color: "green" }}>Hoàn thành</span>
+                    ) : order.orderStatus == -1 ? (
+                      <span style={{ color: "red" }}>Đã hủy</span>
+                    ) : ("Không xác định")}
                   </div>
                 </Stack>
               </Grid>
               <Grid item xs={2}>
                 <Stack spacing={2}>
                   <OrderHistoryDetailComponent order={order}/>
-                  {order.orderCompleted == null ?
+                  {order.orderConfirmed == null ?
                     <CancelOrderComponent />
                     :
-                    <ReviewOrderComponent />
+                    ""
                   }
+                  <ReviewOrderComponent order={order}/>
                 </Stack>
               </Grid>
             </Grid>

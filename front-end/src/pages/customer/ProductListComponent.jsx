@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BrowserRouter, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Link, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
@@ -32,6 +32,8 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 export default function ProductListComponent () {
 
+    const navigate = useNavigate();
+
     const customer = useSelector((state) => state.customer.customer);
     // console.log(customer);
 
@@ -49,7 +51,7 @@ export default function ProductListComponent () {
     const dispatch = useDispatch();
     const products = useSelector((state) => state.product.products);
 
-    const [userLogin, setUserLogin] = useState(sessionStorage.getItem('customerID'));
+    const [userLogin, setUserLogin] = useState(localStorage.getItem('customerID'));
 
     React.useEffect(() => {
         dispatch(fetchAvailableProducts());
@@ -59,14 +61,14 @@ export default function ProductListComponent () {
         const cartDetailData = {
             proId: proId,
             cartDetailQuantity: 1,
-            customerId: sessionStorage.getItem('customerID')
+            customerId: localStorage.getItem('customerID')
         }
         dispatch(addToCart(cartDetailData))
             .then(() => {
                 console.log('Thêm vào giỏ thành công');
                 handleOpenSnackbar();
                 
-                dispatch(countCartDetail(sessionStorage.getItem("customerID")));
+                dispatch(countCartDetail(localStorage.getItem("customerID")));
             })
         console.log('re-render');
 
@@ -77,7 +79,7 @@ export default function ProductListComponent () {
             <Box sx={{ flexGrow: 1, padding: 4 }}>
                 <Grid container rowSpacing={5} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                     {products.map((product) => (
-                        <Grid item xs={3} md={3} key={product.proId}>
+                        <Grid item xs={12} sm={6} md={4} lg={2.4} key={product.proId}>
                             <Card sx={{
                                 maxWidth: '100%',
                                 transition: 'transform 0.3s ease-in-out',
@@ -93,7 +95,7 @@ export default function ProductListComponent () {
                                     style={{textAlign: 'center'}}
                                 />
                                 <CardContent>
-                                    <Typography gutterBottom variant="h5" component="div">
+                                    <Typography gutterBottom variant="h7" component="div">
                                     {product.proName}
                                     </Typography>
                                     <Typography variant="body1" color="red">
@@ -118,6 +120,7 @@ export default function ProductListComponent () {
             <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleCloseSnackbar}>
                 <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%', color: 'white' }}>
                 Thêm vào giỏ hàng thành công!
+                <div><Button variant="contained" color="success" size="small" sx={{color: 'white'}} onClick={() => navigate(`/cart/${localStorage.getItem('customerID')}`)}>Xem giỏ hàng</Button></div>
                 </Alert>
             </Snackbar>
         </>

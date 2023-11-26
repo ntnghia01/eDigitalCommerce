@@ -125,7 +125,7 @@ export default function Cart() {
       console.log("Delete successfully");
       handleOpenSnackbar();
       
-      dispatch(countCartDetail(sessionStorage.getItem("customerID")));
+      dispatch(countCartDetail(localStorage.getItem("customerID")));
       dispatch(calcCart(customerId));
      })
   }

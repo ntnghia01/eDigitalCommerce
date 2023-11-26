@@ -20,8 +20,8 @@ import AddIcon from "@mui/icons-material/Add";
 import { FormControl, Grid, InputAdornment, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { confirmOrder, fetchOrder, getOrderDetailByOrderId } from "../../../slices/orderSlice";
-import { fetchShippers } from "../../../slices/shipperSlice";
+import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
+import { fetchOrderByShipper, startShip } from "../../slices/shipperSlice";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -56,7 +56,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function ConfirmOrder(props) {
+export default function StartShipComponent(props) {
   console.log("check render");
   const { order } = props;
   const [open, setOpen] = React.useState(false);
@@ -80,81 +80,42 @@ export default function ConfirmOrder(props) {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(fetchShippers());
-  }, [dispatch]);
-
-  const shippers = useSelector((state) => state.shipper.shippers);
-  // console.log(shippers);
-
   const [confirmShipper, setConfirmShipper] = useState();
 
   const handleSubmit = (e) => {
-    const confirmData = {
-      adminId: localStorage.getItem("adminID"),
-      shipperId: confirmShipper
-    };
-    console.log(confirmData);
-    dispatch(confirmOrder({orderId: order.orderId, confirmData: confirmData}))
+    console.log("Start");
+    dispatch(startShip(order.orderId))
       .then(() => {
         handleClose();
-        dispatch(fetchOrder());
+        dispatch(fetchOrderByShipper(localStorage.getItem("shipperID")));
         handleOpenSnackbar();
       });
   }
 
   return (
     <>
-      <Button startIcon={<RecommendIcon />} variant="contained" onClick={() => {handleClickOpen();}} disabled={order.orderConfirmed == null ? false : true}>Xác nhận đơn hàng</Button>
+      <Button startIcon={<PlayCircleFilledWhiteIcon />} variant="contained" onClick={() => {handleClickOpen();}}>Bắt đầu giao</Button>
       <Dialog
         open={open}
+        TransitionComponent={Transition}
+        keepMounted
         onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+        aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-title">
-          {"Vui lòng điền các thông tin để xác nhận đơn hàng"}
-        </DialogTitle>
+        <DialogTitle>{"Bắt đầu giao đơn hàng"}</DialogTitle>
         <DialogContent>
-          {/* <DialogContentText id="alert-dialog-description">
-            Let Google help apps determine location. This means sending
-            anonymous location data to Google, even when no apps are running.
-          </DialogContentText> */}
-          <FormControl fullWidth sx={{mt: 3}}>
-            <InputLabel id="demo-simple-select-label">Chỉ định người giao</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              defaultValue=""
-              label="Người giao"
-              onChange={(e) => {
-                setConfirmShipper(e.target.value);
-              }}
-            >
-                {shippers.map((shipper) => (
-                    <MenuItem key={shipper.userId} value={shipper.userId}>{shipper.userName} - {shipper.userPhone}</MenuItem>
-                ))}
-            </Select>
-          </FormControl>
+          <DialogContentText id="alert-dialog-slide-description">
+            Bắt đầu giao đơn hàng #{order.orderId} này?
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleSubmit}>Xác nhận</Button>
-          <Button onClick={handleClose} autoFocus>
-            Hủy
-          </Button>
+          <Button onClick={handleSubmit}>Bắt đầu</Button>
+          <Button onClick={handleClose}>Hủy</Button>
         </DialogActions>
       </Dialog>
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity="success"
-          sx={{ width: "100%", color: "white" }}
-        >
-          Xác nhận đơn hàng thành công!
+      <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%', color: 'white' }}>
+          Đã bắt đầu giao
         </Alert>
       </Snackbar>
     </>

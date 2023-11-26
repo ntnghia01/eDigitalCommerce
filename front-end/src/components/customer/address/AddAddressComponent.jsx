@@ -42,7 +42,7 @@ export default function AddAddressComponent(props) {
   };
 
   const [addressData, setAddressData] = useState({
-    customer: sessionStorage.getItem('customerID'),
+    customer: localStorage.getItem('customerID'),
     addressName: "",
     addressPhone: "",
     addressFull: "",
@@ -131,11 +131,11 @@ export default function AddAddressComponent(props) {
     dispatch(addAddress(addressData))
       .then(() => {
         handleSnackbar("Thêm địa chỉ thành công!");
-        dispatch(fetchAddresses(sessionStorage.getItem('customerID')));
+        dispatch(fetchAddresses(localStorage.getItem('customerID')));
         console.log("Add address successfully");
         handleClose();
         handleSetAddressActive();
-        dispatch(fetchAddresses(sessionStorage.getItem('customerID')));
+        dispatch(fetchAddresses(localStorage.getItem('customerID')));
       })
   }
   const [isDefault, setIsDefault] = useState(1);

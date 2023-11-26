@@ -18,12 +18,13 @@ import { useNavigate } from 'react-router-dom';
 export default function CustomerSignupPage() {
 
   const [signupData, setSignupData] = useState({
-    customerPhone: "",
-    customerPassword: "",
-    customerName: "",
-    customerSex: 3,
-    customerEmail: "",
-    customerBirthday: "",
+    userPhone: "",
+    userPassword: "",
+    userName: "",
+    userSex: 3,
+    userEmail: "",
+    userBirthday: "",
+    userRole: 1
   });
 
   const handleInputChange = (e) => {
@@ -59,8 +60,8 @@ export default function CustomerSignupPage() {
         <Stack spacing={2}>
           <TextField
             // margin="dense"
-            name="customerPhone"
-            id="customer_phone"
+            name="userPhone"
+            id="user_phone"
             label="Số điện thoại"
             type="text"
             variant="outlined"
@@ -70,8 +71,8 @@ export default function CustomerSignupPage() {
           />
           <TextField
             // margin="dense"
-            name="customerPassword"
-            id="customer_password"
+            name="userPassword"
+            id="user_password"
             label="Mật khẩu"
             type="password"
             variant="outlined"
@@ -81,8 +82,8 @@ export default function CustomerSignupPage() {
           />
           <TextField
             // margin="dense"
-            name="customerName"
-            id="customer_name"
+            name="userName"
+            id="user_name"
             label="Họ tên"
             type="text"
             variant="outlined"
@@ -93,7 +94,7 @@ export default function CustomerSignupPage() {
           <RadioGroup
             row
             aria-labelledby="demo-row-radio-buttons-group-label"
-            name="customerSex"
+            name="userSex"
             // value={supplierStatus}
             onChange={(e) => {
                 handleInputChange(e);
@@ -104,8 +105,8 @@ export default function CustomerSignupPage() {
             <FormControlLabel value="3" control={<Radio />} label="Khác" />
           </RadioGroup>
           <TextField
-            name="customerEmail"
-            id="customer_email"
+            name="userEmail"
+            id="user_email"
             label="Email"
             type="email"
             variant="outlined"
@@ -114,8 +115,8 @@ export default function CustomerSignupPage() {
             }}
           />
           <TextField
-            name="customerBirthday"
-            id="customer_birthday"
+            name="userBirthday"
+            id="user_birthday"
             label="Ngày sinh"
             type="date"
             variant="outlined"

@@ -12,6 +12,8 @@ import CustomerPage from './pages/customer/Customer';
 import CustomerLoginPage from './pages/customer/login';
 import CustomerSignupPage from './pages/customer/signup';
 import AdminLoginPage from './pages/admin/login/AdminLoginPage';
+import ShipperLoginPage from './pages/shipper/ShipperLoginPage';
+import Shipper from './pages/shipper/Shipper';
 
 
 function App() {
@@ -28,6 +30,8 @@ function App() {
           {/* <Route path='/signup' element={<CustomerSignupPage />}></Route> */}
           <Route path='/admin/*' element={<Admin />}></Route>
           <Route path="/admin/login" element={<AdminLoginPage />} />
+          <Route path="/shipper" element={<Shipper />} />
+          <Route path="/shipper/login" element={<ShipperLoginPage />} />
         </Routes>
       </BrowserRouter>
     </>

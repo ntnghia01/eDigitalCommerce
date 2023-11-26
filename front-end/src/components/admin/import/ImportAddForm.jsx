@@ -58,7 +58,7 @@ export default function ImportAddForm() {
   }, [dispatch]);
 
   const [supplierId, setSupplierID] = React.useState();
-  const [adminId, setAdminID] = React.useState(sessionStorage.getItem("adminID"));
+  const [adminId, setAdminID] = React.useState(localStorage.getItem("adminID"));
   let importTotal = 0;
 
   const handleAddDetailClick = () => {

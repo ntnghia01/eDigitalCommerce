@@ -60,6 +60,22 @@ export const getOrderCountByCustomerId = createAsyncThunk (
     }
 );
 
+export const confirmPayment = createAsyncThunk (
+    'order/paid',
+    async (orderId) => {
+        const response = await axios.put(prefixAPI + `/api/order/confirmPayment/${orderId}`);
+        return response.data;
+    }
+);
+
+export const completeOrder = createAsyncThunk (
+    'order/complete',
+    async (orderId) => {
+        const response = await axios.put(prefixAPI + `/api/order/complete/${orderId}`);
+        return response.data;
+    }
+);
+
 const orderSlice = createSlice ({
     name: 'order',
     initialState,

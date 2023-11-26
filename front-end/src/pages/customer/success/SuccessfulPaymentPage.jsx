@@ -33,37 +33,52 @@ export default function SuccessfulPaymentPage() {
         setOrderInfo(vnpOrderInfo);
 
         // If both values exist, dispatch the action
-        if (vnpTransactionStatus && vnpOrderInfo && sessionStorage.getItem("paymentId")) {
+        if (vnpTransactionStatus && vnpOrderInfo && localStorage.getItem("paymentId")) {
             const orderData = {
-                customerId: sessionStorage.getItem("customerID"),
-                paymentId: sessionStorage.getItem("paymentId"),
-                orderName: sessionStorage.getItem("orderName"),
-                orderPhone: sessionStorage.getItem("orderPhone"),
-                orderAddress: sessionStorage.getItem("orderAddress"),
-                orderNote: sessionStorage.getItem("orderNote"),
-                orderShipFee: sessionStorage.getItem("orderShipFee"),
-                orderTotalAmount: sessionStorage.getItem("orderTotalAmount")
+                customerId: localStorage.getItem("customerID"),
+                paymentId: localStorage.getItem("paymentId"),
+                orderName: localStorage.getItem("orderName"),
+                orderPhone: localStorage.getItem("orderPhone"),
+                orderAddress: localStorage.getItem("orderAddress"),
+                orderNote: localStorage.getItem("orderNote"),
+                orderShipFee: localStorage.getItem("orderShipFee"),
+                orderTotalAmount: localStorage.getItem("orderTotalAmount")
             }
             dispatch(createOrder(orderData)).then(() => {
                 console.log("Pay with VNPay successfully");
-                sessionStorage.removeItem("paymentId", orderData.paymentId);
-                sessionStorage.removeItem("orderName", orderData.orderName);
-                sessionStorage.removeItem("orderPhone", orderData.orderPhone);
-                sessionStorage.removeItem("orderAddress", orderData.orderAddress);
-                sessionStorage.removeItem("orderNote", orderData.orderNote);
-                sessionStorage.removeItem("orderShipFee", orderData.orderShipFee);
-                sessionStorage.removeItem("orderTotalAmount", orderData.orderTotalAmount);
-                dispatch(getCustomerInfo(sessionStorage.getItem("customerID")));
-                dispatch(fetchCartDetail(sessionStorage.getItem("customerID")));
-                dispatch(fetchAddresses(sessionStorage.getItem("customerID")));
-                dispatch(getDefaultAddress(sessionStorage.getItem("customerID")));
+                dispatch(getCustomerInfo(localStorage.getItem("customerID")));
+                dispatch(fetchCartDetail(localStorage.getItem("customerID")));
+                dispatch(fetchAddresses(localStorage.getItem("customerID")));
+                dispatch(getDefaultAddress(localStorage.getItem("customerID")));
                 dispatch(fetchPayments());
-                dispatch(calcCart(sessionStorage.getItem("customerID")));
-                dispatch(countCartDetail(sessionStorage.getItem("customerID")));
-                dispatch(getOrderCountByCustomerId(sessionStorage.getItem("customerID")));
+                dispatch(calcCart(localStorage.getItem("customerID")));
+                dispatch(countCartDetail(localStorage.getItem("customerID")));
+                dispatch(getOrderCountByCustomerId(localStorage.getItem("customerID")));
             });
         }
     }, [location.search, dispatch]);
+
+    const handleRedirectToHomePage = () => {
+        localStorage.removeItem("paymentId");
+        localStorage.removeItem("orderName");
+        localStorage.removeItem("orderPhone");
+        localStorage.removeItem("orderAddress");
+        localStorage.removeItem("orderNote");
+        localStorage.removeItem("orderShipFee");
+        localStorage.removeItem("orderTotalAmount");
+        navigate('/');
+    }
+
+    const handleRedirectToHistoryPage = () => {
+        localStorage.removeItem("paymentId");
+        localStorage.removeItem("orderName");
+        localStorage.removeItem("orderPhone");
+        localStorage.removeItem("orderAddress");
+        localStorage.removeItem("orderNote");
+        localStorage.removeItem("orderShipFee");
+        localStorage.removeItem("orderTotalAmount");
+        navigate(`/history/${localStorage.getItem('customerID')}`)
+    }
 
     return (
         <>
@@ -73,8 +88,8 @@ export default function SuccessfulPaymentPage() {
                         <AlertTitle>Thanh toán thành công qua VNPay</AlertTitle>
                         Chúc mừng bạn đã thanh toán thành công — <strong>xem lại đơn hàng!</strong>
                     </Alert>
-                    <Button variant="contained" sx={{margin: 1}} startIcon={<HomeIcon />} onClick={() => {navigate('/')}}>Về trang chủ</Button>
-                    <Button variant="contained" sx={{margin: 1}} startIcon={<InventoryIcon />} onClick={() => {navigate(`/history/${sessionStorage.getItem('customerID')}`)}}>Xem lại đơn hàng</Button></>
+                    <Button variant="contained" sx={{margin: 1}} startIcon={<HomeIcon />} onClick={() => handleRedirectToHomePage()}>Về trang chủ</Button>
+                    <Button variant="contained" sx={{margin: 1}} startIcon={<InventoryIcon />} onClick={() => handleRedirectToHistoryPage()}>Xem lại đơn hàng</Button></>
                 ) : (<>
                     <Alert severity="error">
                         <AlertTitle>Thanh toán thất bại</AlertTitle>

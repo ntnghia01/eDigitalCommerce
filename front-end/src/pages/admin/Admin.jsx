@@ -65,6 +65,7 @@ import ShipperAccountPage from "./account/ShipperAccountPage";
 import CustomerAccountPage from "./account/CustomerAccountPage";
 import AdminAccountPage from "./account/AdminAccountPage";
 import AdminLoginPage from "./login/AdminLoginPage";
+import ReviewPage from "./review/ReviewPage";
 
 // import '../../../public/avatar.png'
 
@@ -129,8 +130,8 @@ function Admin() {
                     fontSize: collapse ? "1.5rem" : "2.125rem",
                   }}
                 >
-                  {sessionStorage.getItem('adminName') ? 
-                    sessionStorage.getItem('adminName') : "Chưa đăng nhập"}
+                  {localStorage.getItem('adminName') ? 
+                    localStorage.getItem('adminName') : "Chưa đăng nhập"}
                 </Typography>
                 <Typography
                   variant="h5"
@@ -195,7 +196,11 @@ function Admin() {
               {" "}
               Quản Lý Đơn Hàng{" "}
             </MenuItem>
-            <MenuItem icon={<PreviewIcon />} style={{ fontSize: "0.99rem" }}>
+            <MenuItem 
+              icon={<PreviewIcon />} 
+              style={{ fontSize: "0.99rem" }}
+              component={<Link to="/admin/review" />}
+            >
               {" "}
               Quản Lý Đánh Giá{" "}
             </MenuItem>
@@ -208,6 +213,7 @@ function Admin() {
               icon={<ManageAccountsOutlinedIcon />}
               style={{ fontSize: "0.99rem" }}
             >
+              <MenuItem icon={<Person3Icon />} component={<Link to="/admin/account/customer" />}> Khách  hàng </MenuItem>
               <MenuItem
                 rootStyles={{ background: "none" }}
                 component={<Link to="/admin/account/shipper" />}
@@ -216,7 +222,6 @@ function Admin() {
                 {" "}
                 Shipper{" "}
               </MenuItem>
-              <MenuItem icon={<Person3Icon />} component={<Link to="/admin/account/customer" />}> Khách  hàng </MenuItem>
               <MenuItem icon={<SupportAgentIcon />} component={<Link to="/admin/account/admin" />}> Quản trị viên </MenuItem>
             </SubMenu>
           </Menu>
@@ -237,6 +242,7 @@ function Admin() {
             <Route path="/account/shipper" element={<ShipperAccountPage />} />
             <Route path="/account/customer" element={<CustomerAccountPage />} />
             <Route path="/account/admin" element={<AdminAccountPage />} />
+            <Route path="/review" element={<ReviewPage />} />
           </Routes>
         </div>
       </div>

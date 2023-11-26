@@ -1,5 +1,3 @@
-import InfoIcon from '@mui/icons-material/Info';
-
 import * as React from "react";
 import { useState } from "react";
 import Button from "@mui/material/Button";
@@ -17,16 +15,16 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from '@mui/icons-material/Check';
+import InfoIcon from '@mui/icons-material/Info';
+import Divider from '@mui/material/Divider';
 
 // import Icons
 import AddIcon from "@mui/icons-material/Add";
 import { Grid, InputAdornment, Stack, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { getOrderDetailByOrderId } from "../../../slices/orderSlice";
-// import ConfirmPayment from "./ConfirmPayment";
-// import ConfirmOrder from "./ConfirmOrder";
-// import ConfirmCancel from "./ConfirmCancel";
+import { getOrderDetailByOrderId } from "../../slices/orderSlice";
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -57,41 +55,46 @@ function formatNumberWithCommas(input) {
   return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
-export default function OrderHistoryDetailComponent (props) {
-    console.log("Check render OrderHistoryDetailComponent");
-    const { order } = props;
-    const [open, setOpen] = React.useState(false);
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-    const handleClose = () => {
-        setOpen(false);
-    };
+export default function OrderDetailShipperComponent(props) {
+  const { order } = props;
+  const [open, setOpen] = React.useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-    const dispatch = useDispatch();
-    // useEffect(() => {
-    //   dispatch(getOrderDetailByOrderId(order.orderId));
-    // }, [dispatch]);
-    const handleGetOrderDetail = (orderId) => {
-        dispatch(getOrderDetailByOrderId(orderId));
-    };
-    // console.log("check render");
-    const orderDetails = useSelector((state) => state.order.orderDetails);
-    // console.log(orderDetails);
-    return (
-        <>
-        <Button size="small" variant="outlined" startIcon={<InfoIcon />} onClick={() => {
+  const dispatch = useDispatch();
+  // useEffect(() => {
+  //   dispatch(getOrderDetailByOrderId(order.orderId));
+  // }, [dispatch]);
+  const handleGetOrderDetail = (orderId) => {
+    dispatch(getOrderDetailByOrderId(orderId));
+  };
+  // console.log("check render");
+  const orderDetails = useSelector((state) => state.order.orderDetails);
+  // console.log(orderDetails);
+  return (
+    <>
+      <Button
+        onClick={() => {
           handleClickOpen();
           handleGetOrderDetail(order.orderId);
-        }}>Chi tiết</Button>
-        <Dialog
+        }}
+        variant="outlined"
+        startIcon={<InfoIcon />}
+      >
+        Xem chi tiết
+      </Button>
+      <Dialog
         fullScreen
         open={open}
         TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
-        sx={{ width: 1500 }}
+        sx={{ width: "100%", maxWidth: "none" }}
       >
         <AppBar sx={{ position: "relative" }}>
           <Toolbar>
@@ -124,10 +127,18 @@ export default function OrderHistoryDetailComponent (props) {
             alignItems="flex-start"
             //   spacing={10}
           >
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Stack spacing={2}>
                 <div>Tên khách hàng: {order.user.userName}</div>
+                <div>
+                  Tên người giao:{" "}
+                  {order.shipper != null ? order.shipper.shipperName : "Trống"}
+                </div>
                 <div>Hình thức thanh toán: {order.payment.paymentName}</div>
+                <div>
+                  Người duyệt:{" "}
+                  {order.admin != null ? order.admin.adminName : "Trống"}
+                </div>
                 <div>Mã đơn hàng: {order.orderCode}</div>
                 <div>Thời gian đặt hàng: {formatDateTime(order.orderTime)}</div>
                 <div>Tên người nhận: {order.orderName}</div>
@@ -137,66 +148,46 @@ export default function OrderHistoryDetailComponent (props) {
                 <div>
                   Dự kiến giao vào: {formatDateTime(order.orderShipExpected)}
                 </div>
-                {order.shipper != null ? 
-                    <div>
-                    Tên người giao:{" "}
-                    {order.shipper.shipperName}
-                    </div>
-                    : ""
-                }
-                {order.orderShipping != null ?
-                    <div>
-                    Ngày bắt đầu giao:{" "}
-                    {formatDateTime(order.orderShipping)}
-                    </div>
-                    :""
-                }
-                {order.orderShipped != null ?
-                    <div>
-                        Đã giao ngày:{" "}
-                        {formatDateTime(order.orderShipped)}
-                    </div>
-                    : ""
-                }
-                {order.orderPaid != null ?
+                <div>
+                  Ngày duyệt:{" "}
+                  {order.orderConfirmed != null
+                    ? formatDateTime(order.orderConfirmed)
+                    : "Chưa duyệt"}
+                </div>
+                <div>
+                  Ngày giao:{" "}
+                  {order.orderShipping != null
+                    ? formatDateTime(order.orderShipping)
+                    : "Chưa giao"}
+                </div>
+                <div>
+                  Đã giao ngày:{" "}
+                  {order.orderShipped != null
+                    ? formatDateTime(order.orderShipped)
+                    : "Chưa giao"}
+                </div>
                 <div>
                   Ngày thanh toán:{" "}
-                   {formatDateTime(order.orderPaid)}
-                    
+                  {order.orderPaid != null
+                    ? formatDateTime(order.orderPaid)
+                    : "Chưa thanh toán"}
                 </div>
-                : ""}
-                {order.orderCompleted != null ?
                 <div>
                   Ngày hoàn thành:{" "}
-                   {formatDateTime(order.orderCompleted)}
-                    
+                  {order.orderCompleted != null
+                    ? formatDateTime(order.orderCompleted)
+                    : "Chưa hoàn thành"}
                 </div>
-                : ""}
-                {order.orderCancelled != null ?
-                    <div>
-                    Ngày hủy:{" "}
-                    {formatDateTime(order.orderCancelled)}
-                    </div>
-                    : ""
-                }
-                <h4>Phí giao hàng: {formatNumberWithCommas(order.orderShipFee)}đ</h4>
-                  <h4>
-                    Tổng tiền: {formatNumberWithCommas(order.orderTotalAmount)}đ
-                  </h4>
-                  <h4>
-                    Trạng thái: {
-                    order.orderStatus==1?'Đang chờ xử lý'
-                    : order.orderStatus==2? 'Đang chờ giao'
-                    : order.orderStatus==3? 'Đang giao'
-                    : order.orderStatus==4? 'Đã giao'
-                    : order.orderStatus==5? 'Đã hoàn thành'
-                    : order.orderStatus==-1? 'Đã hủy'
-                    : 'Không xác định'
-                    }
-                    </h4>
+                <div>
+                  Ngày hủy:{" "}
+                  {order.orderCancelled != null
+                    ? formatDateTime(order.orderCancelled)
+                    : "Không"}
+                </div>
               </Stack>
             </Grid>
-            <Grid item xs={6} sx={{ borderLeft: 1 }}>
+
+            <Grid item xs={12} sm={6} sx={{ borderLeft: 1 }}>
               <h3>Thông tin sản phẩm</h3>
               <Stack spacing={3}>
                 {orderDetails.map((orderDetail) => (
@@ -231,16 +222,26 @@ export default function OrderHistoryDetailComponent (props) {
                 
                 
               </Stack>
+              <Stack spacing={3} sx={{marginTop: 10}}>
+                  <h4>Phí giao hàng: {formatNumberWithCommas(order.orderShipFee)}đ</h4>
+                  <h4>
+                    Tổng tiền: {formatNumberWithCommas(order.orderTotalAmount)}đ
+                  </h4>
+                  <h4>
+                    Trạng thái: 
+                    { order.orderStatus == 1 ? "Đang chờ xử lý"
+                    : order.orderStatus == 2 ? "Đang chờ giao"
+                    : order.orderStatus == 3 ? "Đang giao"
+                    : order.orderStatus == 4 ? "Đã giao"
+                    : order.orderStatus == 5 ? "Đã hoàn thành"
+                    : order.orderStatus == -1 ? "Đã hủy"
+                    : "Không xác định"}
+                    </h4>
+                </Stack>
             </Grid>
           </Grid>
         </DialogContent>
-        <DialogActions sx={{ borderTop: 1 }}>
-          {/* <ConfirmOrder order={order} />
-          <ConfirmPayment order={order} />
-          <Button startIcon={<CheckIcon />} variant="outlined" >Đánh dấu hoàn thành</Button>
-          <ConfirmCancel order={order} /> */}
-        </DialogActions>
       </Dialog>
-        </>
-    )
+    </>
+  );
 }

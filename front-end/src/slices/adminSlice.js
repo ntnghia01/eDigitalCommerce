@@ -12,9 +12,9 @@ export const adminLogin = createAsyncThunk (
     async (loginData) => {
         const response = await axios.post(prefixAPI + '/api/auth/signin', loginData);
         console.log(response.data);
-        sessionStorage.setItem("adminID", response.data.userId);
-        sessionStorage.setItem("adminName", response.data.username);
-        sessionStorage.setItem("adminToken", response.data.accessToken);
+        localStorage.setItem("adminID", response.data.userId);
+        localStorage.setItem("adminName", response.data.username);
+        localStorage.setItem("adminToken", response.data.accessToken);
         return response.data;
     }
 )

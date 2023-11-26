@@ -15,13 +15,14 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import HandshakeIcon from '@mui/icons-material/Handshake';
+import CheckIcon from '@mui/icons-material/Check';
 
 // import Icons
 import AddIcon from "@mui/icons-material/Add";
 import { Grid, InputAdornment, Stack, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { confirmPayment, fetchOrder, getOrderDetailByOrderId } from '../../../slices/orderSlice';
+import { completeOrder, confirmPayment, fetchOrder, getOrderDetailByOrderId } from '../../../slices/orderSlice';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -51,7 +52,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function ConfirmPayment(props) {
+export default function CompleteOrder(props) {
     const { order } = props;
     const [open, setOpen] = React.useState(false);
     const handleClickOpen = () => {
@@ -79,7 +80,7 @@ export default function ConfirmPayment(props) {
 
   const handleSubmit = (e) => {
     console.log("confirm payment");
-    dispatch(confirmPayment(order.orderId))
+    dispatch(completeOrder(order.orderId))
       .then(() => {
         handleClose();
         dispatch(fetchOrder());
@@ -90,9 +91,9 @@ export default function ConfirmPayment(props) {
 
   return (
     <>
-      <Button startIcon={<HandshakeIcon />} variant='outlined' onClick={() => {handleClickOpen();}} 
-      disabled={order.orderPaid == null ? false : true}
-      >Xác nhận thanh toán</Button>
+      <Button startIcon={<CheckIcon />} variant="outlined" onClick={() => {handleClickOpen();}}
+        disabled={order.orderCompleted == null ? false : true}
+      >Đánh dấu hoàn thành</Button>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -104,7 +105,7 @@ export default function ConfirmPayment(props) {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Xác nhận thanh toán cho đơn hàng #{order.orderId}
+            Xác nhận hoàn thành cho đơn hàng #{order.orderId}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -122,7 +123,7 @@ export default function ConfirmPayment(props) {
           severity="success"
           sx={{ width: "100%", color: "white" }}
         >
-          Xác nhận thanh toán thành công
+          Hoàn thành đơn hàng
         </Alert>
       </Snackbar>
     </>

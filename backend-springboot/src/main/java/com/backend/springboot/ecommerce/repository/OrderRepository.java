@@ -11,4 +11,7 @@ import com.backend.springboot.ecommerce.entity.Order;
 public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Query("SELECT o FROM Order o WHERE o.user.userId = :customerId")
     List<Order> findOrderByCustomerID(@Param("customerId") int customerId);
+
+    @Query("SELECT o FROM Order o WHERE o.shipper.userId = :shipperId ORDER BY o.orderStatus ASC")
+    List<Order> findOrderByShipperID(@Param("shipperId") int shipperId);
 }

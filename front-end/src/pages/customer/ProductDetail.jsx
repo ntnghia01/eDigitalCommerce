@@ -94,13 +94,13 @@ export default function ProductDetail() {
     const cartDetailData = {
       proId: proId,
       cartDetailQuantity: cartDetailQuantity,
-      customerId: sessionStorage.getItem("customerID"),
+      customerId: localStorage.getItem("customerID"),
     };
     dispatch(addToCart(cartDetailData)).then(() => {
       console.log("Thêm vào giỏ thành công");
       handleOpenSnackbar();
       
-      dispatch(countCartDetail(sessionStorage.getItem("customerID")));
+      dispatch(countCartDetail(localStorage.getItem("customerID")));
     });
     console.log("re-render");
   };
@@ -178,6 +178,7 @@ export default function ProductDetail() {
           sx={{ width: "100%", color: "white" }}
         >
           Thêm vào giỏ hàng thành công!
+          <div>Xem giỏ hàng</div>
         </Alert>
       </Snackbar>
     </>

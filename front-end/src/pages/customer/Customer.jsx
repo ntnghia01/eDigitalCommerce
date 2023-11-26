@@ -31,7 +31,7 @@ export default function CustomerPage() {
     <>
       <Box sx={{ flexGrow: 1, backgroundColor: "#eeeeee" }}>
         <Grid container spacing={2}>
-          <Grid item xs={2}></Grid>
+          <Grid item xs={2} sm={0} md={0} lg={0}></Grid>
           <Grid
             item
             xs={8}
@@ -51,7 +51,7 @@ export default function CustomerPage() {
               <Route path="/successfulpayment" element={<SuccessfulPaymentPage />} />
             </Routes>
           </Grid>
-          <Grid item xs={2}></Grid>
+          <Grid item xs={2} sm={0}></Grid>
         </Grid>
       </Box>
       <Box sx={{ position: "relative" }}>

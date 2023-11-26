@@ -16,6 +16,7 @@ import paymentSlice from '../slices/paymentSlice';
 import orderSlice from '../slices/orderSlice';
 import shipperSlice from '../slices/shipperSlice';
 import adminSlice from '../slices/adminSlice';
+import reviewSlice from '../slices/reviewSlice';
 
 
 // const store = createStore(rootReducer, applyMiddleware(thunk));
@@ -33,7 +34,8 @@ const store = configureStore ({
         payment: paymentSlice,
         order: orderSlice,
         shipper: shipperSlice,
-        admin: adminSlice
+        admin: adminSlice,
+        review: reviewSlice
     },
 });
 

@@ -2,10 +2,10 @@ import * as React from 'react';
 import { Grid, Paper, Typography, TextField, Button } from '@mui/material';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { adminLogin } from '../../../slices/adminSlice';
 import { useNavigate } from 'react-router-dom';
+import { shipperLogin } from '../../slices/shipperSlice';
 
-export default function AdminLoginPage() {
+export default function ShipperLoginPage() {
     console.log("Check render");
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -21,18 +21,18 @@ export default function AdminLoginPage() {
             password: password
         }
         console.log(loginData);
-        dispatch(adminLogin(loginData))
-        .then(() => {
-            if (localStorage.getItem("adminID")) {
-                navigate('/admin');
-                // dispatch(countCartDetail(localStorage.getItem("customerID")));
-                // dispatch(getOrderCountByCustomerId(localStorage.getItem("customerID")));
-                // dispatch(getCustomerInfo(localStorage.getItem("customerID")));
-            } else {
-                alert("Sai tài khoản hoặc mật khẩu")
-            }
-            console.log("Đăng nhập thành công");
-        })
+        dispatch(shipperLogin(loginData))
+            .then(() => {
+                if (localStorage.getItem("shipperID")) {
+                    navigate('/shipper');
+                    // dispatch(countCartDetail(localStorage.getItem("customerID")));
+                    // dispatch(getOrderCountByCustomerId(localStorage.getItem("customerID")));
+                    // dispatch(getCustomerInfo(localStorage.getItem("customerID")));
+                } else {
+                    alert("Sai tài khoản hoặc mật khẩu")
+                }
+                console.log("Đăng nhập thành công");
+            })
     };
 
     const handleEnterKeyPress = (event) => {
@@ -46,7 +46,7 @@ export default function AdminLoginPage() {
             <Grid item xs={10} sm={6} md={4}>
                 <Paper elevation={3} style={{ padding: 20 }}>
                     <Typography variant="h5" align="center" gutterBottom>
-                        Đăng nhập Admin
+                        Đăng nhập Shipper
                     </Typography>
                     {/* <form onSubmit={handleLogin}> */}
                         <Grid container spacing={2}>
