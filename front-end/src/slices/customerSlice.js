@@ -44,7 +44,21 @@ export const deleteCustomerInfo = createAsyncThunk (
     }
 )
 
+export const updateCustomerInfomation = createAsyncThunk (
+    'customer/updateInfo',
+    async ({userId, updateData}) => {
+        const response = await axios.put(prefixAPI + `/api/customer/${userId}`, updateData);
+        return response.data;
+    }
+)
 
+export const deleteCustomerAccount = createAsyncThunk (
+    'customer/deleteAccount',
+    async (userId) => {
+        const response = await axios.delete(prefixAPI + `/api/customer/${userId}`);
+        return response.data;
+    }
+)
 
 const customerSlice = createSlice ({
     name: 'customer',

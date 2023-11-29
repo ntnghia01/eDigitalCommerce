@@ -32,6 +32,7 @@ import CategoryEditForm from "../../../components/admin/Category/CategoryEditFor
 import CategoryAddForm from "../../../components/admin/Category/CategoryAddForm";
 import CategoryTable from "../../../components/admin/Category/CategoryTable";
 import ReviewTableComponent from "../../../components/admin/review/ReviewTableComponent";
+import CommentTableComponent from "../../../components/admin/comment/CommentTableComponent";
 
 // import Component
 
@@ -39,12 +40,12 @@ import ReviewTableComponent from "../../../components/admin/review/ReviewTableCo
 
 
 
-export default function ReviewPage() {
+export default function CommentPage() {
   return (
     <>
-      <h1 style={{textAlign: 'center'}}>QUẢN LÝ ĐÁNH GIÁ ĐƠN HÀNG</h1>
+      <h1 style={{textAlign: 'center'}}>QUẢN LÝ BÌNH LUẬN</h1>
       <div style={{ height: 400, width: "100%" }}>
-        <ReviewTableComponent />
+        <CommentTableComponent />
       </div>
     </>
   );

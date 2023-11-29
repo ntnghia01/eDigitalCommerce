@@ -5,7 +5,9 @@ const prefixAPI = 'http://localhost:9004';
 
 const initialState = {
     products: [],
-    product: {}
+    product: {},
+    productByCate: [],
+    productByBrand: []
 }
 
 export const fetchProducts = createAsyncThunk (
@@ -118,6 +120,22 @@ export const searchProductByName = createAsyncThunk (
     }
 )
 
+export const getProductByCategory = createAsyncThunk (
+    'product/getByCategory',
+    async (cateId) => {
+        const response = await axios.get(prefixAPI + `/api/product/category/${cateId}`);
+        return response.data;
+    }
+)
+
+export const getProductByBrand = createAsyncThunk (
+    'product/getByBrand',
+    async (brandId) => {
+        const response = await axios.get(prefixAPI + `/api/product/brand/${brandId}`);
+        return response.data;
+    }
+)
+
 const productSlice = createSlice ({
     name: 'products',
     initialState,
@@ -135,6 +153,12 @@ const productSlice = createSlice ({
             })
             .addCase(searchProductByName.fulfilled, (state, action) => {
                 state.products = action.payload;
+            })
+            .addCase(getProductByCategory.fulfilled, (state, action) => {
+                state.productByCate = action.payload;
+            })
+            .addCase(getProductByBrand.fulfilled, (state, action) => {
+                state.productByBrand = action.payload;
             })
     }
 });

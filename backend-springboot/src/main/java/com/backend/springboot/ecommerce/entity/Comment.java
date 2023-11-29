@@ -3,6 +3,8 @@ package com.backend.springboot.ecommerce.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,15 +28,26 @@ public class Comment implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer cmtId;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column (name = "cmt_time", nullable = false)
     private LocalDateTime cmtTime;
+
+    // @Column (name = "cmt_rate", nullable = false)
+    // private Integer cmtRate;
+
     @Column (name = "cmt_content", nullable = false)
     private String cmtContent;
+
     @Column (name = "cmt_status", nullable = false)
     private Integer cmtStatus;
-    @Column (name = "cmt_created_at", nullable = false)
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column (name = "cmt_created_at", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime cmtCreatedAt;
-    @Column (name = "cmt_updated_at", nullable = false)
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column (name = "cmt_updated_at", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime cmtUpdatedAt;
 
     @ManyToOne

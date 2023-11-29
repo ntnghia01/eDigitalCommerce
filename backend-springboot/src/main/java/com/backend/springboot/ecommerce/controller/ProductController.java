@@ -67,6 +67,18 @@ public class ProductController {
         return new ResponseEntity<>(productList, HttpStatus.OK);
     }
 
+    @GetMapping("/category/{cateId}")
+    public ResponseEntity<List<Product>> getProductByCategoryID(@PathVariable Integer cateId) {
+        List<Product> products = productRepository.findProductByCateID(cateId);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @GetMapping("/brand/{brandId}")
+    public ResponseEntity<List<Product>> getProductByBrandID(@PathVariable Integer brandId) {
+        List<Product> products = productRepository.findProductByBrandID(brandId);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<?> createProduct(@ModelAttribute ProductRequestDto productRequestDto) {
         Optional<Category> categOptional = categoryRepository.findById(productRequestDto.getCateId());

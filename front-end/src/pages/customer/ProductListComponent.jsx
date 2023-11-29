@@ -80,7 +80,9 @@ export default function ProductListComponent () {
                 <Grid container rowSpacing={5} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                     {products.map((product) => (
                         <Grid item xs={12} sm={6} md={4} lg={2.4} key={product.proId}>
-                            <Card sx={{
+                            <Card 
+                            onClick={() => navigate(`/product/detail/${product.proId}`)}
+                            sx={{
                                 maxWidth: '100%',
                                 transition: 'transform 0.3s ease-in-out',
                                 '&:hover': {

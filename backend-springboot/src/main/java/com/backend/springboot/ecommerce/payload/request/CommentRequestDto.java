@@ -8,6 +8,7 @@ import lombok.Data;
 public class CommentRequestDto {
     private Integer cmtId;
     private LocalDateTime cmtTime;
+    private Integer cmtRate;
     private String cmtContent;
     private Integer cmtStatus;
 

@@ -66,6 +66,7 @@ import CustomerAccountPage from "./account/CustomerAccountPage";
 import AdminAccountPage from "./account/AdminAccountPage";
 import AdminLoginPage from "./login/AdminLoginPage";
 import ReviewPage from "./review/ReviewPage";
+import CommentPage from "./comment/CommentPage";
 
 // import '../../../public/avatar.png'
 
@@ -204,7 +205,7 @@ function Admin() {
               {" "}
               Quản Lý Đánh Giá{" "}
             </MenuItem>
-            <MenuItem icon={<CommentIcon />} style={{ fontSize: "0.99rem" }}>
+            <MenuItem icon={<CommentIcon />} style={{ fontSize: "0.99rem" }} component={<Link to="/admin/comment" />}>
               {" "}
               Quản Lý Bình Luận{" "}
             </MenuItem>
@@ -243,6 +244,7 @@ function Admin() {
             <Route path="/account/customer" element={<CustomerAccountPage />} />
             <Route path="/account/admin" element={<AdminAccountPage />} />
             <Route path="/review" element={<ReviewPage />} />
+            <Route path="/comment" element={<CommentPage />} />
           </Routes>
         </div>
       </div>

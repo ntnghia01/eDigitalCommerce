@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.springboot.ecommerce.entity.Address;
 import com.backend.springboot.ecommerce.entity.Comment;
 import com.backend.springboot.ecommerce.entity.User;
 import com.backend.springboot.ecommerce.entity.Product;
@@ -38,7 +39,7 @@ public class CommentController {
 
     @GetMapping
     public ResponseEntity<List<Comment>> getAllComment() {
-        List<Comment> comments = commentRepository.findAll();
+        List<Comment> comments = commentRepository.findComments();
         return new ResponseEntity<List<Comment>>(comments, HttpStatus.OK);
     }
 
@@ -54,6 +55,7 @@ public class CommentController {
             newComment.setProduct(product);
             newComment.setUser(customer);
             newComment.setCmtTime(LocalDateTime.now());
+            // newComment.setCmtRate(commentRequestDto.getCmtRate());
             newComment.setCmtContent(commentRequestDto.getCmtContent());
             newComment.setCmtStatus(1);
             newComment.setCmtCreatedAt(LocalDateTime.now());
@@ -71,11 +73,30 @@ public class CommentController {
         Optional<Comment> commentOptional = commentRepository.findById(commentId);
         if (commentOptional.isPresent()) {
             Comment comment = commentOptional.get();
-            comment.setCmtStatus(-1);
+            comment.setCmtStatus(0);
             commentRepository.save(comment);
             return ResponseEntity.ok(new MessageResponse("Disable comment successfully!"));
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PutMapping("/active/{commentId}")
+    public ResponseEntity<?> activeComment(@PathVariable Integer commentId) {
+        Optional<Comment> commentOptional = commentRepository.findById(commentId);
+        if (commentOptional.isPresent()) {
+            Comment comment = commentOptional.get();
+            comment.setCmtStatus(1);
+            commentRepository.save(comment);
+            return ResponseEntity.ok(new MessageResponse("Active comment successfully!"));
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/product/{proId}")
+    public ResponseEntity<List<Comment>> getCommentByProductID(@PathVariable Integer proId) {
+        List<Comment> comments = commentRepository.findCommentByProductID(proId);
+        return new ResponseEntity<List<Comment>>(comments, HttpStatus.OK);
     }
 }

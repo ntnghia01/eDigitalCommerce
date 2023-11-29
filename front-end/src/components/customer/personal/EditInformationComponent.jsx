@@ -17,6 +17,7 @@ import FormLabel from '@mui/material/FormLabel';
 import { useDispatch } from "react-redux";
 import { editBrand, fetchBrands } from "../../../slices/brandSlice";
 import { editSupplier, fetchSuppliers } from "../../../slices/supplierSlice";
+import { getCustomerInfo, updateCustomerInfomation } from "../../../slices/customerSlice";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -26,9 +27,24 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function SupplierEditForm(props) {
+function convertMillisecondsToDate(milliseconds) {
+    const date = new Date(milliseconds);
+    const day = date.getDate();
+    const month = date.getMonth() + 1; // Tháng bắt đầu từ 0
+    const year = date.getFullYear();
+  
+    // Định dạng ngày và tháng để đảm bảo có hai chữ số
+    const formattedDay = day < 10 ? `0${day}` : day;
+    const formattedMonth = month < 10 ? `0${month}` : month;
+  
+    // Trả về chuỗi ngày/tháng/năm
+    return `${year}-${formattedMonth}-${formattedDay}`;
+  }
 
-  const existSupplier = props.data;
+export default function EditInformationComponent(props) {
+
+  const {informations} = props;
+  console.log(informations);
 
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
@@ -51,30 +67,32 @@ export default function SupplierEditForm(props) {
 
   const dispatch = useDispatch();
 
-  const [supplierId, setSupplierID] = React.useState(existSupplier.id);
-  const [supplierName, setSupplierName] = React.useState(existSupplier.name);
-  const [supplierEmail, setSupplierEmail] = React.useState(existSupplier.email);
-  const [supplierPhone, setSupplierPhone] = React.useState(existSupplier.phone);
-  const [supplierAddress, setSupplierAddress] = React.useState(existSupplier.address);
-  const [supplierStatus, setSupplierStatus] = React.useState(existSupplier.status);
+  const [userId, setUserID] = React.useState(informations.userId);
+  const [userPhone, setUserPhone] = React.useState(informations.userPhone);
+  const [userName, setUserName] = React.useState(informations.userName);
+  const [userSex, setUserSex] = React.useState(informations.userSex);
+  const [userEmail, setUserEmail] = React.useState(informations.userEmail);
+  const [userBirthday, setuserBirthday] = React.useState(informations.userBirthday);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const updateSupplierData = {
-        supplierName: supplierName,
-        supplierEmail: supplierEmail,
-        supplierPhone: supplierPhone,
-        supplierAddress: supplierAddress,
-        supplierStatus: supplierStatus
+    const updateData = {
+        userPhone: userPhone,
+        userName: userName,
+        userSex: userSex,
+        userEmail: userEmail,
+        userBirthday: convertMillisecondsToDate(userBirthday),
+        userStatus: 1
     }
-    dispatch(editSupplier({supplierId: supplierId, supplierData: updateSupplierData}))
+    console.log(updateData);
+    dispatch(updateCustomerInfomation({userId: localStorage.getItem("customerID"), updateData: updateData}))
       .then(() => {
-        dispatch(fetchSuppliers());
+        dispatch(getCustomerInfo(localStorage.getItem("customerID")));
         handleOpenSuccessSnackbar();
-        console.log("Cập nhật nhà cung cấp thành công!");
+        console.log("Cập nhật thông tin thành công!");
       })
       .catch((error) => {
-        console.log('Cập nhật nhà cung cấp thất bại: ' + error);
+        console.log('Cập nhật thông tin thất bại: ' + error);
       })
     setOpen(false);
   };
@@ -83,13 +101,11 @@ export default function SupplierEditForm(props) {
   return (
     <div>
       <Button
-        variant="contained"
-        color="warning"
+        variant="outlined"
         startIcon={<EditIcon />}
         onClick={handleClickOpen}
-        style={{width: '8rem'}}
       >
-        Cập nhật
+        Cập nhật thông tin cá nhân
       </Button>
       <Dialog
         open={open}
@@ -98,61 +114,62 @@ export default function SupplierEditForm(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{`Chỉnh Sửa Nhà Cung Cấp ID=${props.data.id}`}</DialogTitle>
+        <DialogTitle>{`Cập nhật thông tin cá nhân #${informations.userId}`}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
             id="cate_name"
-            label="Nhập tên nhà cung cấp"
+            label="Họ tên"
             type="text"
             fullWidth
             variant="standard"
-            value={supplierName}
-            onChange={e => {setSupplierName(e.target.value)}}
+            value={userName}
+            onChange={e => {setUserName(e.target.value)}}
           />
           <TextField
             autoFocus
             margin="dense"
             id="cate_email"
-            label="Nhập email tả nhà cung cấp"
+            label="Số điện thoại"
             type="text"
             fullWidth
             variant="standard"
-            value={supplierEmail}
-            onChange={e => {setSupplierEmail(e.target.value)}}
+            value={userPhone}
+            onChange={e => {setUserPhone(e.target.value)}}
           />
           <TextField
             autoFocus
             margin="dense"
-            id="cate_phone"
-            label="Nhập số điện thoại nhà cung cấp"
+            id="cate_email"
+            label="Email"
             type="text"
             fullWidth
             variant="standard"
-            value={supplierPhone}
-            onChange={e => {setSupplierPhone(e.target.value)}}
+            value={userEmail}
+            onChange={e => {setUserEmail(e.target.value)}}
           />
           <TextField
             autoFocus
             margin="dense"
-            id="cate_address"
-            label="Nhập địa chỉ nhà cung cấp"
-            type="text"
+            id="cate_email"
+            label="Ngày sinh"
+            type="date"
             fullWidth
             variant="standard"
-            value={supplierAddress}
-            onChange={e => {setSupplierAddress(e.target.value)}}
+            value={convertMillisecondsToDate(userBirthday)}
+            onChange={e => {setuserBirthday(e.target.value)}}
           />
           <RadioGroup
             row
             aria-labelledby="demo-row-radio-buttons-group-label"
             name="row-radio-buttons-group"
-            value={supplierStatus}
-            onChange={e => {setSupplierStatus(e.target.value)}}
+            value={userSex}
+            onChange={e => {setUserSex(e.target.value)}}
           >
-            <FormControlLabel value="1" control={<Radio />} label="Hoạt động" />
-            <FormControlLabel value="0" control={<Radio />} label="Không hoạt động" />
+            <FormControlLabel value="1" control={<Radio />} label="Nam" />
+            <FormControlLabel value="2" control={<Radio />} label="Nữ" />
+            <FormControlLabel value="0" control={<Radio />} label="Khác" />
           </RadioGroup>
         </DialogContent>
         <DialogActions>

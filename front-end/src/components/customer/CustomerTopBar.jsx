@@ -76,9 +76,38 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
+
+function stringToColor(string) {
+  let hash = 0;
+  let i;
+
+  /* eslint-disable no-bitwise */
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = '#';
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.slice(-2);
+  }
+  /* eslint-enable no-bitwise */
+
+  return color;
+}
+
+function stringAvatar(name) {
+  return {
+    sx: {
+      bgcolor: stringToColor(name),
+    },
+    children: `${name.split(' ')[0][0]}${name.split(' ')[2][0]}`,
+  };
+}
 export default function CustomerTopBar() {
   const { mode, setMode } = useColorScheme();
-  console.log("check topbar render");
+  // console.log("check topbar render");
   const customerLogin = localStorage.getItem("customerName");
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -97,13 +126,18 @@ export default function CustomerTopBar() {
   const dispatch = useDispatch();
 
   const handleCloseUserMenu = () => {
+
+    setAnchorElUser(null);
+  };
+
+  const handleSignout = () => {
     localStorage.removeItem("customerID");
     localStorage.removeItem("customerName");
     localStorage.removeItem("customerToken");
-
-    setAnchorElUser(null);
+    
     dispatch(deleteCustomerInfo());
-  };
+    handleCloseUserMenu()
+  }
 
   const navigate = useNavigate();
   const navi = () => {
@@ -178,10 +212,16 @@ export default function CustomerTopBar() {
   return (
     <>
       <AppBar position="static">
-        <Container maxWidth="xl">
+        <Container maxWidth="xl" >
           <Toolbar disableGutters>
-            <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
-            <Typography
+            {/* <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} /> */}
+            <img
+                  alt="LOGO"
+                  src="../../../public/logo3_transparent.png"
+                  style={{ cursor: "pointer", width: 200, padding: 5 }}
+                  onClick={() => navigate('/')} 
+                />
+            {/* <Typography
               variant="h6"
               noWrap
               component="a"
@@ -196,8 +236,8 @@ export default function CustomerTopBar() {
                 textDecoration: "none",
               }}
             >
-              LOGO
-            </Typography>
+              LOGOOO
+            </Typography> */}
 
             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
               <IconButton
@@ -371,7 +411,7 @@ export default function CustomerTopBar() {
                     onClick={handleOpenUserMenu}
                     sx={{ p: 0, marginLeft: 1 }}
                   >
-                    <Avatar alt="Remy Sharp" src={`../../../public/avar.jpg`} />
+                    <Avatar {...stringAvatar(`${localStorage.getItem("customerName")}`)} />
                   </IconButton>
                 </Tooltip>
                 <Menu
@@ -390,11 +430,17 @@ export default function CustomerTopBar() {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  {settings.map((setting) => (
+                  {/* {settings.map((setting) => (
                     <MenuItem key={setting} onClick={handleCloseUserMenu}>
                       <Typography textAlign="center">{setting}</Typography>
                     </MenuItem>
-                  ))}
+                  ))} */}
+                  <MenuItem >
+                      <Typography textAlign="center" onClick={()=> {navigate('/personal'); handleCloseUserMenu();}}>Thông tin cá nhân</Typography>
+                    </MenuItem>
+                  <MenuItem onClick={()=> handleSignout()}>
+                      <Typography textAlign="center">Đăng xuất</Typography>
+                    </MenuItem>
                 </Menu>
               </Box>
             ) : (

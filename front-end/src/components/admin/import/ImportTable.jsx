@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from '@mui/material/Typography';
+import EditIcon from '@mui/icons-material/Edit';
 
 import {
   Button,
@@ -73,7 +74,7 @@ export default function ImportTable() {
                   <TableCell align="left">{import1.supplier.supplierName}</TableCell>
                   <TableCell align="left">{import1.user.userName}</TableCell>
                   <TableCell align="right">{import1.importDate}</TableCell>
-                  <TableCell align="left">{import1.importTotal}</TableCell>
+                  <TableCell align="left">{import1.importTotal.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</TableCell>
                   <TableCell align="left">
                     {import1.importStatus == 1 ? 
                         <Typography sx={{backgroundColor:'#4caf50', color:'white', paddingLeft: '1.2rem', borderRadius: '5rem'}}>Tốt</Typography>

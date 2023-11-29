@@ -9,6 +9,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import EditIcon from '@mui/icons-material/Edit';
 
 // import Icons
 import UpdateIcon from "@mui/icons-material/Update";
@@ -82,7 +83,7 @@ export default function CategoryEditForm(props) {
       <Button
         variant="contained"
         color="warning"
-        startIcon={<UpdateIcon />}
+        startIcon={<EditIcon />}
         onClick={handleClickOpen}
       >
         Cập nhật

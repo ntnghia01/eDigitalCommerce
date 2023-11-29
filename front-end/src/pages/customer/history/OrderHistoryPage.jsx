@@ -100,7 +100,7 @@ export default function OrderHistoryPage() {
         /> */}
       </Breadcrumbs>
 
-      <Box sx={{ flexGrow: 1, padding: 2 }}>
+      <Box sx={{ flexGrow: 1, padding: 2, height: '80vh' }}>
         <h3>Lịch sử mua hàng</h3>
         {orderHistory.map((order) => (
           <Paper key={order.orderId} elevation={3} sx={{ padding: 2, marginTop: 2 }}>

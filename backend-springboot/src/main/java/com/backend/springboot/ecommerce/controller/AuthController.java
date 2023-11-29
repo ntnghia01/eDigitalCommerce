@@ -55,7 +55,7 @@ public class AuthController {
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody AuthRequestDto authRequestDto) {
 
     Optional<User> customer = userService.getByUser(authRequestDto.getUsername());
-    if (!customerRepository.existsByUserPhone(authRequestDto.getUsername())) {
+    if (!customerRepository.existsByUserPhoneAndUserStatusNot(authRequestDto.getUsername(), -1)) {
       return new ResponseEntity<>(new MessageResponse("INVALID_USERNAME"), HttpStatus.BAD_REQUEST);
     }
 

@@ -12,6 +12,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import EditIcon from '@mui/icons-material/Edit';
 
 // import Icons
 import UpdateIcon from "@mui/icons-material/Update";
@@ -122,7 +123,7 @@ export default function ProductEditForm(props) {
       <Button
         variant="contained"
         color="warning"
-        startIcon={<UpdateIcon />}
+        startIcon={<EditIcon />}
         onClick={handleClickOpen}
         style={{width: '8rem'}}
       >

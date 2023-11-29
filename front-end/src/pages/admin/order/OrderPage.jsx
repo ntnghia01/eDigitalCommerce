@@ -22,7 +22,7 @@ function Order() {
     <>
       <h1 style={{textAlign: 'center'}}>QUẢN LÝ ĐƠN HÀNG</h1>
       <div style={{ height: 400, width: "100%" }}>
-        <Grid container spacing={2} marginBottom={2}>
+        {/* <Grid container spacing={2} marginBottom={2}>
           <Grid
             item
             xs={6}
@@ -50,7 +50,7 @@ function Order() {
               Nhập Excel
             </Button>
           </Grid>
-        </Grid>
+        </Grid> */}
         <OrderTable />
       </div>
     </>

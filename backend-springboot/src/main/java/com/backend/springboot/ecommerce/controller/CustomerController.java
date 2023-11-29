@@ -81,19 +81,24 @@ public class CustomerController {
         Optional<User> customerOptional = userRepository.findById(customerId);
 
         if (customerOptional.isPresent()) {
-            User customer = customerOptional.get();
+            Optional<User> userExisted = userRepository.findUserByPhoneExcludingUserId(customerId, customerRequestDto.getUserPhone());
+            Optional<User> userEmailExisted = userRepository.findUserByEmailExcludingUserId(customerId, customerRequestDto.getUserEmail());
+            if (userExisted.isPresent() || userEmailExisted.isPresent()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            } else {
+                User customer = customerOptional.get();
+                customer.setUserPhone(customerRequestDto.getUserPhone());
+                // customer.setUserPassword(customerRequestDto.getUserPassword());
+                customer.setUserName(customerRequestDto.getUserName());
+                customer.setUserSex(customerRequestDto.getUserSex());
+                customer.setUserEmail(customerRequestDto.getUserEmail());
+                customer.setUserBirthday(customerRequestDto.getUserBirthday());
+                customer.setUserStatus(customerRequestDto.getUserStatus());
+                customer.setUserUpdatedAt(LocalDateTime.now());
 
-            customer.setUserPhone(customerRequestDto.getUserPhone());
-            customer.setUserPassword(customerRequestDto.getUserPassword());
-            customer.setUserName(customer.getUserName());
-            customer.setUserSex(customerRequestDto.getUserSex());
-            customer.setUserEmail(customerRequestDto.getUserEmail());
-            customer.setUserBirthday(customer.getUserBirthday());
-            customer.setUserStatus(customerRequestDto.getUserStatus());
-            customer.setUserUpdatedAt(LocalDateTime.now());
-
-            userRepository.save(customer);
-            return ResponseEntity.ok(new MessageResponse("Update customer successfully!"));
+                userRepository.save(customer);
+                return ResponseEntity.ok(new MessageResponse("Update customer successfully!"));
+            }
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

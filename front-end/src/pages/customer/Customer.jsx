@@ -18,6 +18,7 @@ import PrintIcon from "@mui/icons-material/Print";
 import ShareIcon from "@mui/icons-material/Share";
 import OrderHistoryPage from "./history/OrderHistoryPage";
 import SuccessfulPaymentPage from "./success/SuccessfulPaymentPage";
+import PersonalPage from "./personal/PersonalPage";
 
 const actions = [
   { icon: <FileCopyIcon />, name: "Copy" },
@@ -29,7 +30,7 @@ const actions = [
 export default function CustomerPage() {
   return (
     <>
-      <Box sx={{ flexGrow: 1, backgroundColor: "#eeeeee" }}>
+      <Box sx={{ flexGrow: 1, backgroundColor: "#f5f5f5" }}>
         <Grid container spacing={2}>
           <Grid item xs={2} sm={0} md={0} lg={0}></Grid>
           <Grid
@@ -49,6 +50,7 @@ export default function CustomerPage() {
               <Route path="/checkout/:customerId" element={<CheckoutPage />} />
               <Route path="/history/:customerId" element={<OrderHistoryPage />} />
               <Route path="/successfulpayment" element={<SuccessfulPaymentPage />} />
+              <Route path="/personal" element={<PersonalPage />} />
             </Routes>
           </Grid>
           <Grid item xs={2} sm={0}></Grid>

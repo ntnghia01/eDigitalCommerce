@@ -55,7 +55,7 @@ export const getOrderCountByCustomerId = createAsyncThunk (
     'order/getOrderCountByCustomerId',
     async (customerId) => {
         const response = await axios.get(prefixAPI + `/api/order/count/${customerId}`);
-        console.log(response.data.orderCount);
+        // console.log(response.data.orderCount);
         return response.data.orderCount;
     }
 );
