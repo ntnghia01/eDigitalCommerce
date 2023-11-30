@@ -25,8 +25,8 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import HistoryIcon from "@mui/icons-material/History";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
-import MicIcon from '@mui/icons-material/Mic';
-import LinearProgress from '@mui/material/LinearProgress';
+import MicIcon from "@mui/icons-material/Mic";
+import LinearProgress from "@mui/material/LinearProgress";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -34,6 +34,7 @@ import { countCartDetail } from "../../slices/cartSlice";
 import { deleteCustomerInfo } from "../../slices/customerSlice";
 import { searchProductByName } from "../../slices/productSlice";
 import { getOrderCountByCustomerId } from "../../slices/orderSlice";
+import { Grid } from "@mui/material";
 
 const pages = ["Trang chủ", "Giới thiệu", "Liên hệ"];
 const settings = ["Thông tin cá nhân", "Tài khoản", "Cài đặt", "Đăng xuất"];
@@ -86,7 +87,7 @@ function stringToColor(string) {
     hash = string.charCodeAt(i) + ((hash << 5) - hash);
   }
 
-  let color = '#';
+  let color = "#";
 
   for (i = 0; i < 3; i += 1) {
     const value = (hash >> (i * 8)) & 0xff;
@@ -102,7 +103,7 @@ function stringAvatar(name) {
     sx: {
       bgcolor: stringToColor(name),
     },
-    children: `${name.split(' ')[0][0]}${name.split(' ')[2][0]}`,
+    children: `${name.split(" ")[0][0]}${name.split(" ")[2][0]}`,
   };
 }
 export default function CustomerTopBar() {
@@ -126,7 +127,6 @@ export default function CustomerTopBar() {
   const dispatch = useDispatch();
 
   const handleCloseUserMenu = () => {
-
     setAnchorElUser(null);
   };
 
@@ -134,17 +134,17 @@ export default function CustomerTopBar() {
     localStorage.removeItem("customerID");
     localStorage.removeItem("customerName");
     localStorage.removeItem("customerToken");
-    
+
     dispatch(deleteCustomerInfo());
-    handleCloseUserMenu()
-  }
+    handleCloseUserMenu();
+  };
 
   const navigate = useNavigate();
   const navi = () => {
     navigate("/login");
   };
 
-  const [inputValue, setInputChat] = useState('');
+  const [inputValue, setInputChat] = useState("");
   const [recognition, setRecognition] = useState();
   const [isListening, setIsListening] = useState();
 
@@ -152,19 +152,19 @@ export default function CustomerTopBar() {
     e.preventdefault;
     setInputChat(e.target.value);
     console.log(e.target.value);
-    const searchData = {proName: e.target.value}
+    const searchData = { proName: e.target.value };
     dispatch(searchProductByName(searchData));
-  }
+  };
   const products = useSelector((state) => state.product.products);
 
   const countCart = useSelector((state) => state.cart.countCart);
   const countOrder = useSelector((state) => state.order.orderCount);
 
   useEffect(() => {
-    const SpeechRecognition = 
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition ||
-    window.mozSpeechRecognition;
+    const SpeechRecognition =
+      window.SpeechRecognition ||
+      window.webkitSpeechRecognition ||
+      window.mozSpeechRecognition;
 
     if (!SpeechRecognition) {
       alert(
@@ -175,52 +175,58 @@ export default function CustomerTopBar() {
 
     const recognitionInstance = new SpeechRecognition();
     recognitionInstance.lang = "vi-VN";
- 
+
     recognitionInstance.onresult = (event) => {
       const { transcript } = event.results[0][0];
       // console.log(event.results[0][0]);
       setInputChat(transcript);
-      const searchData = {proName: transcript}
+      const searchData = { proName: transcript };
       dispatch(searchProductByName(searchData));
       setIsListening(false);
     };
 
     setRecognition(recognitionInstance);
-    
+
     dispatch(countCartDetail(localStorage.getItem("customerID")));
     dispatch(getOrderCountByCustomerId(localStorage.getItem("customerID")));
-  },[])
+  }, []);
 
   useEffect(() => {
     dispatch(countCartDetail(localStorage.getItem("customerID")));
     dispatch(getOrderCountByCustomerId(localStorage.getItem("customerID")));
-  },[])
-
+  }, []);
 
   const startListening = () => {
-    if(recognition )
-      if(!isListening){
-        
+    if (recognition)
+      if (!isListening) {
         setIsListening(true);
         recognition.start();
       } else {
         setIsListening(false);
         recognition.stop();
       }
-  }
+  };
 
   return (
     <>
-      <AppBar position="static">
-        <Container maxWidth="xl" >
+    <AppBar position="static">
+      <Grid container spacing={2}>
+        <Grid item xs={2} sm={0} md={0} lg={0}></Grid>
+        <Grid
+          item
+          xs={8}
+          sx={{ backgroundColor: "white" }}
+          style={{ paddingLeft: 0 }}
+        >
+        <Container maxWidth="xl" sx={{backgroundColor: '#1976d2'}}>
           <Toolbar disableGutters>
             {/* <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} /> */}
             <img
-                  alt="LOGO"
-                  src="../../../public/logo3_transparent.png"
-                  style={{ cursor: "pointer", width: 200, padding: 5 }}
-                  onClick={() => navigate('/')} 
-                />
+              alt="LOGO"
+              src="../../../public/logo3_transparent.png"
+              style={{ cursor: "pointer", width: 200, padding: 5 }}
+              onClick={() => navigate("/")}
+            />
             {/* <Typography
               variant="h6"
               noWrap
@@ -305,13 +311,23 @@ export default function CustomerTopBar() {
                 </Button>
               ))} */}
               <Button
-                  key="home"
-                  onClick={() => {navigate('/');}}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                  
-                >
-                  Trang chủ
-                </Button>
+                key="home"
+                onClick={() => {
+                  navigate("/");
+                }}
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                Trang chủ
+              </Button>
+              <Button
+                key="home"
+                onClick={() => {
+                  navigate("/");
+                }}
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                Giới thiệu
+              </Button>
             </Box>
             <Search>
               <SearchIconWrapper>
@@ -326,14 +342,13 @@ export default function CustomerTopBar() {
               {/* <Button variant="contained" color="error" onClick={() => startListening()}>
                   Mic
                 </Button> */}
-                <IconButton
+              <IconButton
                 size="large"
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={() => startListening()}
                 color={isListening ? "error" : "inherit"}
-
               >
                 <MicIcon />
               </IconButton>
@@ -347,7 +362,7 @@ export default function CustomerTopBar() {
                   navigate(`/cart/${localStorage.getItem("customerID")}`)
                 }
               >
-                <Badge badgeContent={countCart} color="error" >
+                <Badge badgeContent={countCart} color="error">
                   <ShoppingCartIcon />
                 </Badge>
               </IconButton>
@@ -390,13 +405,9 @@ export default function CustomerTopBar() {
                 }}
               >
                 {mode === "light" ? (
-                  <DarkModeIcon
-                    style={{ cursor: "pointer" }}
-                  />
+                  <DarkModeIcon style={{ cursor: "pointer" }} />
                 ) : (
-                  <LightModeIcon
-                    style={{ cursor: "pointer" }}
-                  />
+                  <LightModeIcon style={{ cursor: "pointer" }} />
                 )}
               </IconButton>
             </Box>
@@ -411,7 +422,11 @@ export default function CustomerTopBar() {
                     onClick={handleOpenUserMenu}
                     sx={{ p: 0, marginLeft: 1 }}
                   >
-                    <Avatar {...stringAvatar(`${localStorage.getItem("customerName")}`)} />
+                    <Avatar
+                      {...stringAvatar(
+                        `${localStorage.getItem("customerName")}`
+                      )}
+                    />
                   </IconButton>
                 </Tooltip>
                 <Menu
@@ -435,12 +450,20 @@ export default function CustomerTopBar() {
                       <Typography textAlign="center">{setting}</Typography>
                     </MenuItem>
                   ))} */}
-                  <MenuItem >
-                      <Typography textAlign="center" onClick={()=> {navigate('/personal'); handleCloseUserMenu();}}>Thông tin cá nhân</Typography>
-                    </MenuItem>
-                  <MenuItem onClick={()=> handleSignout()}>
-                      <Typography textAlign="center">Đăng xuất</Typography>
-                    </MenuItem>
+                  <MenuItem>
+                    <Typography
+                      textAlign="center"
+                      onClick={() => {
+                        navigate("/personal");
+                        handleCloseUserMenu();
+                      }}
+                    >
+                      Thông tin cá nhân
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem onClick={() => handleSignout()}>
+                    <Typography textAlign="center">Đăng xuất</Typography>
+                  </MenuItem>
                 </Menu>
               </Box>
             ) : (
@@ -457,7 +480,11 @@ export default function CustomerTopBar() {
             )}
           </Toolbar>
         </Container>
+        </Grid>
+        <Grid item xs={2} sm={0} md={0} lg={0}></Grid>
+      </Grid>
       </AppBar>
+      
       {/* <Box sx={{ width: '100%' }}>
       <LinearProgress />
     </Box> */}

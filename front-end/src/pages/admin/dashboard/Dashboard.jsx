@@ -1,7 +1,13 @@
 import * as React from "react";
 import { BarChart, LineChart, ScatterChart } from "@mui/x-charts";
 import { PieChart, pieArcClasses } from "@mui/x-charts";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Paper, Stack } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import Rating from "@mui/material/Rating";
+import PaidIcon from "@mui/icons-material/Paid";
+import Inventory2Icon from '@mui/icons-material/Inventory2';
+import MessageIcon from '@mui/icons-material/Message';
+import StarBorderPurple500Icon from '@mui/icons-material/StarBorderPurple500';
 
 const sample = [1, 10, 30, 50, 70, 90, 100];
 const data = [
@@ -49,95 +55,143 @@ const seriesC = {
 export default function AdminDashboard() {
   return (
     <>
-      <h1>TỔNG QUAN</h1>
+      <h1 style={{ textAlign: "center" }}>TỔNG QUAN</h1>
       <Box></Box>
       <Grid container spacing={4}>
-        <Grid item xs={4}>
-          <BarChart
-            xAxis={[
-              { scaleType: "band", data: ["group A", "group B", "group C"] },
-            ]}
-            series={[
-              { data: [4, 3, 5] },
-              { data: [1, 6, 3] },
-              { data: [2, 5, 6] },
-            ]}
-            width={500}
-            height={300}
-          />
+        <Grid item xs={3}>
+          <Paper
+            elevation={3}
+            sx={{ padding: 4, boxShadow: "0px 4px 8px #4caf50" }}
+          >
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={2}
+            >
+                <PaidIcon fontSize="large"/>
+              <div>
+                <Typography variant="h6" gutterBottom>
+                  Tổng doanh thu
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                  23.390.000 VND
+                </Typography>
+              </div>
+            </Stack>
+          </Paper>
+        </Grid>
+        <Grid item xs={3}>
+          <Paper
+            elevation={3}
+            sx={{ padding: 4, boxShadow: "0px 4px 8px #2a3eb1" }}
+          >
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={2}
+            >
+                <Inventory2Icon  fontSize="large"/>
+              <div>
+                <Typography variant="h6" gutterBottom>
+                  Tổng đơn hàng
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                  12
+                </Typography>
+              </div>
+            </Stack>
+          </Paper>
+        </Grid>
+        <Grid item xs={3}>
+          <Paper
+            elevation={3}
+            sx={{ padding: 4, boxShadow: "0px 4px 8px #00a0b2" }}
+          >
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={2}
+            >
+                <MessageIcon  fontSize="large"/>
+              <div>
+              <Typography variant="h6" gutterBottom>
+                Tổng bình luận
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                23
+              </Typography>
+              </div>
+            </Stack>
+          </Paper>
+        </Grid>
+        <Grid item xs={3}>
+          <Paper
+            elevation={3}
+            sx={{ padding: 4, boxShadow: "0px 4px 8px #ef6c00", height: 133 }}
+          >
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={2}
+            >
+                <StarBorderPurple500Icon  fontSize="large"/>
+              <div>
+            <Typography variant="h6" gutterBottom>
+              Đánh giá trung bình
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              <Rating name="read-only" value={4} readOnly />
+            </Typography>
+              </div>
+            </Stack>
+          </Paper>
         </Grid>
         <Grid item xs={4}>
-          {/* <LineChart
-            xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
-            series={[
-              {
-                data: [2, 5.5, 2, 8.5, 1.5, 5],
-                area: true,
-              },
-            ]}
-            width={500}
-            height={300}
-          /> */}
+          <Paper elevation={3}>
+            <BarChart
+              xAxis={[
+                { scaleType: "band", data: ["group A", "group B", "group C"] },
+              ]}
+              series={[
+                { data: [4, 3, 5] },
+                { data: [1, 6, 3] },
+                { data: [2, 5, 6] },
+              ]}
+              width={500}
+              height={300}
+            />
+          </Paper>
         </Grid>
         <Grid item xs={4}>
-          {/* <LineChart
-            xAxis={[{ data: sample }]}
-            yAxis={[
-              { id: "linearAxis", scaleType: "linear" },
-              { id: "logAxis", scaleType: "log" },
-            ]}
-            series={[
-              { yAxisKey: "linearAxis", data: sample, label: "linear" },
-              { yAxisKey: "logAxis", data: sample, label: "log" },
-            ]}
-            leftAxis="linearAxis"
-            rightAxis="logAxis"
-            height={300}
-          /> */}
+          <Paper elevation={3}>
+            <ScatterChart
+              width={500}
+              height={300}
+              series={[
+                {
+                  label: "series A",
+                  data: data2.map((v) => ({ x: v.x1, y: v.y1, id: v.id })),
+                },
+                {
+                  label: "series B",
+                  data: data2.map((v) => ({ x: v.x1, y: v.y2, id: v.id })),
+                },
+              ]}
+            />
+          </Paper>
         </Grid>
         <Grid item xs={4}>
-          <PieChart
-            series={[
-              {
-                data,
-                highlightScope: { faded: "global", highlighted: "item" },
-                faded: { innerRadius: 30, additionalRadius: -30 },
-              },
-            ]}
-            sx={{
-              [`& .${pieArcClasses.faded}`]: {
-                fill: "gray",
-              },
-            }}
-            height={200}
-          />{" "}
-        </Grid>
-        <Grid item xs={4}>
-          <ScatterChart
-            width={600}
-            height={300}
-            series={[
-              {
-                label: "series A",
-                data: data2.map((v) => ({ x: v.x1, y: v.y1, id: v.id })),
-              },
-              {
-                label: "series B",
-                data: data2.map((v) => ({ x: v.x1, y: v.y2, id: v.id })),
-              },
-            ]}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <BarChart
-            width={500}
-            height={300}
-            series={[
-              { ...seriesA, stack: "total" },
-              { ...seriesB, stack: "total" },
-              { ...seriesC, stack: "total" },
-            ]}
-          />
+          <Paper elevation={3}>
+            <BarChart
+              width={500}
+              height={300}
+              series={[
+                { ...seriesA, stack: "total" },
+                { ...seriesB, stack: "total" },
+                { ...seriesC, stack: "total" },
+              ]}
+            />
+          </Paper>
         </Grid>
       </Grid>
     </>

@@ -80,6 +80,7 @@ export default function ProductListComponent () {
                 <Grid container rowSpacing={5} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                     {products.map((product) => (
                         <Grid item xs={12} sm={6} md={4} lg={2.4} key={product.proId}>
+                            <Paper elevation={2}>
                             <Card 
                             onClick={() => navigate(`/product/detail/${product.proId}`)}
                             sx={{
@@ -112,7 +113,7 @@ export default function ProductListComponent () {
                                         <Button variant="contained" onClick={()=>handleAddToCart(product.proId)}  ><ShoppingCartIcon /></Button>
                                     : ''}
                                 </CardActions>
-                            </Card>
+                            </Card></Paper>
                         </Grid>
                     ))}
                     

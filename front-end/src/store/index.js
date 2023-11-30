@@ -18,6 +18,9 @@ import shipperSlice from '../slices/shipperSlice';
 import adminSlice from '../slices/adminSlice';
 import reviewSlice from '../slices/reviewSlice';
 import commentSlice from '../slices/commentSlice';
+import accountSlice from '../slices/accountSlice';
+import blogSlice from '../slices/blogSlice';
+import contactSlice from '../slices/contactSlice';
 
 
 // const store = createStore(rootReducer, applyMiddleware(thunk));
@@ -37,7 +40,10 @@ const store = configureStore ({
         shipper: shipperSlice,
         admin: adminSlice,
         review: reviewSlice,
-        comment: commentSlice
+        comment: commentSlice,
+        account: accountSlice,
+        blog: blogSlice,
+        contact: contactSlice
     },
 });
 

@@ -16,7 +16,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     // @Query("SELECT c FROM Customer c WHERE c.customerPhone = :customerPhone")
     // Optional<Customer> findByCustomerPhone(@Param("customerPhone") String customerPhone);
     Boolean existsByUserPhone(String userPhone);
-    Boolean existsByUserPhoneAndUserStatusNot(String userPhone, Integer userStatus);
+    Boolean existsByUserPhoneAndUserStatus(String userPhone, Integer userStatus);
 
     @Query("SELECT shipper FROM User shipper WHERE shipper.userRole = 3 and shipper.userStatus <> -1")
     List<User> findAllShipperAvailable();
@@ -26,5 +26,14 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("SELECT u FROM User u WHERE u.userStatus <> -1 AND u.userEmail = :userEmail AND u.userId <> :customerId")
     Optional<User> findUserByEmailExcludingUserId(@Param("customerId") Integer customerId, @Param("userEmail") String userEmail);
+
+    @Query("SELECT u FROM User u WHERE u.userRole = 1 and u.userStatus <> -1")
+    List<User> findAllCustomer();
+
+    @Query("SELECT u FROM User u WHERE u.userRole = 2 and u.userStatus <> -1")
+    List<User> findAllAdmin();
+
+    @Query("SELECT u FROM User u WHERE u.userRole = 3 and u.userStatus <> -1")
+    List<User> findAllShipper();
 
 }

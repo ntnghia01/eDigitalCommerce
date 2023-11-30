@@ -9,6 +9,7 @@ import com.backend.springboot.ecommerce.payload.response.MessageResponse;
 import com.backend.springboot.ecommerce.repository.CartRepository;
 import com.backend.springboot.ecommerce.repository.UserRepository;
 import com.backend.springboot.ecommerce.security.jwt.JwtUtils;
+import com.backend.springboot.ecommerce.service.EmailService;
 import com.backend.springboot.ecommerce.service.UserDetailsImpl;
 import com.backend.springboot.ecommerce.service.UserDetailsServiceImpl;
 
@@ -25,6 +26,7 @@ import jakarta.validation.Valid;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -50,12 +52,15 @@ public class AuthController {
   @Autowired
   UserDetailsServiceImpl userService;
 
+  @Autowired
+  private EmailService emailService;
+
 
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody AuthRequestDto authRequestDto) {
 
     Optional<User> customer = userService.getByUser(authRequestDto.getUsername());
-    if (!customerRepository.existsByUserPhoneAndUserStatusNot(authRequestDto.getUsername(), -1)) {
+    if (!customerRepository.existsByUserPhoneAndUserStatus(authRequestDto.getUsername(), 1)) {
       return new ResponseEntity<>(new MessageResponse("INVALID_USERNAME"), HttpStatus.BAD_REQUEST);
     }
 
@@ -117,6 +122,26 @@ public class AuthController {
     cart.setCartCreatedAt(LocalDateTime.now());
     cart.setCartUpdatedAt(LocalDateTime.now());
     cartRepository.save(cart);
+
+    // Gửi email chúc mừng khi đặt hàng thành công
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+    String formattedOrderTime = customer.getUserCreatedAt().format(formatter);
+    
+    String to = customer.getUserEmail(); // Địa chỉ email của người nhận
+    String subject = "SUCCESSFULLY REGISTERED AN E-STORE ACCOUNT!!!";
+    String message = "Xin chào, " + customer.getUserName() + "!<br/><br/>"
+            + "Chúc mừng bạn đã đăng ký thành công tài khoản E-STORE. Chúng tôi rất vui mừng khi bạn trở thành một thành viên của chúng tôi<br/><br/>"
+            + "THÔNG TIN TÀI KHOẢN:<br/>"
+            + "Họ tên: " + customer.getUserName() + "<br/>"
+            + "Số điện thoại: " + customer.getUserPhone() + "<br/>"
+            + "Email: " + customer.getUserEmail() + "<br/>"
+            + "Ngày tạo: " + formattedOrderTime + "<br/>"
+            + "Chúng tôi cam kết về vấn đề bảo mật thông tin của bạn." + "<br/><br/>"
+            + "Xin cảm ơn và chúc bạn một ngày tốt lành!";
+    
+    // Gửi email khi đặt hàng thành công
+    emailService.sendEmail(to, subject, message);
 
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }

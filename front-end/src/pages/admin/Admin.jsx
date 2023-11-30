@@ -25,18 +25,13 @@ import {
 import HomeIcon from "@mui/icons-material/Home";
 import Typography from "@mui/material/Typography";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import TwoWheelerIcon from '@mui/icons-material/TwoWheeler';
-import SupportAgentIcon from '@mui/icons-material/SupportAgent';
-import Person3Icon from '@mui/icons-material/Person3';
+import TwoWheelerIcon from "@mui/icons-material/TwoWheeler";
+import SupportAgentIcon from "@mui/icons-material/SupportAgent";
+import Person3Icon from "@mui/icons-material/Person3";
 
 import { useColorScheme } from "@mui/material/styles";
 
-import {
-  Sidebar,
-  Menu,
-  MenuItem,
-  SubMenu,
-} from "react-pro-sidebar";
+import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 
 // Icons
 import BarChartIcon from "@mui/icons-material/BarChart";
@@ -50,6 +45,7 @@ import PreviewIcon from "@mui/icons-material/Preview";
 import CommentIcon from "@mui/icons-material/Comment";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 import FactoryIcon from "@mui/icons-material/Factory";
+import ArticleIcon from '@mui/icons-material/Article';
 
 import Categories from "./categories";
 import AddCategoryForm from "../../components/admin/Category/AddCategoryForm";
@@ -67,8 +63,18 @@ import AdminAccountPage from "./account/AdminAccountPage";
 import AdminLoginPage from "./login/AdminLoginPage";
 import ReviewPage from "./review/ReviewPage";
 import CommentPage from "./comment/CommentPage";
+import AdminBlogPage from "./blog/AdminBlogPage";
+import AdminContactPage from "./contact/AdminContactPage";
 
 // import '../../../public/avatar.png'
+
+const activeStyles = {
+  backgroundColor: "#1565c0",
+  color: "#ffffff", // Màu chữ trắng
+  fontSize: "0.99rem",
+  borderRadius: "10px 0 0 10px",
+  // transform: 'scale(1.1)'
+};
 
 function Admin() {
   const navigate = useNavigate();
@@ -82,10 +88,12 @@ function Admin() {
     }
   };
 
+  const [selectedMenuItem, setSelectedMenuItem] = useState("");
+
   return (
     <>
       <div style={{ display: "flex" }}>
-        <Sidebar backgroundColor="none" collapsed={collapse}>
+        <Sidebar backgroundColor="none" collapsed={collapse} style={{ padding: 3 }}>
           <Menu
             style={{ height: "100vh" }}
             menuItemStyles={{
@@ -131,8 +139,9 @@ function Admin() {
                     fontSize: collapse ? "1.5rem" : "2.125rem",
                   }}
                 >
-                  {localStorage.getItem('adminName') ? 
-                    localStorage.getItem('adminName') : "Chưa đăng nhập"}
+                  {localStorage.getItem("adminName")
+                    ? localStorage.getItem("adminName")
+                    : "Chưa đăng nhập"}
                 </Typography>
                 <Typography
                   variant="h5"
@@ -145,15 +154,30 @@ function Admin() {
             <MenuItem
               active={true}
               icon={<Dashboard />}
-              style={{ fontSize: "0.99rem" }}
+              // style={{ fontSize: "0.99rem" }}
               component={<Link to="/admin/dashboard" />}
+              style={{
+                ...(selectedMenuItem === "/admin/dashboard"
+                  ? activeStyles
+                  : {fontSize: '0.95rem'}), // Sử dụng activeStyles nếu MenuItem được chọn
+              }}
+              onClick={() => {
+                setSelectedMenuItem("/admin/dashboard");
+              }}
             >
               {" "}
               Tổng Quan{" "}
             </MenuItem>
             <MenuItem
               icon={<CategoryIcon />}
-              style={{ fontSize: "0.99rem" }}
+              style={{
+                ...(selectedMenuItem === "/admin/categories"
+                  ? activeStyles
+                  : {fontSize: '0.95rem'}), // Sử dụng activeStyles nếu MenuItem được chọn
+              }}
+              onClick={() => {
+                setSelectedMenuItem("/admin/categories");
+              }}
               component={<Link to="/admin/categories" />}
             >
               {" "}
@@ -161,7 +185,12 @@ function Admin() {
             </MenuItem>
             <MenuItem
               icon={<BrandingWatermarkIcon />}
-              style={{ fontSize: "0.99rem" }}
+              style={{
+                ...(selectedMenuItem === "/admin/brands" ? activeStyles : {fontSize: '0.95rem'}), // Sử dụng activeStyles nếu MenuItem được chọn
+              }}
+              onClick={() => {
+                setSelectedMenuItem("/admin/brands");
+              }}
               component={<Link to="/admin/brands" />}
             >
               {" "}
@@ -169,61 +198,167 @@ function Admin() {
             </MenuItem>
             <MenuItem
               icon={<FactoryIcon />}
-              style={{ fontSize: "0.99rem" }}
+              style={{
+                ...(selectedMenuItem === "/admin/supplier" ? activeStyles : {fontSize: '0.95rem'}), // Sử dụng activeStyles nếu MenuItem được chọn
+              }}
+              onClick={() => {
+                setSelectedMenuItem("/admin/supplier");
+              }}
               component={<Link to="/admin/supplier" />}
             >
               Quản Lý Nhà Cung Cấp
             </MenuItem>
             <MenuItem
               icon={<PhoneAndroidIcon />}
-              style={{ fontSize: "0.99rem" }}
+              style={{
+                ...(selectedMenuItem === "/admin/product" ? activeStyles : {fontSize: '0.95rem'}), // Sử dụng activeStyles nếu MenuItem được chọn
+              }}
+              onClick={() => {
+                setSelectedMenuItem("/admin/product");
+              }}
               component={<Link to="/admin/product" />}
             >
               Quản Lý Sản Phẩm
             </MenuItem>
             <MenuItem
               icon={<ImportExportIcon />}
-              style={{ fontSize: "0.99rem" }}
+              style={{
+                ...(selectedMenuItem === "/admin/import" ? activeStyles : {fontSize: '0.95rem'}), // Sử dụng activeStyles nếu MenuItem được chọn
+              }}
+              onClick={() => {
+                setSelectedMenuItem("/admin/import");
+              }}
               component={<Link to="/admin/import" />}
             >
               {" "}
               Quản Lý Nhập/Xuất{" "}
             </MenuItem>
-            <MenuItem 
-              icon={<InventoryIcon />} 
-              style={{ fontSize: "0.99rem" }}
+            <MenuItem
+              icon={<InventoryIcon />}
+              style={{
+                ...(selectedMenuItem === "/admin/order" ? activeStyles : {fontSize: '0.95rem'}), // Sử dụng activeStyles nếu MenuItem được chọn
+              }}
+              onClick={() => {
+                setSelectedMenuItem("/admin/order");
+              }}
               component={<Link to="/admin/order" />}
             >
               {" "}
               Quản Lý Đơn Hàng{" "}
             </MenuItem>
-            <MenuItem 
-              icon={<PreviewIcon />} 
-              style={{ fontSize: "0.99rem" }}
+            <MenuItem
+              icon={<PreviewIcon />}
+              style={{
+                ...(selectedMenuItem === "/admin/review" ? activeStyles : {fontSize: '0.95rem'}), // Sử dụng activeStyles nếu MenuItem được chọn
+              }}
+              onClick={() => {
+                setSelectedMenuItem("/admin/review");
+              }}
               component={<Link to="/admin/review" />}
             >
               {" "}
               Quản Lý Đánh Giá{" "}
             </MenuItem>
-            <MenuItem icon={<CommentIcon />} style={{ fontSize: "0.99rem" }} component={<Link to="/admin/comment" />}>
+            <MenuItem
+              icon={<CommentIcon />}
+              style={{
+                ...(selectedMenuItem === "/admin/comment" ? activeStyles : {fontSize: '0.95rem'}), // Sử dụng activeStyles nếu MenuItem được chọn
+              }}
+              onClick={() => {
+                setSelectedMenuItem("/admin/comment");
+              }}
+              component={<Link to="/admin/comment" />}
+            >
               {" "}
               Quản Lý Bình Luận{" "}
+            </MenuItem>
+            <MenuItem
+              icon={<ArticleIcon />}
+              style={{
+                ...(selectedMenuItem === "/admin/blog" ? activeStyles : {fontSize: '0.95rem'}), // Sử dụng activeStyles nếu MenuItem được chọn
+              }}
+              onClick={() => {
+                setSelectedMenuItem("/admin/blog");
+              }}
+              component={<Link to="/admin/blog" />}
+            >
+              {" "}
+              Quản Lý Bài Viết{" "}
+            </MenuItem>
+            <MenuItem
+              icon={<ArticleIcon />}
+              style={{
+                ...(selectedMenuItem === "/admin/contact" ? activeStyles : {fontSize: '0.95rem'}), // Sử dụng activeStyles nếu MenuItem được chọn
+              }}
+              onClick={() => {
+                setSelectedMenuItem("/admin/contact");
+              }}
+              component={<Link to="/admin/contact" />}
+            >
+              {" "}
+              Quản Lý Liên Hệ{" "}
             </MenuItem>
             <SubMenu
               label="Quản Lý Tài Khoản"
               icon={<ManageAccountsOutlinedIcon />}
-              style={{ fontSize: "0.99rem" }}
+              // style={{
+              //   ...(selectedMenuItem === "/admin/comment" ? activeStyles : {fontSize: '0.95rem'}), // Sử dụng activeStyles nếu MenuItem được chọn
+              // }}
+              // onClick={() => {
+              //   setSelectedMenuItem("/admin/comment");
+              // }}
             >
-              <MenuItem icon={<Person3Icon />} component={<Link to="/admin/account/customer" />}> Khách  hàng </MenuItem>
+              <MenuItem
+                icon={<Person3Icon />}
+                
+                style={{
+                  ...(selectedMenuItem === "/admin/account/customer"
+                    ? activeStyles
+                    : {fontSize: '0.95rem'}), // Sử dụng activeStyles nếu MenuItem được chọn
+                }}
+                onClick={() => {
+                  setSelectedMenuItem("/admin/account/customer");
+                }}
+                component={
+                  <Link
+                    to="/admin/account/customer"
+                  />
+                }
+              >
+                {" "}
+                Khách hàng{" "}
+              </MenuItem>
               <MenuItem
                 rootStyles={{ background: "none" }}
                 component={<Link to="/admin/account/shipper" />}
                 icon={<TwoWheelerIcon />}
+                style={{
+                  ...(selectedMenuItem === "/admin/account/shipper"
+                    ? activeStyles
+                    : {fontSize: '0.95rem'}), // Sử dụng activeStyles nếu MenuItem được chọn
+                }}
+                onClick={() => {
+                  setSelectedMenuItem("/admin/account/shipper");
+                }}
               >
                 {" "}
                 Shipper{" "}
               </MenuItem>
-              <MenuItem icon={<SupportAgentIcon />} component={<Link to="/admin/account/admin" />}> Quản trị viên </MenuItem>
+              <MenuItem
+                icon={<SupportAgentIcon />}
+                style={{
+                  ...(selectedMenuItem === "/admin/account/admin"
+                    ? activeStyles
+                    : {fontSize: '0.95rem'}), // Sử dụng activeStyles nếu MenuItem được chọn
+                }}
+                onClick={() => {
+                  setSelectedMenuItem("/admin/account/admin");
+                }}
+                component={<Link to="/admin/account/admin" />}
+              >
+                {" "}
+                Quản trị viên{" "}
+              </MenuItem>
             </SubMenu>
           </Menu>
         </Sidebar>
@@ -231,6 +366,7 @@ function Admin() {
         <div style={{ width: "100%", padding: 20 }}>
           <AdminTopBar />
           <Routes>
+            <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/login" element={<AdminLoginPage />} />
             <Route path="/dashboard" element={<AdminDashboard />} />
             <Route path="/categories" element={<Categories />} />
@@ -245,6 +381,8 @@ function Admin() {
             <Route path="/account/admin" element={<AdminAccountPage />} />
             <Route path="/review" element={<ReviewPage />} />
             <Route path="/comment" element={<CommentPage />} />
+            <Route path="/blog" element={<AdminBlogPage />} />
+            <Route path="/contact" element={<AdminContactPage />} />
           </Routes>
         </div>
       </div>

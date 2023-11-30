@@ -1,52 +1,55 @@
 package com.backend.springboot.ecommerce.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import jakarta.mail.internet.MimeMessage;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.util.Properties;
 
 @Service
 public class EmailService {
 
-    // @Autowired
-    // private JavaMailSender emailSender;
+    @Value("${config.mail.host}")
+    private String host;
+    @Value("${config.mail.port}")
+    private String port;
+    @Value("${config.mail.username}")
+    private String email;
+    @Value("${config.mail.password}")
+    private String password;
 
-    // // @Autowired
-    // // public EmailService(JavaMailSender emailSender) {
-    // //     this.emailSender = emailSender;
-    // // }
+    public void sendEmail(String to, String subject, String body) {
+        System.out.println(email);
+        System.out.println(password);
+        Properties props = new Properties();
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", port);
 
-    // public void sendEmail(String to, String subject, String text) {
-    //     try {
-    //         MimeMessage message = emailSender.createMimeMessage();
-    //         MimeMessageHelper helper = new MimeMessageHelper(message, true);
-    //         helper.setTo(to);
-    //         helper.setSubject(subject);
-    //         helper.setText(text, true); // true indicates HTML format
+        Session session = Session.getInstance(props,
+                new Authenticator() {
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(email, password);
+                    }
+                });
 
-    //         emailSender.send(message);
-    //         System.out.println("Email sent successfully.");
-    //     } catch (Exception ex) {
-    //         System.err.println("Error sending email: " + ex.getMessage());
-    //     }
-    // }
+        Message message = new MimeMessage(session);
+        try {
+            message.setRecipients(Message.RecipientType.TO, new InternetAddress[]{new InternetAddress(to)});
 
-    // public void sendEmail2(String to, String subject, String text) {
-    //     try {
-    //         SimpleMailMessage msg = new SimpleMailMessage();
-    //         msg.setFrom("nguyentrungnghia26112001@gmail.com");
-    //         msg.setTo(to);
-    //         msg.setSubject(subject);
-    //         msg.setText(text); // true indicates HTML format
+            message.setFrom(new InternetAddress(email));
+            message.setSubject(subject);
+            message.setContent(body, "text/html; charset=utf-8");
 
-    //         emailSender.send(msg);
-    //         System.out.println("Email sent successfully.");
-    //     } catch (Exception ex) {
-    //         System.err.println("Error sending email: " + ex.getMessage());
-    //     }
-    // }
+            Transport.send(message);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

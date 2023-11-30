@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.springboot.ecommerce.entity.Address;
 import com.backend.springboot.ecommerce.entity.Comment;
 import com.backend.springboot.ecommerce.entity.User;
 import com.backend.springboot.ecommerce.entity.Product;

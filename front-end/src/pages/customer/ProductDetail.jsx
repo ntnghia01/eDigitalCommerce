@@ -5,7 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getProductByBrand, getProductByCategory, getProductDetail } from "../../slices/productSlice";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { Button, CardMedia, Stack, TextField } from "@mui/material";
+import { Button, CardMedia, Stack, TextField, makeStyles } from "@mui/material";
 import { emphasize, styled } from "@mui/material/styles";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Chip from "@mui/material/Chip";
@@ -22,6 +22,8 @@ import Avatar from '@mui/material/Avatar';
 import { addToCart, countCartDetail } from "../../slices/cartSlice";
 import { useState } from "react";
 import { addComment, fetchCommentByProductID } from "../../slices/commentSlice";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import ProductImageList from "../../components/admin/product/ProductImageList";
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor =
@@ -113,6 +115,7 @@ function stringAvatar(name) {
   };
 }
 
+
 export default function ProductDetail() {
   console.log("Check render ProductDetail");
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
@@ -145,16 +148,20 @@ export default function ProductDetail() {
     console.log(proId);
     dispatch(getProductDetail(proId)).then(() => {
       // console.log(product);
-      dispatch(getProductByCategory(product.category.cateId))
-      dispatch(getProductByBrand(product.brand.brandId))
+      // if(product.category.cateId) {dispatch(getProductByCategory(product.category.cateId))}
+      // if(product.brand.brandId) {dispatch(getProductByBrand(product.brand.brandId))}
+      if(product.category.cateId) {dispatch(getProductByCategory(1))}
+      if(product.brand.brandId) {dispatch(getProductByBrand(1))}
     });
     dispatch(fetchCommentByProductID(proId))
   }, [dispatch]);
   const product = useSelector((state) => state.product.product);
 
   useEffect(() => {
-      dispatch(getProductByCategory(product.category.cateId))
-      dispatch(getProductByBrand(product.brand.brandId))
+      // dispatch(getProductByCategory(product.category.cateId))
+      // dispatch(getProductByBrand(product.brand.brandId))
+      dispatch(getProductByCategory(1))
+      dispatch(getProductByBrand(1))
   }, []);
 
   const comments = useSelector((state) => state.comment.comments);
@@ -208,21 +215,22 @@ export default function ProductDetail() {
           <Grid item xs={6}>
             {/* <img src={`http://localhost:9004/api/product/images/${product.proImage}`}  alt="" /> */}
             <CardMedia
-              sx={{ height: "30rem", maxWidth: "30rem" }}
+              sx={{ height: "25rem", maxWidth: "25rem" }}
               image={`http://localhost:9004/api/product/images/${product.proImage}`}
               title="green iguana"
               style={{ textAlign: "center" }}
             />
+            <ProductImageList />
           </Grid>
           <Grid item xs={6}>
             <Stack spacing={2}>
-              <Typography variant="h3" gutterBottom>
+              <Typography variant="h4" gutterBottom>
                 {product.proName}
               </Typography>
-              <Typography variant="h4" gutterBottom color={"red"}>
+              <Typography variant="h5" gutterBottom color={"red"}>
                 {formatNumberWithCommas(product.proPrice)} VNĐ
               </Typography>
-              <Typography variant="h5" gutterBottom>
+              <Typography variant="h7" gutterBottom>
                 Số lượng còn lại: {product.proQuantity}
               </Typography>
               <Rating name="read-only" value={4} readOnly />
@@ -247,7 +255,51 @@ export default function ProductDetail() {
                 Thêm vào giỏ hàng
               </Button>
               <Typography variant="body1" gutterBottom>
-                Mô tả: {product.proDesc}
+                {/* Mô tả: {product.proDesc} */}
+                <TableContainer component={Paper}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Thông số</TableCell>
+            <TableCell>Chi tiết</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell>Màn hình</TableCell>
+            <TableCell>Super Retina XDR OLED, 6.1 inches</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Hệ điều hành</TableCell>
+            <TableCell>iOS 16</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Bộ nhớ trong</TableCell>
+            <TableCell>128GB / 256GB / 512GB</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>RAM</TableCell>
+            <TableCell>6GB</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Camera chính</TableCell>
+            <TableCell>Triple 12 MP, f/1.6, f/2.2, f/2.4</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Camera selfie</TableCell>
+            <TableCell>12 MP, f/2.2</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Pin</TableCell>
+            <TableCell>Li-Ion 3700 mAh, sạc nhanh 20W</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Màu sắc</TableCell>
+            <TableCell>Đen, Trắng, Xanh, Đỏ</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </TableContainer>
               </Typography>
             </Stack>
           </Grid>
@@ -294,7 +346,7 @@ export default function ProductDetail() {
               </Typography>
             <Stack spacing={2}>
               {productByCate.slice(0, 5).map((product) => (
-                <Paper>
+                <Paper key={product.proId}>
                   <Grid container>
                     <Grid item xs={4} sx={{padding: 1}}>
                       <CardMedia
@@ -313,27 +365,6 @@ export default function ProductDetail() {
                   </Grid>
                 </Paper>
               ))}
-
-              {/* {productByBrand.map((product) => (
-                <Paper>
-                  <Grid container>
-                    <Grid item xs={4} sx={{padding: 1}}>
-                      <CardMedia
-                        sx={{ height: "5rem", maxWidth: "5rem" }}
-                        image={`http://localhost:9004/api/product/images/${product.proImage}`}
-                        title="green iguana"
-                        style={{ textAlign: "center" }}
-                      />
-                    </Grid>
-                    <Grid item xs={8}>
-                      <Stack spacing={2}>
-                        <div>{product.proName}</div>
-                        <div>{product.proPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</div>
-                      </Stack>
-                    </Grid>
-                  </Grid>
-                </Paper>
-              ))} */}
               
             </Stack>
           </Grid>

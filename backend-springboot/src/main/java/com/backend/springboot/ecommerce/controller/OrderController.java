@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 // import java.util.UUID;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,7 @@ import com.backend.springboot.ecommerce.repository.OrderDetailRepository;
 import com.backend.springboot.ecommerce.repository.OrderRepository;
 import com.backend.springboot.ecommerce.repository.PaymentRepository;
 
+
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/order")
@@ -48,8 +50,11 @@ public class OrderController {
     private CartDetailRepository cartDetailRepository;
     @Autowired
     private OrderDetailRepository orderDetailRepository;
+
     @Autowired
     private EmailService emailService;
+
+
 
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrder() {
@@ -121,22 +126,35 @@ public class OrderController {
             }
 
             // Gửi email chúc mừng khi đặt hàng thành công
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            String formattedOrderTime = savedOrder.getOrderTime().format(formatter);
             
-            // String to = customer.getUserEmail(); // Địa chỉ email của người nhận
-            // String subject = "Chúc mừng! Đơn hàng của bạn đã được đặt thành công";
-            // String message = "Xin chào, " + customer.getUserName() + "!<br/><br/>"
-            //         + "Cảm ơn bạn đã đặt hàng tại cửa hàng của chúng tôi. Đơn hàng của bạn đã được nhận và đang được xử lý.<br/><br/>"
-            //         + "Thông tin đơn hàng:<br/>"
-            //         + "Mã đơn hàng: " + savedOrder.getOrderCode() + "<br/>"
-            //         + "Thời gian đặt hàng: " + savedOrder.getOrderTime() + "<br/><br/>"
-            //         + "Xin cảm ơn và chúc bạn một ngày tốt lành!";
+            String to = customer.getUserEmail(); // Địa chỉ email của người nhận
+            String subject = "E-STORE CONGRATULATES YOU ON YOUR SUCCESSFULLY ORDER!!!";
+            String message = "Xin chào, " + customer.getUserName() + "!<br/><br/>"
+                    + "Cảm ơn bạn đã đặt hàng tại cửa hàng của chúng tôi. Đơn hàng của bạn đã được nhận và đang được xử lý.<br/><br/>"
+                    + "THÔNG TIN ĐƠN HÀNG:<br/>"
+                    + "Mã đơn hàng: " + savedOrder.getOrderCode() + "<br/>"
+                    + "Thời gian đặt hàng: " + formattedOrderTime + "<br/><br/>"
+                    + "Xin cảm ơn và chúc bạn một ngày tốt lành!";
             
-            // // Gửi email khi đặt hàng thành công
-            // emailService.sendEmail2(to, subject, message);
+            // Gửi email khi đặt hàng thành công
+            emailService.sendEmail(to, subject, message);
 
             return ResponseEntity.ok(new MessageResponse("Create order successfully!!!"));
         } else {
             return new ResponseEntity<>(new MessageResponse("Customer or Payment not found!"), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/sendMail")
+    public ResponseEntity<?> testMail() {
+        try {
+            emailService.sendEmail("nghiab1910265@student.ctu.edu.vn", "E-Store", "Chúc mừng");
+            return ResponseEntity.ok(new MessageResponse("Send successfully!!!"));
+        } catch(Exception e) {
+            return new ResponseEntity<>(new MessageResponse("Failed"), HttpStatus.NOT_FOUND);
         }
     }
 

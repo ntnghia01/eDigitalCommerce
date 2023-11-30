@@ -11,13 +11,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.springboot.ecommerce.entity.Order;
 import com.backend.springboot.ecommerce.entity.User;
-import com.backend.springboot.ecommerce.payload.request.OrderRequestDto;
 import com.backend.springboot.ecommerce.payload.response.MessageResponse;
 import com.backend.springboot.ecommerce.repository.OrderRepository;
 import com.backend.springboot.ecommerce.repository.UserRepository;
