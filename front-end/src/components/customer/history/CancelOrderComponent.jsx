@@ -8,6 +8,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 
 import CancelIcon from '@mui/icons-material/Cancel';
+import { DialogContentText } from "@mui/material";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -33,26 +34,11 @@ export default function CancelOrderComponent (props) {
         >
             <DialogTitle>{"Xác nhận hủy đơn hàng"}</DialogTitle>
             <DialogContent>
-                Đang xây dựng
+
             
-                {/* <FormControl fullWidth sx={{mt: 3, width: '34rem'}}>
-                    <InputLabel id="demo-simple-select-label">Nhà Cung Cấp</InputLabel>
-                    <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    defaultValue=""
-                    fullWidth
-                    label="Nhà cung cấp"
-                    onChange={(e) => {
-                        setSupplierID(e.target.value);
-                    }}
-                    >
-                        {supplierData.map((supplier) => (
-                            <MenuItem key={supplier.supplierId} value={supplier.supplierId}>{supplier.supplierName}</MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-                {importDetails} */}
+                <DialogContentText id="alert-dialog-description">
+            Bạn có chắc muốn hủy đơn hàng này?
+          </DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Xác nhận</Button>

@@ -88,22 +88,22 @@ export default function ProductTable() {
                   <TableCell align="left">{product.proName}</TableCell>
                   <TableCell align="left"><img src={`http://localhost:9004/api/product/images/${product.proImage}`} alt="" style={{width: "100px", height: "100px"}}/></TableCell>
                   <TableCell align="right">{formatNumberWithCommas(product.proPrice)}</TableCell>
-                  <TableCell align="left">{product.proDesc}</TableCell>
+                  <TableCell align="left">{product.proDesc.slice(0,100)}</TableCell>
                   <TableCell align="right">{product.proQuantity}</TableCell>
                   <TableCell align="left">{product.category.cateName}</TableCell>
                   <TableCell align="left">{product.brand.brandName}</TableCell>
                   <TableCell align="left">
                     {product.proStatus == 1 ? 
-                        <Typography sx={{backgroundColor:'#4caf50', color:'white', paddingLeft: '1rem', borderRadius: '5rem'}}>Hoạt động</Typography>
+                        <Typography sx={{backgroundColor:'#4caf50', color:'white', paddingLeft: '1rem', borderRadius: '5rem', width: "10vh"}}>Hoạt động</Typography>
                     : product.proStatus == 0 ?
-                        <Typography sx={{backgroundColor:'orange', color:'white', paddingLeft: '1rem', borderRadius: '5rem'}}>Vô hiệu hóa</Typography>
+                        <Typography sx={{backgroundColor:'orange', color:'white', paddingLeft: '0.6rem', borderRadius: '5rem'}}>Vô hiệu hóa</Typography>
                     :   <Typography sx={{backgroundColor:'#ff3d00', color:'white', paddingLeft: '1rem', borderRadius: '5rem'}}>Đã xóa</Typography>
                     }
                     </TableCell>
                   <TableCell align="right">{formatDateTime(product.proCreatedAt)}</TableCell>
                   <TableCell align="right">{formatDateTime(product.proUpdatedAt)}</TableCell>
                   <TableCell align="left">
-                    <Stack spacing={2}>
+                    <Stack direction="row" spacing={2}>
                       <ProductEditForm
                         data={{id: product.proId, name: product.proName, price: product.proPrice, desc: product.proDesc, quantity: product.proQuantity, category: product.category.cateId, brand: product.brand.brandId, status: product.proStatus, image: product.proImage}} />
                       <ConfirmDeleteProduct deleteID={product.proId}/>

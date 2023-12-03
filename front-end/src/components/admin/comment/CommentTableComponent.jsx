@@ -87,7 +87,8 @@ export default function CommentTableComponent() {
                   {/* <TableCell align="left">{order.admin==null?'Trống':order.admin.adminName}</TableCell> */}
                   <TableCell align="left">{comment.user.userName}</TableCell>
                   <TableCell align="left">
-                    {comment.cmtStatus==1?"Hiển thị": "Đã ẩn"}
+                    {comment.cmtStatus==1?<Typography variant="body1" sx={{color: '#00a152'}}>Hiển thị</Typography>
+                    : <Typography variant="body1" sx={{color: '#b23c17'}}>Đã ẩn</Typography>}
                   </TableCell>
                   <TableCell align="center">
                     {comment.cmtStatus==1 ?

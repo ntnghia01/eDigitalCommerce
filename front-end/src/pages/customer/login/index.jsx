@@ -1,4 +1,4 @@
-import { Button, Stack, TextField } from "@mui/material";
+import { Button, Grid, Stack, TextField } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -52,8 +52,10 @@ export default function CustomerLoginPage() {
 
   return (
     <>
+      <Grid container spacing={3} sx={{padding: 3}}>
+      <Grid item xs={12} sm={6} >
       <Paper elevation={3} sx={{padding: 5}}>
-        <h1>Đăng nhập</h1>
+      <h1 style={{textAlign: 'center'}}>Đăng nhập</h1>
         <Stack spacing={2}>
           <TextField
             // margin="dense"
@@ -95,7 +97,16 @@ export default function CustomerLoginPage() {
             Đăng ký
           </Button>
         </Stack>
-      </Paper>
+      </Paper></Grid>
+      <Grid item xs={12} sm={6} sx={{ display: 'flex', justifyContent: 'center' }}>
+        {/* Thay thế phần này bằng logo của bạn */}
+        <img
+          src="../../../public/logo2.png"
+          alt="Logo"
+          style={{ width: '67%', height: 'auto', borderRadius: 10 }}
+        />
+      </Grid>
+    </Grid>
     </>
   );
 }

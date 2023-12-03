@@ -8,7 +8,18 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from '@mui/material/Typography';
 
+import { green, yellow, blue, red, purple, grey } from '@mui/material/colors';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import DepartureBoardIcon from '@mui/icons-material/DepartureBoard';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import NoCrashIcon from '@mui/icons-material/NoCrash';
+import CancelIcon from '@mui/icons-material/Cancel';
+
+import PriceCheckIcon from '@mui/icons-material/PriceCheck';
+
 import {
+  Avatar,
   Button,
   Table,
   TableBody,
@@ -54,6 +65,7 @@ export default function OrderTable() {
     }, [dispatch]);
     // console.log(products);
 
+
     
     return (
         <TableContainer component={Paper}>
@@ -93,14 +105,16 @@ export default function OrderTable() {
                     </TableCell>
                   <TableCell align="left">{order.orderNote}</TableCell>
                   <TableCell align="left">
-                  { order.orderStatus == 1 ? "Đang chờ xử lý"
-                    : order.orderStatus == 2 ? "Đang chờ giao"
-                    : order.orderStatus == 3 ? "Đang giao"
-                    : order.orderStatus == 4 ? "Đã giao"
-                    : order.orderStatus == 5 ? "Đã hoàn thành"
-                    : order.orderStatus == -1 ? "Đã hủy"
+                  { order.orderStatus == 1 ? <Typography variant="body1" sx={{color: '#3f51b5'}}>Đang chờ xử lý</Typography>
+                    : order.orderStatus == 2 ? <Typography variant="body1" sx={{color: '#b2a429'}}>Đang chờ giao</Typography>
+                    : order.orderStatus == 3 ? <Typography variant="body1" sx={{color: '#b23c17'}}>Đang giao</Typography>
+                    : order.orderStatus == 4 ? <Typography variant="body1" sx={{color: '#618833'}}>Đã giao</Typography>
+                    : order.orderStatus == 5 ? <Typography variant="body1" sx={{color: '#00a152'}}>Đã hoàn thành</Typography>
+                    : order.orderStatus == -1 ? <Typography variant="body1" sx={{color: '#ab003c'}}>Đã hủy</Typography>
                     : "Không xác định"}
                     </TableCell>
+
+
                   <TableCell align="center">
                     {/* <Stack spacing={2}> */}
                     

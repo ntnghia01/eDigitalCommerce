@@ -5,9 +5,15 @@ import { Box, Grid, Paper, Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Rating from "@mui/material/Rating";
 import PaidIcon from "@mui/icons-material/Paid";
-import Inventory2Icon from '@mui/icons-material/Inventory2';
-import MessageIcon from '@mui/icons-material/Message';
-import StarBorderPurple500Icon from '@mui/icons-material/StarBorderPurple500';
+import Inventory2Icon from "@mui/icons-material/Inventory2";
+import MessageIcon from "@mui/icons-material/Message";
+import StarBorderPurple500Icon from "@mui/icons-material/StarBorderPurple500";
+import { useEffect } from "react";
+import BarsChart from "./charts/BarsChart";
+import PieChartWithCenterLabel from "./charts/PieChartWithCenterLabel";
+import BarsChart2 from "./charts/BarsChart2";
+import StraightAnglePieChart from "./charts/StraightAnglePieChart";
+import StackChart from "./charts/StackChart";
 
 const sample = [1, 10, 30, 50, 70, 90, 100];
 const data = [
@@ -52,7 +58,9 @@ const seriesC = {
   label: "series C",
 };
 
+
 export default function AdminDashboard() {
+
   return (
     <>
       <h1 style={{ textAlign: "center" }}>TỔNG QUAN</h1>
@@ -63,12 +71,8 @@ export default function AdminDashboard() {
             elevation={3}
             sx={{ padding: 4, boxShadow: "0px 4px 8px #4caf50" }}
           >
-            <Stack
-              direction="row"
-              alignItems="center"
-              spacing={2}
-            >
-                <PaidIcon fontSize="large"/>
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <PaidIcon fontSize="large" />
               <div>
                 <Typography variant="h6" gutterBottom>
                   Tổng doanh thu
@@ -85,12 +89,8 @@ export default function AdminDashboard() {
             elevation={3}
             sx={{ padding: 4, boxShadow: "0px 4px 8px #2a3eb1" }}
           >
-            <Stack
-              direction="row"
-              alignItems="center"
-              spacing={2}
-            >
-                <Inventory2Icon  fontSize="large"/>
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <Inventory2Icon fontSize="large" />
               <div>
                 <Typography variant="h6" gutterBottom>
                   Tổng đơn hàng
@@ -107,19 +107,15 @@ export default function AdminDashboard() {
             elevation={3}
             sx={{ padding: 4, boxShadow: "0px 4px 8px #00a0b2" }}
           >
-            <Stack
-              direction="row"
-              alignItems="center"
-              spacing={2}
-            >
-                <MessageIcon  fontSize="large"/>
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <MessageIcon fontSize="large" />
               <div>
-              <Typography variant="h6" gutterBottom>
-                Tổng bình luận
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                23
-              </Typography>
+                <Typography variant="h6" gutterBottom>
+                  Tổng bình luận
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                  23
+                </Typography>
               </div>
             </Stack>
           </Paper>
@@ -129,26 +125,22 @@ export default function AdminDashboard() {
             elevation={3}
             sx={{ padding: 4, boxShadow: "0px 4px 8px #ef6c00", height: 133 }}
           >
-            <Stack
-              direction="row"
-              alignItems="center"
-              spacing={2}
-            >
-                <StarBorderPurple500Icon  fontSize="large"/>
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <StarBorderPurple500Icon fontSize="large" />
               <div>
-            <Typography variant="h6" gutterBottom>
-              Đánh giá trung bình
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              <Rating name="read-only" value={4} readOnly />
-            </Typography>
+                <Typography variant="h6" gutterBottom>
+                  Đánh giá trung bình
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                  <Rating name="read-only" value={4} readOnly />
+                </Typography>
               </div>
             </Stack>
           </Paper>
         </Grid>
         <Grid item xs={4}>
           <Paper elevation={3}>
-            <BarChart
+            {/* <BarChart
               xAxis={[
                 { scaleType: "band", data: ["group A", "group B", "group C"] },
               ]}
@@ -159,7 +151,9 @@ export default function AdminDashboard() {
               ]}
               width={500}
               height={300}
-            />
+            /> */}
+            <BarsChart2 />
+            {/* <MyChartComponent /> */}
           </Paper>
         </Grid>
         <Grid item xs={4}>
@@ -193,6 +187,24 @@ export default function AdminDashboard() {
             />
           </Paper>
         </Grid>
+        <Grid item xs={4}>
+          <Paper elevation={3}>
+            <BarsChart />
+          </Paper>
+        </Grid>
+        <Grid item xs={4}>
+          <Paper elevation={3}>
+            <PieChartWithCenterLabel />
+            <PieChartWithCenterLabel />
+          </Paper>
+        </Grid>
+        <Grid item xs={4}>
+          <Paper elevation={3}>
+            <StackChart />
+          </Paper>
+        </Grid>
+
+
       </Grid>
     </>
   );

@@ -74,10 +74,10 @@ export default function ActiveCommentComponent(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Hiển thị lại bình luận"}</DialogTitle>
+        <DialogTitle>{`Hiển thị lại bình luận #${comment.cmtId}`}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Bạn có chắc hiển thị lại bình luận ID={comment.cmtId} này?
+            Bạn có chắc hiển thị lại bình luận này?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

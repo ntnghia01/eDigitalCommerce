@@ -54,7 +54,7 @@ export default function ReviewOrderComponent (props) {
       setOpenSnackbar(false);
     };
 
-    const [reviewRate, setReviewRate] = React.useState("0");
+    const [reviewRate, setReviewRate] = React.useState(0);
     const [reviewContent, setReviewContent] = React.useState('');
 
     const handleSubmit = (e) => {
@@ -96,7 +96,7 @@ export default function ReviewOrderComponent (props) {
             onClose={handleClose}
             aria-describedby="alert-dialog-slide-description"
         >
-            <DialogTitle>{"Đánh giá đơn hàng"} #{order.orderId}</DialogTitle>
+            <DialogTitle>{"Đánh giá đơn hàng"}</DialogTitle>
             <DialogContent>
                 {/* <TextField
                     margin="normal"

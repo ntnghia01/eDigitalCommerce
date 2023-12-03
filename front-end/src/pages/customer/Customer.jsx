@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import ProductListComponent from "./ProductListComponent";
 import ProductDetail from "./ProductDetail";
-import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Link, useNavigate } from "react-router-dom";
 import CustomerLoginPage from "./login";
 import CustomerSignupPage from "./signup";
 import Cart from "./cart";
@@ -19,7 +19,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import OrderHistoryPage from "./history/OrderHistoryPage";
 import SuccessfulPaymentPage from "./success/SuccessfulPaymentPage";
 import PersonalPage from "./personal/PersonalPage";
-import { AppBar, Stack, Switch, Typography } from "@mui/material";
+import { AppBar, Button, Stack, Switch, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
@@ -37,6 +37,7 @@ import BrandListComponent from "../../components/customer/BrandListComponent";
 import SlideShowComponent from "../../components/customer/SlideShowComponent";
 import BlogPage from "./blog/BlogPage";
 import ContactPage from "./contact/ContactPage";
+import LookupPage from "./lookup/LookupPage";
 
 const actions = [
   { icon: <FileCopyIcon />, name: "Copy" },
@@ -86,18 +87,19 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function CustomerPage() {
-  
+  console.log("Check render");
   const [inputValue, setInputChat] = useState('');
   const isHomepage = window.location.href === "http://localhost:5173";
+  const navigate = useNavigate();
   return (
     <>
       <Box sx={{ flexGrow: 1, backgroundColor: "#f5f5f5" }}>
         
         <CustomerTopBar />
-            <CategoryListComponent key={1}/>
-            <BrandListComponent key={2}/>
-            {/* <SlideShowComponent key={3}/> */}
-        <Grid container spacing={2} sx={{marginTop: 3}}>
+        <CategoryListComponent key={1}/>
+        <BrandListComponent key={2}/>
+        {/* <SlideShowComponent key={3}/> */}
+        <Grid container spacing={2} sx={{marginTop: 1}}>
           <Grid item xs={2} sm={0} md={0} lg={0}></Grid>
           <Grid
             item
@@ -127,20 +129,37 @@ export default function CustomerPage() {
               <Route path="/personal" element={<PersonalPage />} />
               <Route path="/blog" element={<BlogPage />} />
               <Route path="/contact" element={<ContactPage />} />
+              <Route path="/lookup" element={<LookupPage />} />
             </Routes>
             
             <Box>
               <Grid container backgroundColor={"#f5f5f5"}  sx={{padding: 3}}>
                 <Grid item xs={12} sm={4}>
-                  <Stack spacing={2}>
+                  <Stack spacing={0}>
                     <img
                       alt="LOGO"
                       src="../../../public/logo2.png"
-                      style={{ cursor: "pointer", width: 70, padding: 5 }}
+                      style={{ cursor: "pointer", width: 70, padding: 5, borderRadius: 100 }}
                       onClick={() => navigate("/")}
                     />
-                    <Typography variant="body2">Chính sách sử dụng</Typography>
-                    <Typography variant="body2">Điều khoản sử dụng</Typography>
+                    <Typography variant="body1"
+                      sx={{
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                          fontSize: '1.2em', // Kích thước chữ lớn hơn khi hover
+                          color: 'blue', // Đổi màu chữ thành xanh khi hover
+                          cursor: 'pointer', // Thay đổi con trỏ chuột khi hover
+                        },
+                      }}>Chính sách sử dụng</Typography>
+                    <Typography variant="body1"
+                      sx={{
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                          fontSize: '1.2em', // Kích thước chữ lớn hơn khi hover
+                          color: 'blue', // Đổi màu chữ thành xanh khi hover
+                          cursor: 'pointer', // Thay đổi con trỏ chuột khi hover
+                        },
+                      }}>Điều khoản sử dụng</Typography>
                   </Stack>
                 </Grid>
                 <Grid item xs={12} sm={4}>
@@ -152,31 +171,55 @@ export default function CustomerPage() {
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <Stack spacing={2}>
-                    <Search>
-                      <SearchIconWrapper>
-                        <SearchIcon />
-                      </SearchIconWrapper>
-                      <StyledInputBase
-                        placeholder="Tìm kiếm..."
-                        inputProps={{ "aria-label": "search" }}
-                        value={inputValue}
-                        onChange={(e) => changeValueTest(e)}
-                      />
-                        <IconButton
-                        size="large"
-                        aria-label="account of current user"
-                        aria-controls="menu-appbar"
-                        aria-haspopup="true"
-                      >
-                      </IconButton>
-                    </Search>
-                    
-                    <div>Kết nối với chúng tôi</div>
+                    <Box
+                      onClick={() => {
+                        navigate("/contact");
+                      }}
+                      sx={{
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                          fontSize: '1.2em', // Kích thước chữ lớn hơn khi hover
+                          color: 'blue', // Đổi màu chữ thành xanh khi hover
+                          cursor: 'pointer', // Thay đổi con trỏ chuột khi hover
+                        },
+                      }}
+                    >
+                      Gửi liên hệ
+                    </Box>
+                    <div>Hoặc kết nối với chúng tôi</div>
                     <Stack direction="row" spacing={2}>
-                      <FacebookIcon />
-                      <InstagramIcon />
-                      <TwitterIcon />
-                      <TelegramIcon />
+                      <FacebookIcon sx={{
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                          fontSize: '3em', // Kích thước chữ lớn hơn khi hover
+                          color: 'blue', // Đổi màu chữ thành xanh khi hover
+                          cursor: 'pointer', // Thay đổi con trỏ chuột khi hover
+                        },
+                      }}/>
+                      <InstagramIcon sx={{
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                          fontSize: '3em', // Kích thước chữ lớn hơn khi hover
+                          color: 'blue', // Đổi màu chữ thành xanh khi hover
+                          cursor: 'pointer', // Thay đổi con trỏ chuột khi hover
+                        },
+                      }}/>
+                      <TwitterIcon sx={{
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                          fontSize: '3em', // Kích thước chữ lớn hơn khi hover
+                          color: 'blue', // Đổi màu chữ thành xanh khi hover
+                          cursor: 'pointer', // Thay đổi con trỏ chuột khi hover
+                        },
+                      }}/>
+                      <TelegramIcon sx={{
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                          fontSize: '3em', // Kích thước chữ lớn hơn khi hover
+                          color: 'blue', // Đổi màu chữ thành xanh khi hover
+                          cursor: 'pointer', // Thay đổi con trỏ chuột khi hover
+                        },
+                      }}/>
                       </Stack>
                   </Stack>
                 </Grid>

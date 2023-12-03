@@ -57,9 +57,9 @@ export default function SuppierTable() {
                 <TableCell align="right">
                   Ngày Tạo&nbsp;(dd-mm-yyyy hh-mm-ss)
                 </TableCell>
-                <TableCell align="right">
+                {/* <TableCell align="right">
                   Ngày Cập Nhật&nbsp;(dd-mm-yyyy hh-mm-ss)
-                </TableCell>
+                </TableCell> */}
                 <TableCell align="center">Thao Tác</TableCell>
               </TableRow>
             </TableHead>
@@ -78,16 +78,16 @@ export default function SuppierTable() {
                   <TableCell align="left">{supplier.supplierAddress}</TableCell>
                   <TableCell align="left">
                     {supplier.supplierStatus == 1 ? 
-                    <Typography sx={{backgroundColor:'#4caf50', color:'white', paddingLeft: '1rem', borderRadius: '5rem'}}>Hoạt động</Typography>
+                    <Typography sx={{backgroundColor:'#4caf50', color:'white', paddingLeft: '1rem', borderRadius: '5rem', width: "10vh"}}>Hoạt động</Typography>
                     : supplier.supplierStatus == 0 ?
-                    <Typography sx={{backgroundColor:'orange', color:'white', paddingLeft: '1rem', borderRadius: '5rem'}}>Vô hiệu hóa</Typography>
+                    <Typography sx={{backgroundColor:'orange', color:'white', paddingLeft: '0.6rem', borderRadius: '5rem'}}>Vô hiệu hóa</Typography>
                     : <Typography sx={{backgroundColor:'#ff3d00', color:'white', paddingLeft: '1rem', borderRadius: '5rem'}}>Đã xóa</Typography>
                   }
                     </TableCell>
                   <TableCell align="right">{formatDateTime(supplier.supplierCreatedAt)}</TableCell>
-                  <TableCell align="right">{formatDateTime(supplier.supplierUpdatedAt)}</TableCell>
+                  {/* <TableCell align="right">{formatDateTime(supplier.supplierUpdatedAt)}</TableCell> */}
                   <TableCell align="left">
-                    <Stack  spacing={2}>
+                    <Stack direction="row" spacing={2}>
                       <SupplierEditForm data={{id: supplier.supplierId, name: supplier.supplierName, email: supplier.supplierEmail, phone: supplier.supplierPhone, address: supplier.supplierAddress, status: supplier.supplierStatus}} />
                       <ConfirmDeleteSupplier deleteID={supplier.supplierId}/>
                     </Stack>

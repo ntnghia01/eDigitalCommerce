@@ -74,18 +74,17 @@ export default function ConfirmCancel(props) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Use Google's location service?"}
+          {"Xác nhận cho phép hủy đơn hàng?"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Let Google help apps determine location. This means sending
-            anonymous location data to Google, even when no apps are running.
+            Bạn có chắc muốn xác nhận yêu cầu hủy đơn hàng này
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Disagree</Button>
+          <Button onClick={handleClose}>Có</Button>
           <Button onClick={handleClose} autoFocus>
-            Agree
+            Không
           </Button>
         </DialogActions>
       </Dialog>

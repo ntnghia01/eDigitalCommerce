@@ -24,6 +24,7 @@ import com.backend.springboot.ecommerce.entity.User;
 import com.backend.springboot.ecommerce.entity.Order;
 import com.backend.springboot.ecommerce.entity.OrderDetail;
 import com.backend.springboot.ecommerce.entity.Payment;
+import com.backend.springboot.ecommerce.entity.Product;
 import com.backend.springboot.ecommerce.payload.request.OrderRequestDto;
 import com.backend.springboot.ecommerce.payload.response.MessageResponse;
 import com.backend.springboot.ecommerce.payload.response.OrderResponseDto;
@@ -227,7 +228,16 @@ public class OrderController {
         }
     }
 
-
+    @PostMapping("/lookup")
+    public ResponseEntity<Order> getOrderByOrderCode(@RequestBody OrderRequestDto orderRequestDto) {
+        Optional<Order> orderOptional = orderRepository.findOrderByOrderCode(orderRequestDto.getOrderCode());
+        if (orderOptional.isPresent()) {
+            Order order = orderOptional.get();
+            return new ResponseEntity<Order>(order, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
 
 

@@ -73,8 +73,7 @@ export default function ShipperAccountTableComponent() {
                 <TableCell align="left">Giới tính</TableCell>
                 <TableCell align="left">Ngày sinh</TableCell>
                 <TableCell align="left">Ngày tạo</TableCell>
-                <TableCell align="left">Vai trò</TableCell>
-                <TableCell align="left">Trạng thái</TableCell>
+                <TableCell align="center">Trạng thái</TableCell>
                 <TableCell align="center">Thao Tác</TableCell>
               </TableRow>
             </TableHead>
@@ -88,12 +87,16 @@ export default function ShipperAccountTableComponent() {
                   <TableCell align="left">{account.userName}</TableCell>
                   <TableCell align="left">{account.userPhone}</TableCell>
                   <TableCell align="left">{account.userEmail}</TableCell>
-                  <TableCell align="left">{account.userSex}</TableCell>
+                  <TableCell align="left">{account.userSex==1?"Nam":account.userSex==2?"Nữ":"Khác"}</TableCell>
                   <TableCell align="left">{convertMillisecondsToDate(account.userBirthday)}</TableCell>
                   <TableCell align="left">{account.userCreatedAt}</TableCell>
-                  <TableCell align="left">{account.userRole}</TableCell>
-                  <TableCell align="left">
-                    {account.userStatus==1?"Đang sử dụng": account.userStatus==0? "Bị khóa" : "Không xác định"}
+                  {/* <TableCell align="left">{account.userRole}</TableCell> */}
+                  <TableCell align="left" color="red">
+                    {account.userStatus == 1 ? 
+                    <Typography sx={{backgroundColor:'#4caf50', color:'white', borderRadius: '5rem', textAlign: "center"}}>Đang sử dụng</Typography>
+                    : account.userStatus == 0 ?
+                    <Typography sx={{backgroundColor:'orange', color:'white', borderRadius: '5rem', textAlign: "center"}}>Bị khóa</Typography>
+                    : <Typography sx={{backgroundColor:'#ff3d00', color:'white', borderRadius: '5rem', textAlign: "center"}}>Không xác định</Typography>}
                   </TableCell>
                   <TableCell align="center">
                     {account.userStatus==1 ?

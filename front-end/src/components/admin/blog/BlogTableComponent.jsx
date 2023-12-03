@@ -28,6 +28,8 @@ import {
 import { useEffect } from "react";
 import { fetchReviews } from "../../../slices/reviewSlice";
 import { fetchBlogs } from "../../../slices/blogSlice";
+import BlogEditForm from "./BlogEditComponent";
+import ConfirmDeleteBlogComponent from "./ComfirmDeleteBlogComponent";
 
 const formatDateTime = (oriDateTime) => {
   const dateTime = new Date(oriDateTime);
@@ -75,6 +77,7 @@ export default function BlogTableComponent() {
             <TableCell align="left">Hình ảnh</TableCell>
             <TableCell align="left">Nội dung</TableCell>
             <TableCell align="left">Người viết</TableCell>
+            <TableCell align="left">Trạng thái</TableCell>
             <TableCell align="center">Thao Tác</TableCell>
           </TableRow>
         </TableHead>
@@ -101,23 +104,32 @@ export default function BlogTableComponent() {
                 {blog.blogContent.slice(0, 200)}...
               </TableCell>
               <TableCell align="left">{blog.user.userName}</TableCell>
+              <TableCell align="left">
+                {blog.blogStatus == 1 ? 
+                  <Typography sx={{backgroundColor:'#4caf50', color:'white', paddingLeft: '1rem', borderRadius: '5rem', width: "9vh"}}>Hiển thị</Typography>
+                  : blog.blogStatus == 0 ?
+                  <Typography sx={{backgroundColor:'orange', color:'white', paddingLeft: '2rem', borderRadius: '5rem'}}>Ẩn</Typography>
+                  : <Typography sx={{backgroundColor:'#ff3d00', color:'white', paddingLeft: '1rem', borderRadius: '5rem'}}>Đã xóa</Typography>}
+              </TableCell>
               <TableCell align="center">
                 <Stack direction="row" spacing={2}>
                   {/* <ConfirmPayment order={order} /> */}
-                  <Button
+                  {/* <Button
                     variant="contained"
                     color="warning"
                     startIcon={<EditIcon />}
                   >
                     Sửa
-                  </Button>
-                  <Button
+                  </Button> */}
+                  <BlogEditForm blog={blog} />
+                  {/* <Button
                     variant="contained"
                     color="error"
                     startIcon={<DeleteIcon />}
                   >
                     Xóa
-                  </Button>
+                  </Button> */}
+                  <ConfirmDeleteBlogComponent blog={blog} />
                 </Stack>
               </TableCell>
             </TableRow>

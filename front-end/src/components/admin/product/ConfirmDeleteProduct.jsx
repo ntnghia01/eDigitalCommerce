@@ -70,10 +70,10 @@ export default function ConfirmDeleteProduct(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Xóa Sản Phẩm"}</DialogTitle>
+        <DialogTitle>{`Xóa Sản Phẩm #${props.deleteID}`}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Bạn có chắc muốn xóa sản phẩm ID={props.deleteID} này?
+            Bạn có chắc muốn xóa sản phẩm này?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

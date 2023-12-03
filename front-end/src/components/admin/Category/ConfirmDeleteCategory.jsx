@@ -71,10 +71,10 @@ export default function DeleteCategory(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Xóa Danh Mục"}</DialogTitle>
+        <DialogTitle>{`Xóa Danh Mục #${props.deleteID} `}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Bạn có chắc muốn xóa danh mục ID={props.deleteID} này?
+            Bạn có chắc muốn xóa danh mục này?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

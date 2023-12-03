@@ -100,7 +100,7 @@ export default function ConfirmPayment(props) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Use Google's location service?"}
+          {"Bạn có chắc muốn xác nhận thanh toán cho đơn hàng?"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">

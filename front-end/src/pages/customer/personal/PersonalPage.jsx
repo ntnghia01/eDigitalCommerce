@@ -17,6 +17,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCustomerInfo } from "../../../slices/customerSlice";
 import EditInformationComponent from "../../../components/customer/personal/EditInformationComponent";
 import ConfirmDeleteAccountComponent from "../../../components/customer/personal/ConfirmDeleteAccountComponent";
+import { StyledBreadcrumb } from "../../../components/customize/CustomizeComponent";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import HomeIcon from "@mui/icons-material/Home";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
 
 function stringToColor(string) {
   let hash = 0;
@@ -70,6 +74,22 @@ export default function PersonalPage() {
   const informations = useSelector((state) => state.customer.customer);
   return (
     <>
+    <Breadcrumbs aria-label="breadcrumb" sx={{ marginLeft: 3 }}>
+        <StyledBreadcrumb
+          label="Trang chủ"
+          component="a"
+          // href="#"
+          onClick={() => {
+            navigate("/");
+          }}
+          icon={<HomeIcon fontSize="small" />}
+        />
+        <StyledBreadcrumb
+          label="Thông tin cá nhân"
+          component="a"
+          icon={<AccountCircleIcon fontSize="small" />}
+        />
+      </Breadcrumbs>
       <Grid container spacing={2} sx={{ padding: 6 }}>
         <Grid item xs={12} md={6}>
           <Typography variant="h5" gutterBottom>
@@ -107,7 +127,7 @@ export default function PersonalPage() {
           </Typography>
           <Stack spacing={2}>
             <Typography variant="body1" gutterBottom>
-              Số lượng đơn hàng đã đặt: 2
+              Số lượng đơn hàng đã đặt: 3
             </Typography>
             <Typography variant="body1" gutterBottom>
               Số lượng bình luận: 3
@@ -123,6 +143,7 @@ export default function PersonalPage() {
         justifyContent="center"
         alignItems="center"
         spacing={2}
+        sx={{marginBottom: 2}}
       >
         {/* <Button variant="outlined">Cập nhật thông tin cá nhân</Button> */}
         <EditInformationComponent informations={informations} />

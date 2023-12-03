@@ -20,16 +20,17 @@ import AdfScannerIcon from '@mui/icons-material/AdfScanner';
 import CableIcon from '@mui/icons-material/Cable';
 import UsbIcon from '@mui/icons-material/Usb';
 import SdCardIcon from '@mui/icons-material/SdCard';
+import { fetchBrands } from "../../slices/brandSlice";
 
 
 export default function CategoryListComponent() {
     console.log("check render");
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState("");
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchCategories());
+    dispatch(fetchBrands());
   },[dispatch])
 
   const categories = useSelector((state) => state.categories.categories)
@@ -45,7 +46,7 @@ export default function CategoryListComponent() {
           style={{ paddingLeft: 0 }}
         >
           <BottomNavigation
-            showLabels
+          showLabels
             value={value}
             onChange={(event, newValue) => {
               setValue(newValue);

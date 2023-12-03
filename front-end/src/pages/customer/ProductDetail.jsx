@@ -143,7 +143,7 @@ export default function ProductDetail() {
   const dispatch = useDispatch();
 
   const { proId } = useParams();
-
+  const product = useSelector((state) => state.product.product);
   useEffect(() => {
     console.log(proId);
     dispatch(getProductDetail(proId)).then(() => {
@@ -155,7 +155,7 @@ export default function ProductDetail() {
     });
     dispatch(fetchCommentByProductID(proId))
   }, [dispatch]);
-  const product = useSelector((state) => state.product.product);
+  
 
   useEffect(() => {
       // dispatch(getProductByCategory(product.category.cateId))

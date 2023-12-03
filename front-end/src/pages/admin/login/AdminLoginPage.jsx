@@ -42,11 +42,31 @@ export default function AdminLoginPage() {
       }
 
     return (
-        <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh' }}>
+        <Grid container justifyContent="center" alignItems="center" 
+        style={{
+            height: '100vh',
+            backgroundImage: `url('../../../public/adminBG.jpg')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+        }}
+        >
             <Grid item xs={10} sm={6} md={4}>
-                <Paper elevation={3} style={{ padding: 20 }}>
+                <Paper elevation={3} style={{ padding: 20, backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                        backdropFilter: 'blur(0px)' }}>
+                    <img
+                        src="../../../public/logo2.png"
+                        alt="Logo"
+                        style={{
+                            width: '30%',
+                            marginBottom: 20,
+                            borderRadius: '50%', // Để bo tròn viền
+                            display: 'block',
+                            marginLeft: 'auto',
+                            marginRight: 'auto',
+                        }}
+                    />
                     <Typography variant="h5" align="center" gutterBottom>
-                        Đăng nhập Admin
+                        Đăng Nhập Quản Trị Viên
                     </Typography>
                     {/* <form onSubmit={handleLogin}> */}
                         <Grid container spacing={2}>

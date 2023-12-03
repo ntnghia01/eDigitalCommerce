@@ -46,6 +46,7 @@ import CommentIcon from "@mui/icons-material/Comment";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 import FactoryIcon from "@mui/icons-material/Factory";
 import ArticleIcon from '@mui/icons-material/Article';
+import ContactMailIcon from '@mui/icons-material/ContactMail';
 
 import Categories from "./categories";
 import AddCategoryForm from "../../components/admin/Category/AddCategoryForm";
@@ -72,7 +73,7 @@ const activeStyles = {
   backgroundColor: "#1565c0",
   color: "#ffffff", // Màu chữ trắng
   fontSize: "0.99rem",
-  borderRadius: "10px 0 0 10px",
+  borderRadius: "20px 0 0 20px",
   // transform: 'scale(1.1)'
 };
 
@@ -121,7 +122,7 @@ function Admin() {
               <Box display="flex" justifyContent="center" alignItems="center">
                 <img
                   alt="profile-user"
-                  src={`../../../public/avar.jpg`}
+                  src={`../../../public/logo2.png`}
                   style={{
                     cursor: "pointer",
                     borderRadius: "50%",
@@ -286,7 +287,7 @@ function Admin() {
               Quản Lý Bài Viết{" "}
             </MenuItem>
             <MenuItem
-              icon={<ArticleIcon />}
+              icon={<ContactMailIcon />}
               style={{
                 ...(selectedMenuItem === "/admin/contact" ? activeStyles : {fontSize: '0.95rem'}), // Sử dụng activeStyles nếu MenuItem được chọn
               }}

@@ -48,7 +48,6 @@ public class AddressController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        
     }
 
     @GetMapping("/customer/{customerId}")

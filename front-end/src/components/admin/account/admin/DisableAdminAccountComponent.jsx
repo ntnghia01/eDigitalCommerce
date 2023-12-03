@@ -71,10 +71,10 @@ export default function DisableAdminAccountComponent(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Khóa tài khoản"}</DialogTitle>
+        <DialogTitle>{`Khóa tài khoản #${account.userId}`}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Bạn có chắc muốn khóa tài khoản ID={account.userId} này?
+            Bạn có chắc muốn khóa tài khoản này?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

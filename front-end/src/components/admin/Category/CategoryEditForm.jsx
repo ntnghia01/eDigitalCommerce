@@ -95,7 +95,7 @@ export default function CategoryEditForm(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{`Chỉnh Sửa Danh Mục ID=${existCategory.id}`}</DialogTitle>
+        <DialogTitle>{`Chỉnh Sửa Danh Mục #${existCategory.id}`}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus

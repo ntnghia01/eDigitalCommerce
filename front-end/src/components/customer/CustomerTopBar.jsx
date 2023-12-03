@@ -107,8 +107,10 @@ function stringAvatar(name) {
   };
 }
 export default function CustomerTopBar() {
+
+  console.log("Check render");
+
   const { mode, setMode } = useColorScheme();
-  // console.log("check topbar render");
   const customerLogin = localStorage.getItem("customerName");
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -320,13 +322,31 @@ export default function CustomerTopBar() {
                 Trang chủ
               </Button>
               <Button
-                key="home"
+                key="lookup"
+                onClick={() => {
+                  navigate("/lookup");
+                }}
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                Tra cứu
+              </Button>
+              <Button
+                key="intro"
                 onClick={() => {
                   navigate("/");
                 }}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 Giới thiệu
+              </Button>
+              <Button
+                key="blog"
+                onClick={() => {
+                  navigate("/blog");
+                }}
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                Blog
               </Button>
             </Box>
             <Search>
@@ -356,7 +376,7 @@ export default function CustomerTopBar() {
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
               <IconButton
                 size="large"
-                aria-label="show 4 new cart"
+                // aria-label="show 4 new cart"
                 color="inherit"
                 onClick={() =>
                   navigate(`/cart/${localStorage.getItem("customerID")}`)
@@ -368,7 +388,7 @@ export default function CustomerTopBar() {
               </IconButton>
               <IconButton
                 size="large"
-                aria-label="show 4 new history"
+                // aria-label="show 4 new history"
                 color="inherit"
                 onClick={() =>
                   navigate(`/history/${localStorage.getItem("customerID")}`)
@@ -378,27 +398,27 @@ export default function CustomerTopBar() {
                   <HistoryIcon />
                 </Badge>
               </IconButton>
-              <IconButton
+              {/* <IconButton
                 size="large"
-                aria-label="show 4 new mails"
+                // aria-label="show 4 new mails"
                 color="inherit"
               >
                 <Badge badgeContent={4} color="error">
                   <MailIcon />
                 </Badge>
-              </IconButton>
-              <IconButton
+              </IconButton> */}
+              {/* <IconButton
                 size="large"
-                aria-label="show 17 new notifications"
+                // aria-label="show 17 new notifications"
                 color="inherit"
               >
                 <Badge badgeContent={17} color="error">
                   <NotificationsIcon />
                 </Badge>
-              </IconButton>
+              </IconButton> */}
               <IconButton
                 size="large"
-                aria-label="show 17 new mode"
+                // aria-label="show 17 new mode"
                 color="inherit"
                 onClick={() => {
                   setMode(mode === "light" ? "dark" : "light");

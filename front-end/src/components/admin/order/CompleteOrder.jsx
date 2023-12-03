@@ -101,7 +101,7 @@ export default function CompleteOrder(props) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Use Google's location service?"}
+          {"Đánh dấu hoàn thành đơn hàng này?"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">

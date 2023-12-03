@@ -1,6 +1,7 @@
 import {
   Button,
   FormControlLabel,
+  Grid,
   Radio,
   RadioGroup,
   Stack,
@@ -16,6 +17,8 @@ import { customerSignup } from "../../../slices/customerSlice";
 import { useNavigate } from 'react-router-dom';
 
 export default function CustomerSignupPage() {
+
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const [signupData, setSignupData] = useState({
     userPhone: "",
@@ -42,11 +45,17 @@ export default function CustomerSignupPage() {
   const handleSubmit = (e) => {
     // console.log(signupData);
     e.preventDefault();
-    dispatch(customerSignup(signupData))
-        .then(() => {
-            console.log("Đăng ký thành công");
-            navigate('/login')
-        })
+    if (signupData.userPassword !== confirmPassword) {
+      // Nếu mật khẩu và mật khẩu nhập lại không khớp
+      alert("Mật khẩu không khớp");
+      // Thực hiện các hành động thông báo hoặc xử lý khác ở đây (ví dụ: hiển thị thông báo)
+    } else {
+      dispatch(customerSignup(signupData))
+          .then(() => {
+              console.log("Đăng ký thành công");
+              navigate('/login')
+          })
+    }
   }
 
   const redirect = () => {
@@ -55,8 +64,10 @@ export default function CustomerSignupPage() {
 
   return (
     <>
-      <Paper elevation={3} sx={{padding: 5}}>
-        <h1>Đăng ký</h1>
+        <Grid container spacing={3} sx={{padding: 5}}>
+      <Grid item xs={12} sm={6}>
+      <Paper elevation={3} sx={{padding: 5, borderRadius: '20px 0 0 20px'}}>
+        <h1 style={{textAlign: 'center'}}>Đăng ký</h1>
         <Stack spacing={2}>
           <TextField
             // margin="dense"
@@ -78,6 +89,16 @@ export default function CustomerSignupPage() {
             variant="outlined"
             onChange={(e) => {
                 handleInputChange(e);
+            }}
+          />
+          <TextField
+            name="confirmPassword"
+            id="confirm_password"
+            label="Nhập lại mật khẩu"
+            type="password"
+            variant="outlined"
+            onChange={(e) => {
+              setConfirmPassword(e.target.value);
             }}
           />
           <TextField
@@ -144,7 +165,17 @@ export default function CustomerSignupPage() {
             Đăng nhập
           </Button>
         </Stack>
-      </Paper>
+      </Paper></Grid>
+      <Grid item xs={12} sm={6} sx={{ display: 'flex', justifyContent: 'center' }}>
+        {/* Thay thế phần này bằng logo của bạn */}
+        <img
+          src="../../../public/logo2.png"
+          alt="Logo"
+          // style={{ width: '100%', height: 'auto' }}
+          style={{borderRadius: '0 20px 20px 0'}}
+        />
+      </Grid>
+    </Grid>
     </>
   );
 }

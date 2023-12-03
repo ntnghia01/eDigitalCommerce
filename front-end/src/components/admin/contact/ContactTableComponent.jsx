@@ -29,6 +29,9 @@ import { useEffect } from "react";
 import { fetchReviews } from "../../../slices/reviewSlice";
 import { fetchBlogs } from "../../../slices/blogSlice";
 import { fetchContacts } from "../../../slices/contactSlice";
+import ConfirmContactComponent from "./ConfirmContactCompoentn";
+import ConfirmDeleteBlogComponent from "../blog/ComfirmDeleteBlogComponent";
+import ConfirmDeleteContactComponent from "./ConfirmDeleteContactComponent";
 
 const formatDateTime = (oriDateTime) => {
   const dateTime = new Date(oriDateTime);
@@ -77,6 +80,7 @@ export default function ContactTableComponent() {
             <TableCell align="left">Tên liên hệ</TableCell>
             <TableCell align="left">Số điện thoại</TableCell>
             <TableCell align="left">Email</TableCell>
+            <TableCell align="left">Trạng thái</TableCell>
             <TableCell align="center">Thao Tác</TableCell>
           </TableRow>
         </TableHead>
@@ -98,15 +102,14 @@ export default function ContactTableComponent() {
               <TableCell align="left">{contact.contactUsername}</TableCell>
               <TableCell align="left">{contact.contactUserphone}</TableCell>
               <TableCell align="left">{contact.contactUserEmail}</TableCell>
+              <TableCell align="left">
+                    {contact.contactStatus==1?<Typography variant="body1" sx={{color: '#ff9100', width: "10vh"}}>Đang chờ</Typography>
+                    : <Typography variant="body1" sx={{color: '#00a152'}}>Đã xác nhận</Typography>}
+                  </TableCell>
               <TableCell align="center">
-                <Stack direction="row" spacing={2}>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    startIcon={<DeleteIcon />}
-                  >
-                    Xóa
-                  </Button>
+                <Stack direction="row" spacing={1} sx={{width: '25vh'}}>
+                  {contact.contactStatus == 1 ? <ConfirmContactComponent contact={contact} /> : ""}
+                  <ConfirmDeleteContactComponent contact={contact} />
                 </Stack>
               </TableCell>
             </TableRow>

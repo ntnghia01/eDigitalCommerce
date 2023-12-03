@@ -83,7 +83,7 @@ export default function ConfirmDeleteAccountComponent(props) {
         <DialogTitle>{"Xóa Tài Khoản"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Bạn có chắc muốn xóa tài khoản này #{informations.userId} này?
+            Bạn có chắc muốn xóa tài khoản này?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

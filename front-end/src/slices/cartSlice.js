@@ -22,8 +22,10 @@ export const addToCart = createAsyncThunk (
 export const fetchCartDetail = createAsyncThunk (
     'cart/fetchCartDetail',
     async (customerId) => {
+        
         const response = await axios.get(prefixAPI + `/api/cart/${customerId}`);
         return response.data;
+        
     }
 )
 
@@ -46,9 +48,13 @@ export const deleteCartDetail = createAsyncThunk (
 export const countCartDetail = createAsyncThunk (
     'cart/count',
     async (customerId) => {
-        const response = await axios.get(prefixAPI + `/api/cart/${customerId}`);
-        // console.log(response.data.length);
-        return response.data.length;
+        if (localStorage.getItem("customerID")) {
+            const response = await axios.get(prefixAPI + `/api/cart/${customerId}`);
+            // console.log(response.data.length);
+            return response.data.length;
+        } else {
+            return 0;
+        }
     }
 )
 

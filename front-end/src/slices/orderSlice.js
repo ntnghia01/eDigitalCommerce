@@ -7,7 +7,8 @@ const initialState = {
     orders: [],
     orderDetails: [],
     orderHistory: [],
-    orderCount: 0
+    orderCount: 0,
+    lookedUpOrder: null
 }
 
 export const createOrder = createAsyncThunk (
@@ -54,9 +55,13 @@ export const getOrderByCustomerId = createAsyncThunk (
 export const getOrderCountByCustomerId = createAsyncThunk (
     'order/getOrderCountByCustomerId',
     async (customerId) => {
-        const response = await axios.get(prefixAPI + `/api/order/count/${customerId}`);
-        // console.log(response.data.orderCount);
-        return response.data.orderCount;
+        if (localStorage.getItem("customerID")) {
+            const response = await axios.get(prefixAPI + `/api/order/count/${customerId}`);
+            // console.log(response.data.orderCount);
+            return response.data.orderCount;
+        } else {
+            return 0;
+        }
     }
 );
 
@@ -72,6 +77,14 @@ export const completeOrder = createAsyncThunk (
     'order/complete',
     async (orderId) => {
         const response = await axios.put(prefixAPI + `/api/order/complete/${orderId}`);
+        return response.data;
+    }
+);
+
+export const lookupOrder = createAsyncThunk (
+    'order/lookup',
+    async (lookupData) => {
+        const response = await axios.post(prefixAPI + '/api/order/lookup', lookupData);
         return response.data;
     }
 );
@@ -96,6 +109,9 @@ const orderSlice = createSlice ({
             })
             .addCase(getOrderCountByCustomerId.fulfilled, (state, action) => {
                 state.orderCount = action.payload;
+            })
+            .addCase(lookupOrder.fulfilled, (state, action) => {
+                state.lookedUpOrder = action.payload;
             })
     }
 })

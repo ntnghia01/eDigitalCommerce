@@ -229,12 +229,12 @@ export default function OrderDetailShipperComponent(props) {
                   </h4>
                   <h4>
                     Trạng thái: 
-                    { order.orderStatus == 1 ? "Đang chờ xử lý"
-                    : order.orderStatus == 2 ? "Đang chờ giao"
-                    : order.orderStatus == 3 ? "Đang giao"
-                    : order.orderStatus == 4 ? "Đã giao"
-                    : order.orderStatus == 5 ? "Đã hoàn thành"
-                    : order.orderStatus == -1 ? "Đã hủy"
+                    { order.orderStatus == 1 ? <Typography variant="body1" sx={{color: '#3f51b5'}}>Đang chờ xử lý</Typography>
+                    : order.orderStatus == 2 ? <Typography variant="body1" sx={{color: '#b2a429'}}>Đang chờ giao</Typography>
+                    : order.orderStatus == 3 ? <Typography variant="body1" sx={{color: '#b23c17'}}>Đang giao</Typography>
+                    : order.orderStatus == 4 ? <Typography variant="body1" sx={{color: '#618833'}}>Đã giao</Typography>
+                    : order.orderStatus == 5 ? <Typography variant="body1" sx={{color: '#00a152'}}>Đã hoàn thành</Typography>
+                    : order.orderStatus == -1 ? <Typography variant="body1" sx={{color: '#ab003c'}}>Đã hủy</Typography>
                     : "Không xác định"}
                     </h4>
                 </Stack>

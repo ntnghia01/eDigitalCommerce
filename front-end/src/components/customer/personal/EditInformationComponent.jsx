@@ -114,7 +114,7 @@ export default function EditInformationComponent(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{`Cập nhật thông tin cá nhân #${informations.userId}`}</DialogTitle>
+        <DialogTitle>{`Cập nhật thông tin cá nhân`}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus

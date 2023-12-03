@@ -70,7 +70,7 @@ export default function ShippedComponent(props) {
 
   return (
     <>
-      <Button startIcon={<CheckCircleIcon />} variant="contained" onClick={() => {handleClickOpen();}}>Giao xong</Button>
+      <Button startIcon={<CheckCircleIcon />} variant="contained" onClick={() => {handleClickOpen();}} color="success">Giao xong</Button>
       <Dialog
         open={open}
         TransitionComponent={Transition}

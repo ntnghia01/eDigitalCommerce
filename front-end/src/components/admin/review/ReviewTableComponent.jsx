@@ -22,6 +22,7 @@ import { fetchImports } from "../../../slices/importSlice";
 import { fetchOrder, getOrderDetailByOrderId } from "../../../slices/orderSlice";
 import { useEffect } from "react";
 import { fetchReviews } from "../../../slices/reviewSlice";
+import ReviewDetailComponent from "./ReviewDetailComponent";
 
 const formatDateTime = (oriDateTime) => {
     const dateTime = new Date(oriDateTime);
@@ -88,7 +89,8 @@ export default function ReviewTableComponent() {
                     {/* <Stack spacing={2}> */}
                     
                       {/* <ConfirmPayment order={order} /> */}
-                        <Button>Chi tiết</Button>
+                        {/* <Button>Chi tiết</Button> */}
+                        <ReviewDetailComponent review={review} />
                     {/* </Stack> */}
                   </TableCell>
                 </TableRow>

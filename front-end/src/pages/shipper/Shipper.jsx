@@ -4,8 +4,11 @@ import {
   Box,
   Grid,
   IconButton,
+  Menu,
+  MenuItem,
   TextField,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import {
   Button,
@@ -36,6 +39,8 @@ import { fetchOrderByShipper } from "../../slices/shipperSlice";
 import StartShipComponent from "../../components/shipper/StartShipComponent";
 import ShippedComponent from "../../components/shipper/ShippedComponent";
 import OrderDetailShipperComponent from "../../components/shipper/OrderDetailShipperComponent";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // import "../../../public/avatar.png";
 
@@ -72,6 +77,35 @@ export default function Shipper() {
   useEffect(() => {
     dispatch(fetchOrderByShipper(localStorage.getItem("shipperID")));
   }, [dispatch]);
+
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  const navigate = useNavigate();
+
+  const handleSignout = () => {
+    localStorage.removeItem("shipperID");
+    localStorage.removeItem("shipperName");
+    localStorage.removeItem("shipperToken");
+
+    handleCloseUserMenu();
+    navigate("/shipper/login")
+  };
 
   return (
     <>
@@ -133,14 +167,56 @@ export default function Shipper() {
                   />
                 </Badge>
               </Tooltip>
-
+              <Box sx={{ flexGrow: 0, marginLeft: 2 }}>
               <Tooltip title="Tài khoản">
+              <IconButton
+                    onClick={handleOpenUserMenu}
+                    sx={{ p: 0, marginLeft: 1 }}
+                  >
                 <Avatar
                   alt="Remy Sharp"
                   src="../../../public/AvarShipper.jpg"
                   style={{ cursor: "pointer" }}
                 />
+                </IconButton>
               </Tooltip>
+              <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {/* {settings.map((setting) => (
+                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  ))} */}
+                  <MenuItem>
+                    <Typography
+                      textAlign="center"
+                      onClick={() => {
+                        navigate("/information");
+                        handleCloseUserMenu();
+                      }}
+                    >
+                      Thông tin cá nhân
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem onClick={() => handleSignout()}>
+                    <Typography textAlign="center">Đăng xuất</Typography>
+                  </MenuItem>
+                </Menu>
+              </Box>
             </Stack>
           </Grid>
         </Grid>
@@ -187,12 +263,12 @@ export default function Shipper() {
                 </TableCell>
                 <TableCell align="left">{order.orderNote}</TableCell>
                 <TableCell align="left">
-                  { order.orderStatus == 1 ? "Đang chờ xử lý"
-                    : order.orderStatus == 2 ? "Đang chờ giao"
-                    : order.orderStatus == 3 ? "Đang giao"
-                    : order.orderStatus == 4 ? "Đã giao"
-                    : order.orderStatus == 5 ? "Đã hoàn thành"
-                    : order.orderStatus == -1 ? "Đã hủy"
+                { order.orderStatus == 1 ? <Typography variant="body1" sx={{color: '#3f51b5'}}>Đang chờ xử lý</Typography>
+                    : order.orderStatus == 2 ? <Typography variant="body1" sx={{color: '#b2a429'}}>Đang chờ giao</Typography>
+                    : order.orderStatus == 3 ? <Typography variant="body1" sx={{color: '#b23c17'}}>Đang giao</Typography>
+                    : order.orderStatus == 4 ? <Typography variant="body1" sx={{color: '#618833'}}>Đã giao</Typography>
+                    : order.orderStatus == 5 ? <Typography variant="body1" sx={{color: '#00a152'}}>Đã hoàn thành</Typography>
+                    : order.orderStatus == -1 ? <Typography variant="body1" sx={{color: '#ab003c'}}>Đã hủy</Typography>
                     : "Không xác định"}
                 </TableCell>
                 <TableCell align="center">

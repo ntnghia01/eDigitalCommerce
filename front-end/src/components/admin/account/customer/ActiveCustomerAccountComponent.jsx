@@ -72,10 +72,10 @@ export default function ActiveCustomerAccountComponent(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Kích hoạt tại khoản"}</DialogTitle>
+        <DialogTitle>{`Kích hoạt tài khoản #${account.userId} `}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Bạn có chắc muốn kích hoạt lại tài khoản ID={account.userId} này?
+            Bạn có chắc muốn kích hoạt lại tài khoản này?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

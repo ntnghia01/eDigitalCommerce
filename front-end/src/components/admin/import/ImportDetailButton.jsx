@@ -62,7 +62,7 @@ export default function ImportDetailButton(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{`Chi Tiết Nhập Kho ID=${props.importID}`}</DialogTitle>
+        <DialogTitle>{`Chi Tiết Phiếu Nhập Kho #${props.importID}`}</DialogTitle>
         <DialogContent>
           <TableContainer component={Paper}>
             <Table aria-label="simple table">

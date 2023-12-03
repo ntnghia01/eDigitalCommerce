@@ -78,8 +78,8 @@ export default function CategoryTable () {
                     {category.cateStatus == 1 ? 
                     <Typography sx={{backgroundColor:'#4caf50', color:'white', paddingLeft: '1rem', borderRadius: '5rem', maxWidth: "95%"}}>Đang hoạt động</Typography>
                     : category.cateStatus == 0 ?
-                    <Typography sx={{backgroundColor:'orange', color:'white', paddingLeft: '1rem', borderRadius: '5rem', maxWidth: "75%"}}>Vô hiệu hóa</Typography>
-                    : <Typography sx={{backgroundColor:'#ff3d00', color:'white', paddingLeft: '1rem', borderRadius: '5rem', maxWidth: "75%"}}>Đã xóa</Typography>}
+                    <Typography sx={{backgroundColor:'orange', color:'white', paddingLeft: '1rem', borderRadius: '5rem'}}>Vô hiệu hóa</Typography>
+                    : <Typography sx={{backgroundColor:'#ff3d00', color:'white', paddingLeft: '1rem', borderRadius: '5rem'}}>Đã xóa</Typography>}
                   </TableCell>
                   <TableCell align="right">{formatDateTime(category.cateCreatedAt)}</TableCell>
                   <TableCell align="right">{formatDateTime(category.cateUpdatedAt)}</TableCell>

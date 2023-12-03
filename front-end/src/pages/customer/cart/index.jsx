@@ -134,7 +134,7 @@ export default function Cart() {
 
   return (
     <>
-        <Breadcrumbs aria-label="breadcrumb" sx={{margin: 3}}>
+        <Breadcrumbs aria-label="breadcrumb" sx={{marginLeft: 3}}>
             <StyledBreadcrumb
             component="a"
             // href="#"

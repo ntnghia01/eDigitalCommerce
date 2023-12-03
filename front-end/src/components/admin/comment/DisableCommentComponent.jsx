@@ -74,10 +74,10 @@ export default function DisableCommentComponent(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Ẩn bình luận"}</DialogTitle>
+        <DialogTitle>{`Ẩn bình luận #${comment.cmtId}`}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Bạn có chắc ẩn bình luận ID={comment.cmtId} này?
+            Bạn có chắc muốn ẩn bình luận này?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

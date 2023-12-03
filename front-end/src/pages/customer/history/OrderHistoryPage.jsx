@@ -4,7 +4,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 
 import { emphasize, styled } from "@mui/material/styles";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Chip from "@mui/material/Chip";
+
 import HomeIcon from "@mui/icons-material/Home";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Box, Button, Grid, Paper, Stack } from "@mui/material";
@@ -16,25 +16,7 @@ import CancelOrderComponent from "../../../components/customer/history/CancelOrd
 import ReviewOrderComponent from "../../../components/customer/history/ReviewOrderComponent";
 import { fetchReviews } from "../../../slices/reviewSlice";
 
-const StyledBreadcrumb = styled(Chip)(({ theme }) => {
-  const backgroundColor =
-    theme.palette.mode === "light"
-      ? theme.palette.grey[200]
-      : theme.palette.grey[800];
-  return {
-    backgroundColor,
-    height: theme.spacing(3),
-    color: theme.palette.text.primary,
-    fontWeight: theme.typography.fontWeightRegular,
-    "&:hover, &:focus": {
-      backgroundColor: emphasize(backgroundColor, 0.06),
-    },
-    "&:active": {
-      boxShadow: theme.shadows[1],
-      backgroundColor: emphasize(backgroundColor, 0.12),
-    },
-  };
-});
+import { StyledBreadcrumb } from "../../../components/customize/CustomizeComponent";
 
 function formatNumberWithCommas(input) {
   if (typeof input === "number" && Number.isInteger(input))
@@ -74,7 +56,7 @@ export default function OrderHistoryPage() {
 
   return (
     <>
-      <Breadcrumbs aria-label="breadcrumb" sx={{ margin: 3 }}>
+      <Breadcrumbs aria-label="breadcrumb" sx={{ marginLeft: 3 }}>
         <StyledBreadcrumb
           label="Trang chủ"
           component="a"
@@ -87,17 +69,8 @@ export default function OrderHistoryPage() {
         <StyledBreadcrumb
           label="Lịch sử mua hàng"
           component="a"
-          //   href="#"
-          //   onClick={() => {
-          //     navigate(`/cart/${customerId}`);
-          //   }}
           icon={<ShoppingCartIcon fontSize="small" />}
         />
-        {/* <StyledBreadcrumb
-          label="Thanh toán"
-          // component="a"
-          icon={<ShoppingCartCheckoutIcon fontSize="small" />}
-        /> */}
       </Breadcrumbs>
 
       <Box sx={{ flexGrow: 1, padding: 2, height: '80vh' }}>

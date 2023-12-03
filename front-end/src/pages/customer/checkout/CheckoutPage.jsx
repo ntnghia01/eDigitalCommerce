@@ -213,7 +213,7 @@ export default function CheckoutPage() {
   }
   return (
     <>
-      <Breadcrumbs aria-label="breadcrumb" sx={{ margin: 3 }}>
+      <Breadcrumbs aria-label="breadcrumb" sx={{ marginLeft: 3 }}>
         <StyledBreadcrumb
           label="Trang chủ"
           component="a"
