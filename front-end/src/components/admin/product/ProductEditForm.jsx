@@ -94,7 +94,7 @@ export default function ProductEditForm(props) {
     proName: proName,
     proPrice: proPrice,
     proDesc: proDesc,
-    proQuantity: proQuantity,
+    // proQuantity: proQuantity,
     cateId: proCategory,
     brandId: proBrand,
     proStatus: proStatus,
@@ -142,7 +142,7 @@ export default function ProductEditForm(props) {
             autoFocus
             margin="dense"
             id="pro_name"
-            label="Nhập tên sản phẩm"
+            label="Nhập tên sản phẩm *"
             type="text"
             fullWidth
             variant="standard"
@@ -155,7 +155,7 @@ export default function ProductEditForm(props) {
             autoFocus
             margin="dense"
             id="pro_price"
-            label="Nhập giá sản phẩm"
+            label="Nhập giá sản phẩm *"
             type="text"
             fullWidth
             variant="standard"
@@ -177,11 +177,11 @@ export default function ProductEditForm(props) {
               setProductDesc(e.target.value);
             }}
           />
-          <TextField
+          {/* <TextField
             autoFocus
             margin="dense"
             id="pro_quantity"
-            label="Nhập số lượng ban đầu"
+            label="Nhập số lượng ban đầu *"
             type="text"
             fullWidth
             variant="standard"
@@ -189,9 +189,9 @@ export default function ProductEditForm(props) {
             onChange={(e) => {
               setProductQuantity(e.target.value);
             }}
-          />
+          /> */}
           <FormControl fullWidth sx={{mt: 3}}>
-            <InputLabel id="demo-simple-select-label">Danh mục</InputLabel>
+            <InputLabel id="demo-simple-select-label">Danh mục *</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
@@ -207,7 +207,7 @@ export default function ProductEditForm(props) {
             </Select>
           </FormControl>
           <FormControl fullWidth sx={{mt: 3}}>
-            <InputLabel id="demo-simple-select-label-2">Thương hiệu</InputLabel>
+            <InputLabel id="demo-simple-select-label-2">Thương hiệu *</InputLabel>
             <Select
               labelId="demo-simple-select-label-2"
               id="demo-simple-select-2"

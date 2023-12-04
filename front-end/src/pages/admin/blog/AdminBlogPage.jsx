@@ -5,6 +5,7 @@ import BlogTableComponent from "../../../components/admin/blog/BlogTableComponen
 import BlogAddComponent from "../../../components/admin/blog/BlogAddComponent";
 import { Button, Grid } from "@mui/material";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
+import FilterBlogTable from "../../../components/admin/blog/FilterBlogTable";
 
 export default function AdminBlogPage() {
   return (
@@ -40,6 +41,7 @@ export default function AdminBlogPage() {
             </Button>
           </Grid>
         </Grid>
+        <FilterBlogTable />
         <BlogTableComponent />
       </div>
     </>

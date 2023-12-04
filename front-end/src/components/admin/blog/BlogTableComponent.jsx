@@ -88,7 +88,7 @@ export default function BlogTableComponent() {
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {blog.blogId}
+                #{blog.blogId}
               </TableCell>
               <TableCell align="left">
                 {blog.blogTitle.slice(0, 100)}...

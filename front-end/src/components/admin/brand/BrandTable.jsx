@@ -70,7 +70,7 @@ export default function BrandTable() {
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
-                    {brand.brandId}
+                    #{brand.brandId}
                   </TableCell>
                   <TableCell align="left">{brand.brandName}</TableCell>
                   <TableCell align="left">{brand.brandDesc}</TableCell>

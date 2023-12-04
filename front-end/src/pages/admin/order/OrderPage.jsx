@@ -16,41 +16,15 @@ import SuppierTable from "../../../components/admin/supplier/SupplierTable";
 import SupplierAddForm from "../../../components/admin/supplier/SupplierAddForm";
 import OrderTable from "../../../components/admin/order/OrderTable";
 import ProductAddForm from "../../../components/admin/product/ProductAddForm";
+import FilterOrderTable from "../../../components/admin/order/FilterOrderTable";
 
 function Order() {
   return (
     <>
       <h1 style={{textAlign: 'center'}}>QUẢN LÝ ĐƠN HÀNG</h1>
       <div style={{ height: 400, width: "100%" }}>
-        {/* <Grid container spacing={2} marginBottom={2}>
-          <Grid
-            item
-            xs={6}
-            container
-            direction="row"
-            justifyContent="flex-start"
-            alignItems="center"
-          >
-            <ProductAddForm />
-          </Grid>
-          <Grid
-            item
-            xs={6}
-            container
-            direction="row"
-            justifyContent="flex-end"
-            alignItems="center"
-          >
-            <Button
-              startIcon={<FileUploadIcon />}
-              variant="contained"
-              color="success"
-              type="file"
-            >
-              Nhập Excel
-            </Button>
-          </Grid>
-        </Grid> */}
+
+        <FilterOrderTable />
         <OrderTable />
       </div>
     </>

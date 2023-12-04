@@ -8,6 +8,8 @@ import {
   Card,
   CardContent,
   Button,
+  Tooltip,
+  IconButton,
 } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
@@ -18,7 +20,7 @@ import { getCustomerInfo } from "../../../slices/customerSlice";
 import EditInformationComponent from "../../../components/customer/personal/EditInformationComponent";
 import ConfirmDeleteAccountComponent from "../../../components/customer/personal/ConfirmDeleteAccountComponent";
 import { StyledBreadcrumb } from "../../../components/customize/CustomizeComponent";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import HomeIcon from "@mui/icons-material/Home";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 
@@ -46,6 +48,8 @@ function stringAvatar(name) {
   return {
     sx: {
       bgcolor: stringToColor(name),
+      // width: '30vh',
+      // height: '30vh'
     },
     children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
   };
@@ -66,7 +70,7 @@ function convertMillisecondsToDate(milliseconds) {
 }
 
 export default function PersonalPage() {
-    console.log("chech render PersonalPage");
+  console.log("chech render PersonalPage");
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getCustomerInfo(localStorage.getItem("customerID")));
@@ -74,7 +78,7 @@ export default function PersonalPage() {
   const informations = useSelector((state) => state.customer.customer);
   return (
     <>
-    <Breadcrumbs aria-label="breadcrumb" sx={{ marginLeft: 3 }}>
+      <Breadcrumbs aria-label="breadcrumb" sx={{ marginLeft: 3 }}>
         <StyledBreadcrumb
           label="Trang chủ"
           component="a"
@@ -91,13 +95,18 @@ export default function PersonalPage() {
         />
       </Breadcrumbs>
       <Grid container spacing={2} sx={{ padding: 6 }}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
+          <Stack spacing={2} alignItems="center">
+
+          <Avatar alt="Remy Sharp" src={`../../../public/Avar.jpg`} sx={{width: '80%', height: '100%'}}/>
+          <Button variant="outlined">Thay ảnh đại diện</Button>
+          </Stack>
+        </Grid>
+        <Grid item xs={12} md={4}>
           <Typography variant="h5" gutterBottom>
             Thông tin tài khoản
           </Typography>
           <Stack spacing={2}>
-            <Avatar alt="Remy Sharp" src={`../../../public/avatar.png`} />
-
             <Typography variant="body1" gutterBottom>
               Họ tên: {informations.userName}
             </Typography>
@@ -108,7 +117,12 @@ export default function PersonalPage() {
               Số điện thoại: {informations.userPhone}
             </Typography>
             <Typography variant="body1" gutterBottom>
-              Giới tính: {informations.userSex == 1 ? "Nam" : informations.userSex == 2 ? "Nữ" : "Khác"}
+              Giới tính:{" "}
+              {informations.userSex == 1
+                ? "Nam"
+                : informations.userSex == 2
+                ? "Nữ"
+                : "Khác"}
             </Typography>
             <Typography variant="body1" gutterBottom>
               Ngày sinh: {convertMillisecondsToDate(informations.userBirthday)}
@@ -121,7 +135,7 @@ export default function PersonalPage() {
             </Typography>
           </Stack>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
           <Typography variant="h5" gutterBottom>
             Thông tin mua hàng
           </Typography>
@@ -143,7 +157,7 @@ export default function PersonalPage() {
         justifyContent="center"
         alignItems="center"
         spacing={2}
-        sx={{marginBottom: 2}}
+        sx={{ marginBottom: 2 }}
       >
         {/* <Button variant="outlined">Cập nhật thông tin cá nhân</Button> */}
         <EditInformationComponent informations={informations} />

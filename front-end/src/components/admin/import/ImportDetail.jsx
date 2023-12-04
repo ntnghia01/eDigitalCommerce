@@ -42,7 +42,7 @@ export default function ImportDetail( {onSave} ) {
     <Paper elevation={3} sx={{ margin: 1, padding: 1 }}
       >
           <FormControl fullWidth sx={{mt: 3, marginBottom: 2}}>
-            <InputLabel id="demo-simple-select-label">Sản phẩm</InputLabel>
+            <InputLabel id="demo-simple-select-label">Sản phẩm *</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
@@ -63,7 +63,7 @@ export default function ImportDetail( {onSave} ) {
             autoFocus
             margin="dense"
             id="pro_name"
-            label="Số lượng"
+            label="Số lượng *"
             type="number"
             // fullWidth
             variant="standard"
@@ -75,7 +75,7 @@ export default function ImportDetail( {onSave} ) {
             autoFocus
             margin="dense"
             id="pro_name"
-            label="Giá nhập"
+            label="Giá nhập *"
             type="number"
             // fullWidth
             variant="standard"

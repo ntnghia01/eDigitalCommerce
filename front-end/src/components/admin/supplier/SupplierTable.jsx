@@ -70,7 +70,7 @@ export default function SuppierTable() {
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
-                    {supplier.supplierId}
+                    #{supplier.supplierId}
                   </TableCell>
                   <TableCell align="left">{supplier.supplierName}</TableCell>
                   <TableCell align="left">{supplier.supplierEmail}</TableCell>

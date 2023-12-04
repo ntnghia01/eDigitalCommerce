@@ -12,6 +12,7 @@ import Typography from "@mui/joy/Typography";
 // import Component
 import BrandAddForm from "../../../components/admin/brand/BrandAddForm";
 import BrandTable from "../../../components/admin/brand/BrandTable";
+import FilterCategoryTable from "../../../components/admin/Category/FilterCategoryTable";
 
 function Brands() {
   const Brands = useSelector((state) => state.Brands);
@@ -48,6 +49,7 @@ function Brands() {
             </Button>
           </Grid>
         </Grid>
+        <FilterCategoryTable />
         <BrandTable />
       </div>
     </>

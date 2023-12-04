@@ -91,7 +91,7 @@ export default function ContactTableComponent() {
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {contact.contactId}
+                #{contact.contactId}
               </TableCell>
               <TableCell align="left">
                 {contact.contactTitle.slice(0, 100)}...
@@ -103,7 +103,7 @@ export default function ContactTableComponent() {
               <TableCell align="left">{contact.contactUserphone}</TableCell>
               <TableCell align="left">{contact.contactUserEmail}</TableCell>
               <TableCell align="left">
-                    {contact.contactStatus==1?<Typography variant="body1" sx={{color: '#ff9100', width: "10vh"}}>Đang chờ</Typography>
+                    {contact.contactStatus==1?<Typography variant="body1" sx={{color: '#ff3d00 ', width: "10vh"}}>Đang chờ</Typography>
                     : <Typography variant="body1" sx={{color: '#00a152'}}>Đã xác nhận</Typography>}
                   </TableCell>
               <TableCell align="center">

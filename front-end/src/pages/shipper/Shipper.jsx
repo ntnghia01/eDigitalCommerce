@@ -41,6 +41,7 @@ import ShippedComponent from "../../components/shipper/ShippedComponent";
 import OrderDetailShipperComponent from "../../components/shipper/OrderDetailShipperComponent";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import FilterShipperTable from "../../components/shipper/FilterShipperTable";
 
 // import "../../../public/avatar.png";
 
@@ -223,7 +224,7 @@ export default function Shipper() {
       </Box>
       <Box  sx={{padding: 2}}>
 
-      
+      <FilterShipperTable />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -247,7 +248,7 @@ export default function Shipper() {
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {order.orderId}
+                  #{order.orderId}
                 </TableCell>
                 <TableCell align="left">{order.user.userName}</TableCell>
                 <TableCell align="right">

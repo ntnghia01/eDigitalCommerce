@@ -78,7 +78,7 @@ export default function ShippedComponent(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Bắt đầu giao đơn hàng"}</DialogTitle>
+        <DialogTitle>{"Giao xong đơn hàng"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             Bạn đã giao xong đơn #{order.orderId} này?

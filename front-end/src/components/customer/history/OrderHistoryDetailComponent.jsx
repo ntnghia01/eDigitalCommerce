@@ -140,7 +140,7 @@ export default function OrderHistoryDetailComponent (props) {
                 {order.shipper != null ? 
                     <div>
                     Tên người giao:{" "}
-                    {order.shipper.shipperName}
+                    {order.shipper.userName}
                     </div>
                     : ""
                 }
@@ -184,15 +184,13 @@ export default function OrderHistoryDetailComponent (props) {
                     Tổng tiền: {formatNumberWithCommas(order.orderTotalAmount)}đ
                   </h4>
                   <h4>
-                    Trạng thái: {
-                    order.orderStatus==1?'Đang chờ xử lý'
-                    : order.orderStatus==2? 'Đang chờ giao'
-                    : order.orderStatus==3? 'Đang giao'
-                    : order.orderStatus==4? 'Đã giao'
-                    : order.orderStatus==5? 'Đã hoàn thành'
-                    : order.orderStatus==-1? 'Đã hủy'
-                    : 'Không xác định'
-                    }
+                    Trạng thái: { order.orderStatus == 1 ? <Typography sx={{color: '#3f51b5', display: 'inline'}}>Đang chờ xử lý</Typography>
+                    : order.orderStatus == 2 ? <Typography sx={{color: '#b2a429', display: 'inline'}}>Đang chờ giao</Typography>
+                    : order.orderStatus == 3 ? <Typography sx={{color: '#b23c17', display: 'inline'}}>Đang giao</Typography>
+                    : order.orderStatus == 4 ? <Typography sx={{color: '#618833', display: 'inline'}}>Đã giao</Typography>
+                    : order.orderStatus == 5 ? <Typography sx={{color: '#00a152', display: 'inline'}}>Đã hoàn thành</Typography>
+                    : order.orderStatus == -1 ? <Typography sx={{color: '#ab003c', display: 'inline'}}>Đã hủy</Typography>
+                    : "Không xác định"}
                     </h4>
               </Stack>
             </Grid>

@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from '@mui/material/Typography';
+import Rating from '@mui/material/Rating';
 
 import {
   Button,
@@ -65,7 +66,7 @@ export default function ReviewTableComponent() {
                 <TableCell>ID</TableCell>
                 <TableCell align="left">Thời điểm đánh giá</TableCell>
                 <TableCell align="left">Đơn hàng</TableCell>
-                <TableCell align="right">Mức đánh giá</TableCell>
+                <TableCell align="left">Mức đánh giá</TableCell>
                 <TableCell align="left">Nội dung</TableCell>
                 <TableCell align="left">Người đánh giá</TableCell>
                 <TableCell align="center">Thao Tác</TableCell>
@@ -77,10 +78,10 @@ export default function ReviewTableComponent() {
                   key={review.reviewId}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell component="th" scope="row">{review.reviewId}</TableCell>
+                  <TableCell component="th" scope="row">#{review.reviewId}</TableCell>
                   <TableCell align="left">{review.reviewTime}</TableCell>
                   <TableCell align="left">{review.order.orderCode}</TableCell>
-                  <TableCell align="right">{review.reviewRate}</TableCell>
+                  <TableCell align="left"><Rating readOnly name="simple-controlled" value={review.reviewRate}/></TableCell>
                   {/* <TableCell align="right">{formatDateTime(order.orderShipExpected)}</TableCell> */}
                   <TableCell align="left">{review.reviewContent}</TableCell>
                   {/* <TableCell align="left">{order.admin==null?'Trống':order.admin.adminName}</TableCell> */}

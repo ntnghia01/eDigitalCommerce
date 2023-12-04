@@ -78,7 +78,7 @@ export default function ConfirmCancel(props) {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Bạn có chắc muốn xác nhận yêu cầu hủy đơn hàng này
+            Bạn có chắc muốn xác nhận yêu cầu hủy đơn hàng này?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

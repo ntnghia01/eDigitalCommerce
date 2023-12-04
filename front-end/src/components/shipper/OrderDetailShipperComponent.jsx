@@ -132,12 +132,12 @@ export default function OrderDetailShipperComponent(props) {
                 <div>Tên khách hàng: {order.user.userName}</div>
                 <div>
                   Tên người giao:{" "}
-                  {order.shipper != null ? order.shipper.shipperName : "Trống"}
+                  {order.shipper != null ? order.shipper.userName : "Trống"}
                 </div>
                 <div>Hình thức thanh toán: {order.payment.paymentName}</div>
                 <div>
                   Người duyệt:{" "}
-                  {order.admin != null ? order.admin.adminName : "Trống"}
+                  {order.admin != null ? order.admin.userName : "Trống"}
                 </div>
                 <div>Mã đơn hàng: {order.orderCode}</div>
                 <div>Thời gian đặt hàng: {formatDateTime(order.orderTime)}</div>

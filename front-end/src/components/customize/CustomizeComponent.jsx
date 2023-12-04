@@ -4,6 +4,8 @@ import Chip from "@mui/material/Chip";
 
 import InputBase from "@mui/material/InputBase";
 
+import MuiAlert from "@mui/material/Alert";
+
 export const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     const backgroundColor =
       theme.palette.mode === "light"
@@ -72,3 +74,7 @@ export const StyledInputBase = styled(InputBase)(({ theme }) => ({
     if (!/^\d+$/.test(input)) return "Invalid input";
     return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   }
+
+export const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});

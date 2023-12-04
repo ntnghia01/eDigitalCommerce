@@ -33,6 +33,7 @@ import CategoryAddForm from "../../../components/admin/Category/CategoryAddForm"
 import CategoryTable from "../../../components/admin/Category/CategoryTable";
 import ReviewTableComponent from "../../../components/admin/review/ReviewTableComponent";
 import CommentTableComponent from "../../../components/admin/comment/CommentTableComponent";
+import FilterCommentTable from "../../../components/admin/comment/FilterCommentTable";
 
 // import Component
 
@@ -45,6 +46,7 @@ export default function CommentPage() {
     <>
       <h1 style={{textAlign: 'center'}}>QUẢN LÝ BÌNH LUẬN</h1>
       <div style={{ height: 400, width: "100%" }}>
+        <FilterCommentTable />
         <CommentTableComponent />
       </div>
     </>

@@ -15,6 +15,9 @@ import { emphasize, styled } from '@mui/material/styles';
 import Chip from '@mui/material/Chip';
 import ArticleIcon from '@mui/icons-material/Article';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import SearchIcon from "@mui/icons-material/Search";
+import { useState } from 'react';
+import { Box, IconButton, TextField } from '@mui/material';
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     const backgroundColor =
@@ -46,6 +49,13 @@ export default function BlogPage() {
   
     const blogs = useSelector((state) => state.blog.blogs);
 
+    const [searchText, setSearchText] = useState("");
+    const handleSearch = (event) => {
+      setSearchText(event.target.value);
+      // Điều chỉnh logic tìm kiếm dựa trên searchText ở đây
+      // Ví dụ: lọc danh sách sản phẩm theo searchText
+    };
+
     return (
         <>
         <Breadcrumbs aria-label="breadcrumb" sx={{margin: 3}}>
@@ -61,6 +71,26 @@ export default function BlogPage() {
             component="a" 
             icon={<ArticleIcon fontSize="small" />}  />
         </Breadcrumbs>
+        <Grid container alignItems="center" justifyContent="space-between" sx={{paddingLeft: 3}}>
+        <Grid item>
+        <h3>Lịch sử mua hàng</h3>
+        </Grid>
+        <Grid item xs={6} sm={4} md={3} lg={2}> {/* Điều chỉnh kích thước cho phù hợp */}
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+            <TextField
+              id="search"
+              label="Tìm kiếm"
+              variant="outlined"
+              value={searchText}
+              onChange={handleSearch}
+              size="small"
+            />
+            <IconButton>
+              <SearchIcon />
+            </IconButton>
+          </Box>
+        </Grid>
+      </Grid>
         <Grid container spacing={2} sx={{padding: 3}}>
             {blogs.map((blog) => (
                 <Grid item key={blog.blogId} xs={12} sm={6} md={4} lg={3}>

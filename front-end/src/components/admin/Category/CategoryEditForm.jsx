@@ -101,7 +101,7 @@ export default function CategoryEditForm(props) {
             autoFocus
             margin="dense"
             id="cate_name"
-            label="Tên danh mục"
+            label="Tên danh mục *"
             type="text"
             fullWidth
             variant="standard"

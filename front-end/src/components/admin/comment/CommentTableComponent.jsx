@@ -68,7 +68,7 @@ export default function CommentTableComponent() {
                 <TableCell align="left">Thời điểm bình luận</TableCell>
                 <TableCell align="left">Sản phẩm</TableCell>
                 <TableCell align="left">Nội dung</TableCell>
-                <TableCell align="left">Người đánh giá</TableCell>
+                <TableCell align="left">Người bình luận</TableCell>
                 <TableCell align="left">Trạng thái</TableCell>
                 <TableCell align="center">Thao Tác</TableCell>
               </TableRow>
@@ -79,7 +79,7 @@ export default function CommentTableComponent() {
                   key={comment.cmtId}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell component="th" scope="row">{comment.cmtId}</TableCell>
+                  <TableCell component="th" scope="row">#{comment.cmtId}</TableCell>
                   <TableCell align="left">{comment.cmtTime}</TableCell>
                   <TableCell align="left">{comment.product.proName}</TableCell>
                   {/* <TableCell align="right">{formatDateTime(order.orderShipExpected)}</TableCell> */}

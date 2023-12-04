@@ -99,7 +99,7 @@ export default function AdminAccountTableComponent() {
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {account.userId}
+                  #{account.userId}
                 </TableCell>
                 <TableCell align="left">{account.userName}</TableCell>
                 <TableCell align="left">{account.userEmail}</TableCell>

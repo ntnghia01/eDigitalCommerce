@@ -70,7 +70,7 @@ export default function CategoryTable () {
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
-                    {category.cateId}
+                    #{category.cateId}
                   </TableCell>
                   <TableCell align="left">{category.cateName}</TableCell>
                   <TableCell align="left">{category.cateDesc}</TableCell>

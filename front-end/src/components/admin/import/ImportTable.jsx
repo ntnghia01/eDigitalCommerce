@@ -53,7 +53,7 @@ export default function ImportTable() {
                 <TableCell align="left">Nhà Cung Cấp</TableCell>
                 <TableCell align="left">Người Lập</TableCell>
                 <TableCell align="right">Ngày</TableCell>
-                <TableCell align="left">Tổng</TableCell>
+                <TableCell align="right">Tổng</TableCell>
                 <TableCell align="right">Trạng Thái</TableCell>
                 <TableCell align="right">
                   Ngày Tạo&nbsp;(dd-mm-yyyy hh-mm-ss)
@@ -70,11 +70,11 @@ export default function ImportTable() {
                   key={import1.importId}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell component="th" scope="row">{import1.importId}</TableCell>
+                  <TableCell component="th" scope="row">#{import1.importId}</TableCell>
                   <TableCell align="left">{import1.supplier.supplierName}</TableCell>
                   <TableCell align="left">{import1.user.userName}</TableCell>
                   <TableCell align="right">{import1.importDate}</TableCell>
-                  <TableCell align="left">{import1.importTotal.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</TableCell>
+                  <TableCell align="right">{import1.importTotal.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</TableCell>
                   <TableCell align="left">
                     {import1.importStatus == 1 ? 
                         <Typography sx={{backgroundColor:'#4caf50', color:'white', paddingLeft: '1.2rem', borderRadius: '5rem'}}>Tốt</Typography>

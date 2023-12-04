@@ -121,7 +121,7 @@ export default function ImportAddForm() {
         <DialogContent>
           
           <FormControl fullWidth sx={{mt: 3, width: '34rem'}}>
-            <InputLabel id="demo-simple-select-label">Nhà Cung Cấp</InputLabel>
+            <InputLabel id="demo-simple-select-label">Nhà Cung Cấp *</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"

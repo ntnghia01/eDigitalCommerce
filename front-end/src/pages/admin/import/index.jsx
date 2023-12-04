@@ -18,6 +18,8 @@ import ProductTable from "../../../components/admin/product/ProductTable";
 import ProductAddForm from "../../../components/admin/product/ProductAddForm";
 import ImportTable from "../../../components/admin/import/ImportTable";
 import ImportAddForm from "../../../components/admin/import/ImportAddForm";
+import FilterCategoryTable from "../../../components/admin/Category/FilterCategoryTable";
+import FilterImportTable from "../../../components/admin/import/FilterImportTable";
 
 function Import() {
   return (
@@ -53,6 +55,7 @@ function Import() {
             </Button>
           </Grid>
         </Grid>
+        <FilterImportTable />
         <ImportTable />
       </div>
     </>

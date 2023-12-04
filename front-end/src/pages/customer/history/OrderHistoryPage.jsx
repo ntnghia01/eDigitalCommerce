@@ -4,10 +4,11 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 
 import { emphasize, styled } from "@mui/material/styles";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
+import SearchIcon from "@mui/icons-material/Search";
 
 import HomeIcon from "@mui/icons-material/Home";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { Box, Button, Grid, Paper, Stack } from "@mui/material";
+import { Box, Button, Grid, IconButton, Paper, Stack, TextField, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getOrderByCustomerId } from "../../../slices/orderSlice";
@@ -17,6 +18,7 @@ import ReviewOrderComponent from "../../../components/customer/history/ReviewOrd
 import { fetchReviews } from "../../../slices/reviewSlice";
 
 import { StyledBreadcrumb } from "../../../components/customize/CustomizeComponent";
+import { useState } from "react";
 
 function formatNumberWithCommas(input) {
   if (typeof input === "number" && Number.isInteger(input))
@@ -54,6 +56,13 @@ export default function OrderHistoryPage() {
   const orderHistory = useSelector((state) => state.order.orderHistory);
   const reviews = useSelector((state) => state.review.reviews);
 
+  const [searchText, setSearchText] = useState("");
+  const handleSearch = (event) => {
+    setSearchText(event.target.value);
+    // Điều chỉnh logic tìm kiếm dựa trên searchText ở đây
+    // Ví dụ: lọc danh sách sản phẩm theo searchText
+  };
+
   return (
     <>
       <Breadcrumbs aria-label="breadcrumb" sx={{ marginLeft: 3 }}>
@@ -74,7 +83,26 @@ export default function OrderHistoryPage() {
       </Breadcrumbs>
 
       <Box sx={{ flexGrow: 1, padding: 2, height: '80vh' }}>
+      <Grid container alignItems="center" justifyContent="space-between" sx={{paddingLeft: 3}}>
+        <Grid item>
         <h3>Lịch sử mua hàng</h3>
+        </Grid>
+        <Grid item xs={6} sm={4} md={3} lg={2}> {/* Điều chỉnh kích thước cho phù hợp */}
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+            <TextField
+              id="search"
+              label="Tìm kiếm"
+              variant="outlined"
+              value={searchText}
+              onChange={handleSearch}
+              size="small"
+            />
+            <IconButton>
+              <SearchIcon />
+            </IconButton>
+          </Box>
+        </Grid>
+      </Grid>
         {orderHistory.map((order) => (
           <Paper key={order.orderId} elevation={3} sx={{ padding: 2, marginTop: 2 }}>
             <Grid
@@ -103,19 +131,13 @@ export default function OrderHistoryPage() {
                   </div>
                   <div>
                     Tình trạng đơn hàng:{" "}
-                    {order.orderStatus == 1 ? (
-                      <span style={{ color: "orange" }}>Đang chờ xử lý</span>
-                    ) : order.orderStatus == 2 ? (
-                      <span style={{ color: "orange" }}>Đang chờ giao</span>
-                    ) : order.orderStatus == 3 ? (
-                      "Đang giao"
-                    ) : order.orderStatus == 4 ? (
-                      <span style={{ color: "green" }}>Đã giao</span>
-                    ) : order.orderStatus == 5 ? (
-                      <span style={{ color: "green" }}>Hoàn thành</span>
-                    ) : order.orderStatus == -1 ? (
-                      <span style={{ color: "red" }}>Đã hủy</span>
-                    ) : ("Không xác định")}
+                    { order.orderStatus == 1 ? <Typography sx={{color: '#3f51b5', display: 'inline'}}>Đang chờ xử lý</Typography>
+                    : order.orderStatus == 2 ? <Typography sx={{color: '#b2a429', display: 'inline'}}>Đang chờ giao</Typography>
+                    : order.orderStatus == 3 ? <Typography sx={{color: '#b23c17', display: 'inline'}}>Đang giao</Typography>
+                    : order.orderStatus == 4 ? <Typography sx={{color: '#618833', display: 'inline'}}>Đã giao</Typography>
+                    : order.orderStatus == 5 ? <Typography sx={{color: '#00a152', display: 'inline'}}>Đã hoàn thành</Typography>
+                    : order.orderStatus == -1 ? <Typography sx={{color: '#ab003c', display: 'inline'}}>Đã hủy</Typography>
+                    : "Không xác định"}
                   </div>
                 </Stack>
               </Grid>

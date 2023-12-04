@@ -16,6 +16,8 @@ import SuppierTable from "../../../components/admin/supplier/SupplierTable";
 import SupplierAddForm from "../../../components/admin/supplier/SupplierAddForm";
 import ProductTable from "../../../components/admin/product/ProductTable";
 import ProductAddForm from "../../../components/admin/product/ProductAddForm";
+import FilterCategoryTable from "../../../components/admin/Category/FilterCategoryTable";
+import FilterProductTable from "../../../components/admin/product/FilterProductTable";
 
 function Product() {
   return (
@@ -51,6 +53,7 @@ function Product() {
             </Button>
           </Grid>
         </Grid>
+        <FilterProductTable />
         <ProductTable />
       </div>
     </>

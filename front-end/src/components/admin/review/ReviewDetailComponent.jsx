@@ -77,7 +77,7 @@ export default function ReviewDetailComponent (props) {
             onClose={handleClose}
             aria-describedby="alert-dialog-slide-description"
         >
-            <DialogTitle>{"Chi tiét đánh giá đơn hàng"} #{review.reviewId}</DialogTitle>
+            <DialogTitle>{"Chi tiết đánh giá đơn hàng"} #{review.reviewId}</DialogTitle>
             <DialogContent>
                 {/* <TextField
                     margin="normal"

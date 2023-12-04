@@ -14,6 +14,7 @@ import BrandAddForm from "../../../components/admin/brand/BrandAddForm";
 import BrandTable from "../../../components/admin/brand/BrandTable";
 import SuppierTable from "../../../components/admin/supplier/SupplierTable";
 import SupplierAddForm from "../../../components/admin/supplier/SupplierAddForm";
+import FilterCategoryTable from "../../../components/admin/Category/FilterCategoryTable";
 
 function Supplier() {
   return (
@@ -49,6 +50,7 @@ function Supplier() {
             </Button>
           </Grid>
         </Grid>
+        <FilterCategoryTable />
         <SuppierTable />
       </div>
     </>

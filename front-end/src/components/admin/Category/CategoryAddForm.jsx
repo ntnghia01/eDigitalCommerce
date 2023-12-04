@@ -93,7 +93,7 @@ export default function CategoryAddForm() {
             autoFocus
             margin="dense"
             id="cate_name"
-            label="Nhập tên danh mục"
+            label="Nhập tên danh mục *"
             type="text"
             fullWidth
             variant="standard"

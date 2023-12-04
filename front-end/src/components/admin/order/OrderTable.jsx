@@ -92,7 +92,7 @@ export default function OrderTable() {
                   key={order.orderId}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell component="th" scope="row">{order.orderId}</TableCell>
+                  <TableCell component="th" scope="row">#{order.orderId}</TableCell>
                   <TableCell align="left">{order.user.userName}</TableCell>
                   <TableCell align="left">{order.orderCode}</TableCell>
                   <TableCell align="right">{formatDateTime(order.orderTime)}</TableCell>

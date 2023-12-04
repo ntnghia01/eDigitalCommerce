@@ -442,11 +442,12 @@ export default function CustomerTopBar() {
                     onClick={handleOpenUserMenu}
                     sx={{ p: 0, marginLeft: 1 }}
                   >
-                    <Avatar
+                    {/* <Avatar
                       {...stringAvatar(
                         `${localStorage.getItem("customerName")}`
                       )}
-                    />
+                    /> */}
+                    <Avatar alt="Remy Sharp" src={`../../../public/Avar.jpg`} />
                   </IconButton>
                 </Tooltip>
                 <Menu

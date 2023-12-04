@@ -84,7 +84,7 @@ export default function ProductTable() {
                   key={product.proId}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell component="th" scope="row">{product.proId}</TableCell>
+                  <TableCell component="th" scope="row">#{product.proId}</TableCell>
                   <TableCell align="left">{product.proName}</TableCell>
                   <TableCell align="left"><img src={`http://localhost:9004/api/product/images/${product.proImage}`} alt="" style={{width: "100px", height: "100px"}}/></TableCell>
                   <TableCell align="right">{formatNumberWithCommas(product.proPrice)}</TableCell>

@@ -196,7 +196,7 @@ export default function AddAddressComponent(props) {
             autoFocus
             margin="dense"
             id="addressName"
-            label="Nhập tên người nhận"
+            label="Nhập tên người nhận *"
             type="text"
             fullWidth
             variant="standard"
@@ -207,7 +207,7 @@ export default function AddAddressComponent(props) {
             autoFocus
             margin="dense"
             id="addressPhone"
-            label="Nhập số điện thoại nhận thông báo"
+            label="Nhập số điện thoại *"
             type="text"
             fullWidth
             variant="standard"
@@ -226,7 +226,7 @@ export default function AddAddressComponent(props) {
             onChange={e => {handleInputChange(e)}}
           /> */}
           <FormControl fullWidth sx={{mt: 3}}>
-            <InputLabel id="demo-simple-select-label">Tỉnh</InputLabel>
+            <InputLabel id="demo-simple-select-label">Tỉnh *</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
@@ -244,7 +244,7 @@ export default function AddAddressComponent(props) {
             </Select>
           </FormControl>
           <FormControl fullWidth sx={{mt: 3}}>
-            <InputLabel id="demo-simple-select-label">Quận / Huyện</InputLabel>
+            <InputLabel id="demo-simple-select-label">Quận / Huyện *</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
@@ -260,7 +260,7 @@ export default function AddAddressComponent(props) {
             </Select>
           </FormControl>
           <FormControl fullWidth sx={{mt: 3}}>
-            <InputLabel id="demo-simple-select-label">Xã / Phường</InputLabel>
+            <InputLabel id="demo-simple-select-label">Xã / Phường *</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
@@ -279,7 +279,7 @@ export default function AddAddressComponent(props) {
             autoFocus
             margin="dense"
             id="addressStreetNumber"
-            label="Địa chỉ cụ thể"
+            label="Địa chỉ cụ thể *"
             type="text"
             fullWidth
             variant="standard"

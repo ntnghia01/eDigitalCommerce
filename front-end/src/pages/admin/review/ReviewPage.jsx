@@ -32,6 +32,7 @@ import CategoryEditForm from "../../../components/admin/Category/CategoryEditFor
 import CategoryAddForm from "../../../components/admin/Category/CategoryAddForm";
 import CategoryTable from "../../../components/admin/Category/CategoryTable";
 import ReviewTableComponent from "../../../components/admin/review/ReviewTableComponent";
+import FilterReviewTable from "../../../components/admin/review/FilterReviewTable";
 
 // import Component
 
@@ -44,6 +45,7 @@ export default function ReviewPage() {
     <>
       <h1 style={{textAlign: 'center'}}>QUẢN LÝ ĐÁNH GIÁ ĐƠN HÀNG</h1>
       <div style={{ height: 400, width: "100%" }}>
+        <FilterReviewTable />
         <ReviewTableComponent />
       </div>
     </>
