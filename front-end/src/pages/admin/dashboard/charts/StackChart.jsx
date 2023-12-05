@@ -44,7 +44,7 @@ export default function StackChart() {
         <TextField
           sx={{ minWidth: 150, mr: 5 }}
           select
-          label="stackOffset"
+          label="Chồng lên nhau"
           value={stackOffset}
           onChange={(event) => setStackOffset(event.target.value)}
         >
@@ -59,7 +59,7 @@ export default function StackChart() {
           checked={hasNegativeValue}
           onChange={(event) => setHasNegativeValue(event.target.checked)}
           control={<Switch color="primary" />}
-          label="data has negative value"
+          label="Giá trị tích cực"
           labelPlacement="end"
         />
       </Stack>

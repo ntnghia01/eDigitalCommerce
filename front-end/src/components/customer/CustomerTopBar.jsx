@@ -31,7 +31,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { countCartDetail } from "../../slices/cartSlice";
-import { deleteCustomerInfo } from "../../slices/customerSlice";
+import { deleteCustomerInfo, getCustomerInfo } from "../../slices/customerSlice";
 import { searchProductByName } from "../../slices/productSlice";
 import { getOrderCountByCustomerId } from "../../slices/orderSlice";
 import { Grid } from "@mui/material";
@@ -136,9 +136,11 @@ export default function CustomerTopBar() {
     localStorage.removeItem("customerID");
     localStorage.removeItem("customerName");
     localStorage.removeItem("customerToken");
+    localStorage.removeItem("customerImage");
 
     dispatch(deleteCustomerInfo());
     handleCloseUserMenu();
+    navigate("/");
   };
 
   const navigate = useNavigate();
@@ -447,7 +449,17 @@ export default function CustomerTopBar() {
                         `${localStorage.getItem("customerName")}`
                       )}
                     /> */}
-                    <Avatar alt="Remy Sharp" src={`../../../public/Avar.jpg`} />
+                    {/* <Avatar alt="Remy Sharp" src={`../../../public/Avar.jpg`} /> */}
+                    {localStorage.getItem("customerImage") == null ? (
+                      <Avatar
+                        alt={localStorage.getItem("customerName")}
+                        src={`../../../public/avatar.png`}
+                      />) : 
+                      (<Avatar
+                        alt="Remy Sharp"
+                        src={`http://localhost:9004/api/product/images/${localStorage.getItem("customerImage")}`}
+                      />)
+                    }
                   </IconButton>
                 </Tooltip>
                 <Menu

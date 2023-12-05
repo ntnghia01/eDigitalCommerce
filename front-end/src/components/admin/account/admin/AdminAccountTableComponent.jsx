@@ -9,6 +9,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
 import {
+  Avatar,
   Button,
   Table,
   TableBody,
@@ -83,6 +84,7 @@ export default function AdminAccountTableComponent() {
           <TableHead>
             <TableRow>
               <TableCell>ID</TableCell>
+              <TableCell align="left">Ảnh</TableCell>
               <TableCell align="left">Họ tên</TableCell>
               <TableCell align="left">Email</TableCell>
               <TableCell align="left">Giới tính</TableCell>
@@ -101,6 +103,18 @@ export default function AdminAccountTableComponent() {
                 <TableCell component="th" scope="row">
                   #{account.userId}
                 </TableCell>
+                <TableCell align="center">
+                  {account.userImage == null ? (
+                      <Avatar
+                        alt="User"
+                        src={`../../../public/avatar.png`}
+                      />) : 
+                      (<Avatar
+                        alt="Remy Sharp"
+                        src={`http://localhost:9004/api/product/images/${account.userImage}`}
+                      />)
+                    }
+                  </TableCell>
                 <TableCell align="left">{account.userName}</TableCell>
                 <TableCell align="left">{account.userEmail}</TableCell>
                 <TableCell align="left">

@@ -6,30 +6,31 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import AddIcon from "@mui/icons-material/Add";
-import { Select, TextField } from "@mui/material";
+import { Select, Stack, TextField } from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import { styled } from '@mui/material/styles';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import { styled } from "@mui/material/styles";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../../slices/categorySlice";
 import { fetchBrands } from "../../../slices/brandSlice";
 import { addProduct, fetchProducts } from "../../../slices/productSlice";
+import StandardImageList from "./ProductImageList";
 
-const VisuallyHiddenInput = styled('input')({
-  clip: 'rect(0 0 0 0)',
-  clipPath: 'inset(50%)',
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
   height: 1,
-  overflow: 'hidden',
-  position: 'absolute',
+  overflow: "hidden",
+  position: "absolute",
   bottom: 0,
   left: 0,
-  whiteSpace: 'nowrap',
+  whiteSpace: "nowrap",
   width: 1,
 });
 
@@ -89,7 +90,7 @@ export default function ProductAddForm() {
       cateId: proCategory,
       brandId: proBrand,
       proImage: image.name,
-      image: image
+      image: image,
     };
     console.log(newProduct);
     dispatch(addProduct(newProduct))
@@ -102,7 +103,6 @@ export default function ProductAddForm() {
       .catch((error) => {
         console.log("Thêm thất bại: " + error);
       });
-    
   };
 
   return (
@@ -172,7 +172,7 @@ export default function ProductAddForm() {
               setProQuantity(e.target.value);
             }}
           />
-          <FormControl fullWidth sx={{mt: 3}}>
+          <FormControl fullWidth sx={{ mt: 3 }}>
             <InputLabel id="demo-simple-select-label">Danh mục *</InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -183,12 +183,14 @@ export default function ProductAddForm() {
                 setProCategory(e.target.value);
               }}
             >
-                {categoryData.map((category) => (
-                    <MenuItem key={category.cateId} value={category.cateId}>{category.cateName}</MenuItem>
-                ))}
+              {categoryData.map((category) => (
+                <MenuItem key={category.cateId} value={category.cateId}>
+                  {category.cateName}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
-          <FormControl fullWidth sx={{mt: 3}}>
+          <FormControl fullWidth sx={{ mt: 3 }}>
             <InputLabel id="demo-simple-select-label">Thương hiệu *</InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -200,16 +202,45 @@ export default function ProductAddForm() {
               }}
             >
               {brandData.map((brand) => (
-                    <MenuItem key={brand.brandId} value={brand.brandId}>{brand.brandName}</MenuItem>
-                ))}
+                <MenuItem key={brand.brandId} value={brand.brandId}>
+                  {brand.brandName}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
-          <Button component="label" variant="contained" style={{marginTop: 20}} startIcon={<CloudUploadIcon />}>
-            Upload hình ảnh
-            <VisuallyHiddenInput type="file" onChange={(e) => { setImage(e.target.files[0]); }}/>
-          </Button>
+          <Stack spacing={2}>
+            <Button
+              component="label"
+              variant="contained"
+              style={{ marginTop: 20 }}
+              startIcon={<CloudUploadIcon />}
+            >
+              Upload hình ảnh chính
+              <VisuallyHiddenInput
+                type="file"
+                onChange={(e) => {
+                  setImage(e.target.files[0]);
+                }}
+              />
+            </Button>
+            <Button
+              component="label"
+              variant="contained"
+              style={{ marginTop: 20 }}
+              startIcon={<CloudUploadIcon />}
+            >
+              Upload hình ảnh liên quan
+              <VisuallyHiddenInput
+                type="file"
+                onChange={(e) => {
+                  setImage(e.target.files[0]);
+                }}
+              />
+            </Button>
+          </Stack>
+          {/* <StandardImageList /> */}
         </DialogContent>
-        
+
         <DialogActions>
           <Button onClick={handleSubmit}>Xác nhận</Button>
           <Button onClick={handleClose}>Hủy</Button>

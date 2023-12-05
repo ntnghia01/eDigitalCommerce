@@ -48,6 +48,9 @@ public class User implements Serializable {
     @Column (name = "user_birthday", nullable = true)
     private Date userBirthday;
 
+    @Column (name = "user_image", nullable = true)
+    private String userImage;
+
     @Column (name = "user_status", nullable = false)
     private Integer userStatus;
 

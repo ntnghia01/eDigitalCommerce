@@ -17,6 +17,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from '@mui/icons-material/Check';
 import InfoIcon from '@mui/icons-material/Info';
 import Divider from '@mui/material/Divider';
+import Box from "@mui/material/Box";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
 
 // import Icons
 import AddIcon from "@mui/icons-material/Add";
@@ -54,6 +58,14 @@ function formatNumberWithCommas(input) {
   if (!/^\d+$/.test(input)) return "Invalid input";
   return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
+
+const steps1 = [
+  "Đang chờ xử lý",
+  "Đã duyệt",
+  "Đang giao",
+  "Đã giao",
+  "Hoàn thành",
+];
 
 export default function OrderDetailShipperComponent(props) {
   const { order } = props;
@@ -119,6 +131,15 @@ export default function OrderDetailShipperComponent(props) {
           {/* <DialogContentText id="alert-dialog-slide-description">
             Tên danh mục
           </DialogContentText> */}
+          <Box sx={{ width: "100%", marginTop: 4, marginBottom: 3 }}>
+            <Stepper activeStep={order.orderStatus - 1} alternativeLabel>
+              {steps1.map((label) => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+          </Box>
           <Grid
             container
             spacing={1}

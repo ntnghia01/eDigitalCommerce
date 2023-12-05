@@ -84,6 +84,34 @@ export const activeComment = createAsyncThunk (
 );
 
 
+export const uploadAvatar = createAsyncThunk (
+    'account/uploadAvatar',
+    async ({userId, avatarData}) => {
+        const formData = new FormData();
+
+        // Đưa dữ liệu sản phẩm vào FormData
+        formData.append('userId', avatarData.userId);
+        formData.append('userImage', avatarData.userImage);
+
+        // Kiểm tra xem có tệp hình ảnh được chọn không
+        if (avatarData.image != undefined) {
+            formData.append('image', avatarData.image);
+        }
+        try {
+            const response = await fetch(prefixAPI + `/api/account/avatar/${userId}`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    }
+)
+
+
 const accountSlice = createSlice ({
     name: 'accountt',
     initialState,

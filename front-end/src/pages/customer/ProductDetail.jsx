@@ -231,7 +231,7 @@ export default function ProductDetail() {
                 {formatNumberWithCommas(product.proPrice)} VNĐ
               </Typography>
               <Typography variant="h7" gutterBottom>
-                Số lượng còn lại: {product.proQuantity}
+                {product.proQuantity > 0 ? "Còn hàng" : "Hết hàng"}
               </Typography>
               <Rating name="read-only" value={4} readOnly />
               <TextField
@@ -327,7 +327,15 @@ export default function ProductDetail() {
 
                   {comments.map((comment) => (
                     <Stack key={comment.cmtId} direction="row" spacing={2}>
-                      <Avatar {...stringAvatar(`${comment.user.userName}`)} />
+                      
+                      {comment.user.userImage == null ? (
+                        <Avatar {...stringAvatar(`${comment.user.userName}`)} />
+                      ) : 
+                      (<Avatar
+                        alt="Remy Sharp"
+                        src={`http://localhost:9004/api/product/images/${comment.user.userImage}`}
+                      />)
+                    }
                       <Stack spacing={1}>
                         <div><b>{comment.user.userName}</b></div>
                         <div>{comment.cmtContent}</div>

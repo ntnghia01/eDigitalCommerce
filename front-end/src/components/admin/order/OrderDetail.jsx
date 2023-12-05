@@ -26,6 +26,10 @@ import ConfirmPayment from "./ConfirmPayment";
 import ConfirmOrder from "./ConfirmOrder";
 import ConfirmCancel from "./ConfirmCancel";
 import CompleteOrder from "./CompleteOrder";
+import Box from "@mui/material/Box";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -55,6 +59,14 @@ function formatNumberWithCommas(input) {
   if (!/^\d+$/.test(input)) return "Invalid input";
   return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
+
+const steps1 = [
+  "Đang chờ xử lý",
+  "Đã duyệt",
+  "Đang giao",
+  "Đã giao",
+  "Hoàn thành",
+];
 
 export default function OrderDetail(props) {
   const { order } = props;
@@ -118,6 +130,15 @@ export default function OrderDetail(props) {
           {/* <DialogContentText id="alert-dialog-slide-description">
             Tên danh mục
           </DialogContentText> */}
+          <Box sx={{ width: "100%", marginTop: 4, marginBottom: 3 }}>
+            <Stepper activeStep={order.orderStatus - 1} alternativeLabel>
+              {steps1.map((label) => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+          </Box>
           <Grid
             container
             spacing={1}
@@ -227,12 +248,12 @@ export default function OrderDetail(props) {
                   </h4>
                   <h4>
                     Trạng thái: 
-                    { order.orderStatus == 1 ? <Typography variant="body1" sx={{color: '#3f51b5'}}>Đang chờ xử lý</Typography>
-                    : order.orderStatus == 2 ? <Typography variant="body1" sx={{color: '#b2a429'}}>Đang chờ giao</Typography>
-                    : order.orderStatus == 3 ? <Typography variant="body1" sx={{color: '#b23c17'}}>Đang giao</Typography>
-                    : order.orderStatus == 4 ? <Typography variant="body1" sx={{color: '#618833'}}>Đã giao</Typography>
-                    : order.orderStatus == 5 ? <Typography variant="body1" sx={{color: '#00a152'}}>Đã hoàn thành</Typography>
-                    : order.orderStatus == -1 ? <Typography variant="body1" sx={{color: '#ab003c'}}>Đã hủy</Typography>
+                    { order.orderStatus == 1 ? <Typography variant="body1" sx={{color: '#3f51b5', display: 'inline'}}> Đang chờ xử lý</Typography>
+                    : order.orderStatus == 2 ? <Typography variant="body1" sx={{color: '#b2a429', display: 'inline'}}> Đang chờ giao</Typography>
+                    : order.orderStatus == 3 ? <Typography variant="body1" sx={{color: '#b23c17', display: 'inline'}}> Đang giao</Typography>
+                    : order.orderStatus == 4 ? <Typography variant="body1" sx={{color: '#618833', display: 'inline'}}> Đã giao</Typography>
+                    : order.orderStatus == 5 ? <Typography variant="body1" sx={{color: '#00a152', display: 'inline'}}> Đã hoàn thành</Typography>
+                    : order.orderStatus == -1 ? <Typography variant="body1" sx={{color: '#ab003c', display: 'inline'}}> Đã hủy</Typography>
                     : "Không xác định"}
                     </h4>
                 </Stack>

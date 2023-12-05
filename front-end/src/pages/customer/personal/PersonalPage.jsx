@@ -19,10 +19,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCustomerInfo } from "../../../slices/customerSlice";
 import EditInformationComponent from "../../../components/customer/personal/EditInformationComponent";
 import ConfirmDeleteAccountComponent from "../../../components/customer/personal/ConfirmDeleteAccountComponent";
-import { StyledBreadcrumb } from "../../../components/customize/CustomizeComponent";
+import {
+  StyledBreadcrumb,
+  VisuallyHiddenInput,
+} from "../../../components/customize/CustomizeComponent";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import HomeIcon from "@mui/icons-material/Home";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import { useState } from "react";
+import { uploadAvatar } from "../../../slices/accountSlice";
+import { Alert } from "../../../components/customize/CustomizeComponent";
 
 function stringToColor(string) {
   let hash = 0;
@@ -76,6 +84,41 @@ export default function PersonalPage() {
     dispatch(getCustomerInfo(localStorage.getItem("customerID")));
   }, [dispatch]);
   const informations = useSelector((state) => state.customer.customer);
+
+  const [openSuccessSnackbar, setOpenSuccessSnackbar] = React.useState(false);
+  const handleOpenSuccessSnackbar = () => {
+    setOpenSuccessSnackbar(true);
+  };
+  const handleCloseSuccessSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSuccessSnackbar(false);
+  };
+
+  const [image, setImage] = useState();
+
+  const handleSubmit = (e) => {
+    // setImage(e.target.files[0]);
+    console.log("call");
+    e.preventDefault();
+    const avatarData = {
+      userId: localStorage.getItem("customerID"),
+      userImage: e.target.files[0].name,
+      image: e.target.files[0],
+    };
+    console.log(avatarData);
+    dispatch(uploadAvatar({userId: localStorage.getItem("customerID"), avatarData: avatarData}))
+      .then(() => {
+        dispatch(getCustomerInfo(localStorage.getItem("customerID")));
+        handleOpenSuccessSnackbar();
+        console.log("Cập nhật ảnh thành công!");
+      })
+      .catch((error) => {
+        console.log("Cập nhật ảnh thất bại: " + error);
+      });
+  };
+
   return (
     <>
       <Breadcrumbs aria-label="breadcrumb" sx={{ marginLeft: 3 }}>
@@ -97,9 +140,28 @@ export default function PersonalPage() {
       <Grid container spacing={2} sx={{ padding: 6 }}>
         <Grid item xs={12} md={4}>
           <Stack spacing={2} alignItems="center">
-
-          <Avatar alt="Remy Sharp" src={`../../../public/Avar.jpg`} sx={{width: '80%', height: '100%'}}/>
-          <Button variant="outlined">Thay ảnh đại diện</Button>
+            {informations.userImage == null ? (
+              <Avatar
+                alt="Remy Sharp"
+                src={`../../../public/avatar.png`}
+                sx={{ width: "80%", height: "100%" }}
+              />) : 
+              <Avatar
+                alt="Remy Sharp"
+                src={`http://localhost:9004/api/product/images/${informations.userImage}`}
+                sx={{ width: "80%", height: "100%" }}
+              />
+            }
+            
+            <Button variant="outlined" component="label">
+              Thay ảnh đại diện
+              <VisuallyHiddenInput
+                type="file"
+                onChange={(e) => {
+                  handleSubmit(e);
+                }}
+              />
+            </Button>
           </Stack>
         </Grid>
         <Grid item xs={12} md={4}>
@@ -163,6 +225,19 @@ export default function PersonalPage() {
         <EditInformationComponent informations={informations} />
         <ConfirmDeleteAccountComponent informations={informations} />
       </Stack>
+      <Snackbar
+        open={openSuccessSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSuccessSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSuccessSnackbar}
+          severity="success"
+          sx={{ width: "100%", color: "white" }}
+        >
+          Cập nhật ảnh đại diện thành công!
+        </Alert>
+      </Snackbar>
     </>
   );
 }

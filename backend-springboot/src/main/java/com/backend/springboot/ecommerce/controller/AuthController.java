@@ -86,7 +86,7 @@ public class AuthController {
    
     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
     // Gửi token về cho client
-    return ResponseEntity.ok(new AuthResponse(jwt, userDetails.getUserId(), userDetails.getUsername(), userDetails.getUserPhone()));
+    return ResponseEntity.ok(new AuthResponse(jwt, userDetails.getUserId(), userDetails.getUsername(), userDetails.getUserPhone(), customer.get().getUserImage()));
   }
 
   @PostMapping("/signup")

@@ -17,6 +17,10 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from '@mui/icons-material/Check';
+import Box from "@mui/material/Box";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
 
 // import Icons
 import AddIcon from "@mui/icons-material/Add";
@@ -56,6 +60,14 @@ function formatNumberWithCommas(input) {
   if (!/^\d+$/.test(input)) return "Invalid input";
   return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
+
+const steps1 = [
+  "Đang chờ xử lý",
+  "Đã duyệt",
+  "Đang giao",
+  "Đã giao",
+  "Hoàn thành",
+];
 
 export default function OrderHistoryDetailComponent (props) {
     console.log("Check render OrderHistoryDetailComponent");
@@ -116,6 +128,15 @@ export default function OrderHistoryDetailComponent (props) {
           {/* <DialogContentText id="alert-dialog-slide-description">
             Tên danh mục
           </DialogContentText> */}
+          <Box sx={{ width: "100%", marginTop: 4, marginBottom: 3 }}>
+            <Stepper activeStep={order.orderStatus - 1} alternativeLabel>
+              {steps1.map((label) => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+          </Box>
           <Grid
             container
             spacing={1}
@@ -236,7 +257,7 @@ export default function OrderHistoryDetailComponent (props) {
           {/* <ConfirmOrder order={order} />
           <ConfirmPayment order={order} />
           <Button startIcon={<CheckIcon />} variant="outlined" >Đánh dấu hoàn thành</Button>
-          <ConfirmCancel order={order} /> */}
+          // <ConfirmCancel order={order} /> */}
         </DialogActions>
       </Dialog>
         </>

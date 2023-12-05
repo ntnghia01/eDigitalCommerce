@@ -25,6 +25,7 @@ export const customerLogin = createAsyncThunk (
         localStorage.setItem("customerID", response.data.userId);
         localStorage.setItem("customerName", response.data.username);
         localStorage.setItem("customerToken", response.data.accessToken);
+        localStorage.setItem("customerImage", response.data.image);
         return response.data;
     }
 )
@@ -59,6 +60,7 @@ export const deleteCustomerAccount = createAsyncThunk (
         return response.data;
     }
 )
+
 
 const customerSlice = createSlice ({
     name: 'customer',

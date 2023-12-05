@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 
-const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
-const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
+const uData = [4000, 3000, 2000, 2780];
+const pData = [2400, 1398, 9800, 3908];
 const xLabels = [
-  'Page A',
-  'Page B',
-  'Page C',
-  'Page D',
-  'Page E',
-  'Page F',
-  'Page G',
+  'Quý 1',
+  'Quý 2',
+  'Quý 3',
+  'Quý 4',
+  // 'Page E',
+  // 'Page F',
+  // 'Page G',
 ];
 
 export default function BarsChart2() {
@@ -19,8 +19,8 @@ export default function BarsChart2() {
       width={500}
       height={300}
       series={[
-        { data: pData, label: 'pv', id: 'pvId' },
-        { data: uData, label: 'uv', id: 'uvId' },
+        { data: pData, label: 'Nhập', id: 'pvId' },
+        { data: uData, label: 'Bán', id: 'uvId' },
       ]}
       xAxis={[{ data: xLabels, scaleType: 'band' }]}
     />

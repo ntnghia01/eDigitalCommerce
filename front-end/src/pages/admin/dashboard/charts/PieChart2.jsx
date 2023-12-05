@@ -31,10 +31,10 @@ function PieCenterLabel({ children }) {
   );
 }
 
-export default function PieChartWithCenterLabel() {
+export default function PieChart2() {
   return (
     <PieChart series={[{ data, innerRadius: 80 }]} {...size}>
-      <PieCenterLabel>Bình luận</PieCenterLabel>
+      <PieCenterLabel>Đánh giá</PieCenterLabel>
     </PieChart>
   );
 }

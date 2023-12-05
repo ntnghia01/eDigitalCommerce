@@ -16,13 +16,14 @@ import EditIcon from '@mui/icons-material/Edit';
 
 // import Icons
 import UpdateIcon from "@mui/icons-material/Update";
-import { FormControl, FormControlLabel, Radio, RadioGroup, Select, TextField } from "@mui/material";
+import { FormControl, FormControlLabel, Radio, RadioGroup, Select, Stack, TextField } from "@mui/material";
 import FormLabel from '@mui/material/FormLabel';
 import { useDispatch, useSelector } from "react-redux";
 import { editBrand, fetchBrands } from "../../../slices/brandSlice";
 import { editSupplier, fetchSuppliers } from "../../../slices/supplierSlice";
 import { fetchCategories } from "../../../slices/categorySlice";
 import { editProduct, fetchProducts } from "../../../slices/productSlice";
+import StandardImageList from "./ProductImageList";
 
 
 const VisuallyHiddenInput = styled('input')({
@@ -45,6 +46,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 export default function ProductEditForm(props) {
+  console.log("Check");
 
   const existProduct = props.data;
   // console.log(existProduct);
@@ -136,7 +138,7 @@ export default function ProductEditForm(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{`Chỉnh Sửa Sản Phẩm ID=${props.data.id}`}</DialogTitle>
+        <DialogTitle>{`Chỉnh Sửa Sản Phẩm #${props.data.id}`}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -232,10 +234,35 @@ export default function ProductEditForm(props) {
             <FormControlLabel value="1" control={<Radio />} label="Hoạt động" />
             <FormControlLabel value="0" control={<Radio />} label="Không hoạt động" />
           </RadioGroup>
+          
+          <Stack spacing={2}>
           <Button component="label" variant="contained" style={{marginTop: 20}} startIcon={<CloudUploadIcon />}>
-            Upload hình ảnh
+            Upload hình ảnh chính
             <VisuallyHiddenInput type="file" onChange={(e) => { setImage(e.target.files[0]); }}/>
           </Button>
+          <img
+            // srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+            src={`http://localhost:9004/api/product/images/${existProduct.image}`}
+            alt={existProduct.name}
+            loading="lazy"
+            style={{width: "100px", height: "100px"}}
+          />
+            <Button
+              component="label"
+              variant="contained"
+              style={{ marginTop: 20 }}
+              startIcon={<CloudUploadIcon />}
+            >
+              Upload hình ảnh liên quan
+              <VisuallyHiddenInput
+                type="file"
+                onChange={(e) => {
+                  setImage(e.target.files[0]);
+                }}
+              />
+            </Button>
+          </Stack>
+          <StandardImageList />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleSubmit}>Xác nhận</Button>

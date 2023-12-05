@@ -4,7 +4,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 const chartSetting = {
   xAxis: [
     {
-      label: 'rainfall (mm)',
+      label: 'Đơn vị (VND)',
     },
   ],
   width: 500,
@@ -104,7 +104,7 @@ export default function BarsChart() {
     <BarChart
       dataset={dataset}
       yAxis={[{ scaleType: 'band', dataKey: 'month' }]}
-      series={[{ dataKey: 'seoul', label: 'Seoul rainfall', valueFormatter }]}
+      series={[{ dataKey: 'seoul', label: 'Doanh thu', valueFormatter }]}
       layout="horizontal"
       {...chartSetting}
     />

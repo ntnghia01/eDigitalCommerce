@@ -14,6 +14,7 @@ import PieChartWithCenterLabel from "./charts/PieChartWithCenterLabel";
 import BarsChart2 from "./charts/BarsChart2";
 import StraightAnglePieChart from "./charts/StraightAnglePieChart";
 import StackChart from "./charts/StackChart";
+import PieChart2 from "./charts/PieChart2";
 
 const sample = [1, 10, 30, 50, 70, 90, 100];
 const data = [
@@ -47,15 +48,15 @@ const data2 = [
 
 const seriesA = {
   data: [2, 3, 1, 4, 5],
-  label: "series A",
+  label: "Danh mục",
 };
 const seriesB = {
   data: [3, 1, 4, 2, 1],
-  label: "series B",
+  label: "Thương hiệu",
 };
 const seriesC = {
   data: [3, 2, 4, 5, 1],
-  label: "series C",
+  label: "Nhà cung cấp",
 };
 
 
@@ -140,20 +141,7 @@ export default function AdminDashboard() {
         </Grid>
         <Grid item xs={4}>
           <Paper elevation={3}>
-            {/* <BarChart
-              xAxis={[
-                { scaleType: "band", data: ["group A", "group B", "group C"] },
-              ]}
-              series={[
-                { data: [4, 3, 5] },
-                { data: [1, 6, 3] },
-                { data: [2, 5, 6] },
-              ]}
-              width={500}
-              height={300}
-            /> */}
             <BarsChart2 />
-            {/* <MyChartComponent /> */}
           </Paper>
         </Grid>
         <Grid item xs={4}>
@@ -163,11 +151,11 @@ export default function AdminDashboard() {
               height={300}
               series={[
                 {
-                  label: "series A",
+                  label: "Đăng ký",
                   data: data2.map((v) => ({ x: v.x1, y: v.y1, id: v.id })),
                 },
                 {
-                  label: "series B",
+                  label: "Xóa",
                   data: data2.map((v) => ({ x: v.x1, y: v.y2, id: v.id })),
                 },
               ]}
@@ -195,7 +183,7 @@ export default function AdminDashboard() {
         <Grid item xs={4}>
           <Paper elevation={3}>
             <PieChartWithCenterLabel />
-            <PieChartWithCenterLabel />
+            <PieChart2 />
           </Paper>
         </Grid>
         <Grid item xs={4}>
