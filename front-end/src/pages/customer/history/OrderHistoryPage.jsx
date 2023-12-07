@@ -5,13 +5,23 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { emphasize, styled } from "@mui/material/styles";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import SearchIcon from "@mui/icons-material/Search";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 import HomeIcon from "@mui/icons-material/Home";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { Box, Button, Grid, IconButton, Paper, Stack, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { getOrderByCustomerId } from "../../../slices/orderSlice";
+import { getOrderByCustomerId, searchOrderHistory } from "../../../slices/orderSlice";
 import OrderHistoryDetailComponent from "../../../components/customer/history/OrderHistoryDetailComponent";
 import CancelOrderComponent from "../../../components/customer/history/CancelOrderComponent";
 import ReviewOrderComponent from "../../../components/customer/history/ReviewOrderComponent";
@@ -48,6 +58,7 @@ const formatDateTime = (oriDateTime) => {
 export default function OrderHistoryPage() {
   const dispatch = useDispatch();
 
+  const navigate = useNavigate();
   useEffect(() => {
     dispatch(getOrderByCustomerId(localStorage.getItem("customerID")));
     dispatch(fetchReviews());
@@ -61,6 +72,13 @@ export default function OrderHistoryPage() {
     setSearchText(event.target.value);
     // Điều chỉnh logic tìm kiếm dựa trên searchText ở đây
     // Ví dụ: lọc danh sách sản phẩm theo searchText
+  };
+
+  const changeSearchData = (e) => {
+    e.preventdefault;
+    console.log(e.target.value);
+    const searchData = { customerId: localStorage.getItem("customerID"), orderCode: e.target.value };
+    dispatch(searchOrderHistory(searchData));
   };
 
   return (
@@ -82,29 +100,46 @@ export default function OrderHistoryPage() {
         />
       </Breadcrumbs>
 
-      <Box sx={{ flexGrow: 1, padding: 2, height: '80vh' }}>
-      <Grid container alignItems="center" justifyContent="space-between" sx={{paddingLeft: 3}}>
-        <Grid item>
-        <h3>Lịch sử mua hàng</h3>
+      <Box sx={{ flexGrow: 1, padding: 2, height: "80vh" }}>
+        <Grid
+          container
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{ paddingLeft: 3 }}
+        >
+          <Grid item>
+            <h3>Lịch sử mua hàng</h3>
+          </Grid>
+          <Grid item xs={6} sm={4} md={3} lg={2}>
+            {" "}
+            {/* Điều chỉnh kích thước cho phù hợp */}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+              }}
+            >
+              <TextField
+                id="search"
+                label="Tìm kiếm"
+                variant="outlined"
+                // value={searchText}
+                size="small"
+                onChange={e=>{changeSearchData(e)}}
+              />
+              <IconButton>
+                <SearchIcon />
+              </IconButton>
+            </Box>
+          </Grid>
         </Grid>
-        <Grid item xs={6} sm={4} md={3} lg={2}> {/* Điều chỉnh kích thước cho phù hợp */}
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-            <TextField
-              id="search"
-              label="Tìm kiếm"
-              variant="outlined"
-              value={searchText}
-              onChange={handleSearch}
-              size="small"
-            />
-            <IconButton>
-              <SearchIcon />
-            </IconButton>
-          </Box>
-        </Grid>
-      </Grid>
         {orderHistory.map((order) => (
-          <Paper key={order.orderId} elevation={3} sx={{ padding: 2, marginTop: 2 }}>
+          <Paper
+            key={order.orderId}
+            elevation={3}
+            sx={{ padding: 2, marginTop: 2 }}
+          >
             <Grid
               container
               spacing={1}
@@ -115,14 +150,29 @@ export default function OrderHistoryPage() {
             >
               <Grid item xs={5}>
                 <Stack spacing={3}>
-                  <div>Mã đơn hàng: {order.orderCode}</div>
+                  <div>
+                    Mã đơn hàng: {order.orderCode}
+                    <IconButton
+                      onClick={() =>
+                        navigator.clipboard.writeText(order.orderCode)
+                      }
+                      aria-label="Copy order code"
+                      size="small"
+                    >
+                      <ContentCopyIcon fontSize="small"/>
+                    </IconButton>
+                  </div>
                   <div>Thời gian đặt: {formatDateTime(order.orderTime)}</div>
-                  <div>Ngày dự kiến giao: {formatDateTime(order.orderShipExpected)}</div>
+                  <div>
+                    Ngày dự kiến giao: {formatDateTime(order.orderShipExpected)}
+                  </div>
                 </Stack>
               </Grid>
               <Grid item xs={5}>
                 <Stack spacing={3}>
-                  <div>Tổng tiền: {formatNumberWithCommas(order.orderTotalAmount)}đ</div>
+                  <div>
+                    Tổng tiền: {formatNumberWithCommas(order.orderTotalAmount)}đ
+                  </div>
                   <div>
                     Trạng thái thanh toán:{" "}
                     {order.orderPaid != null
@@ -131,25 +181,41 @@ export default function OrderHistoryPage() {
                   </div>
                   <div>
                     Tình trạng đơn hàng:{" "}
-                    { order.orderStatus == 1 ? <Typography sx={{color: '#3f51b5', display: 'inline'}}>Đang chờ xử lý</Typography>
-                    : order.orderStatus == 2 ? <Typography sx={{color: '#b2a429', display: 'inline'}}>Đang chờ giao</Typography>
-                    : order.orderStatus == 3 ? <Typography sx={{color: '#b23c17', display: 'inline'}}>Đang giao</Typography>
-                    : order.orderStatus == 4 ? <Typography sx={{color: '#618833', display: 'inline'}}>Đã giao</Typography>
-                    : order.orderStatus == 5 ? <Typography sx={{color: '#00a152', display: 'inline'}}>Đã hoàn thành</Typography>
-                    : order.orderStatus == -1 ? <Typography sx={{color: '#ab003c', display: 'inline'}}>Đã hủy</Typography>
-                    : "Không xác định"}
+                    {order.orderStatus == 1 ? (
+                      <Typography sx={{ color: "#3f51b5", display: "inline" }}>
+                        Đang chờ xử lý
+                      </Typography>
+                    ) : order.orderStatus == 2 ? (
+                      <Typography sx={{ color: "#b2a429", display: "inline" }}>
+                        Đang chờ giao
+                      </Typography>
+                    ) : order.orderStatus == 3 ? (
+                      <Typography sx={{ color: "#b23c17", display: "inline" }}>
+                        Đang giao
+                      </Typography>
+                    ) : order.orderStatus == 4 ? (
+                      <Typography sx={{ color: "#618833", display: "inline" }}>
+                        Đã giao
+                      </Typography>
+                    ) : order.orderStatus == 5 ? (
+                      <Typography sx={{ color: "#00a152", display: "inline" }}>
+                        Đã hoàn thành
+                      </Typography>
+                    ) : order.orderStatus == -1 ? (
+                      <Typography sx={{ color: "#ab003c", display: "inline" }}>
+                        Đã hủy
+                      </Typography>
+                    ) : (
+                      "Không xác định"
+                    )}
                   </div>
                 </Stack>
               </Grid>
               <Grid item xs={2}>
                 <Stack spacing={2}>
-                  <OrderHistoryDetailComponent order={order}/>
-                  {order.orderConfirmed == null ?
-                    <CancelOrderComponent />
-                    :
-                    ""
-                  }
-                  <ReviewOrderComponent order={order}/>
+                  <OrderHistoryDetailComponent order={order} />
+                  {order.orderConfirmed == null ? <CancelOrderComponent /> : ""}
+                  <ReviewOrderComponent order={order} />
                 </Stack>
               </Grid>
             </Grid>

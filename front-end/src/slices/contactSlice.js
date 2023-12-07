@@ -17,7 +17,29 @@ export const fetchContacts = createAsyncThunk (
 );
 
 
+export const searchContact = createAsyncThunk (
+    'contact/search',
+    async (searchData) => {
+        const response = await axios.post(prefixAPI + '/api/contact/search', searchData);
+        return response.data;
+    }
+)
 
+export const confirmContact = createAsyncThunk (
+    'contact/confirm',
+    async (contactId) => {
+        const response = await axios.put(prefixAPI + `/api/contact/confirm/${contactId}`);
+        return response.data;
+    }
+)
+
+export const deleteContact = createAsyncThunk (
+    'contact/delete',
+    async (contactId) => {
+        const response = await axios.delete(prefixAPI + `/api/contact/delete/${contactId}`);
+        return response.data;
+    }
+)
 
 
 const contactSlice = createSlice ({
@@ -27,6 +49,9 @@ const contactSlice = createSlice ({
     extraReducers: (builder) => {
         builder
             .addCase(fetchContacts.fulfilled, (state, action) => {
+                state.contacts = action.payload;
+            })
+            .addCase(searchContact.fulfilled, (state, action) => {
                 state.contacts = action.payload;
             })
     }

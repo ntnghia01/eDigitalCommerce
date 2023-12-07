@@ -30,6 +30,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
+import { searchCustomerAccount } from "../../../../slices/accountSlice";
 
 
 // import Component
@@ -37,6 +38,15 @@ import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 // example data
 
 export default function FilterCustomerAccountTable() {
+  const dispatch = useDispatch();
+
+  const changeSearchData = (e) => {
+    e.preventdefault;
+    console.log(e.target.value);
+    const searchData = { userName: e.target.value };
+    dispatch(searchCustomerAccount(searchData));
+  };
+
   return (
     <>
       <Grid
@@ -125,7 +135,7 @@ export default function FilterCustomerAccountTable() {
               label="Tìm kiếm"
               variant="outlined"
               size="small"
-              // onChange={handleSearch} // Bạn cần triển khai hàm xử lý tìm kiếm tại đây
+              onChange={e=>{changeSearchData(e)}}
             />
             <IconButton type="submit" aria-label="search">
               <SearchIcon />

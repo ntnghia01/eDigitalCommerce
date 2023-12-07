@@ -23,6 +23,7 @@ import { editBrand, fetchBrands } from "../../../slices/brandSlice";
 import { editSupplier, fetchSuppliers } from "../../../slices/supplierSlice";
 import { fetchCategories } from "../../../slices/categorySlice";
 import { editProduct, fetchProducts } from "../../../slices/productSlice";
+import { editBlog, fetchBlogs } from "../../../slices/blogSlice";
 
 
 const VisuallyHiddenInput = styled('input')({
@@ -77,8 +78,27 @@ export default function BlogEditForm(props) {
   const [image, setImage] = React.useState();
 //   console.log(proCategory);  
 
+const dispatch = useDispatch();
+
 const handleSubmit = () => {
-    console.log("Building");
+    const blogData = {
+      blogTitle: blogTitle,
+      blogContent: blogContent,
+      blogStatus: blogContent,
+      blogStatus: blogStatus,
+      blogImage: blogImage,
+      image: image
+    }
+    console.log(blogData);
+    dispatch(editBlog({blogId: blog.blogId, blogData: blogData}))
+      .then(() => {
+        dispatch(fetchBlogs());
+        handleOpenSuccessSnackbar();
+        console.log("Cập nhật blog thành công!");
+      }).catch((error) => {
+        console.log('Cập nhật blog thất bại: ' + error);
+      })
+    setOpen(false);
 }
 
   return (

@@ -22,6 +22,7 @@ import {
 import { useEffect } from "react";
 import { fetchCustomerAccounts, fetchShipperAccounts } from "../../../../slices/accountSlice";
 import DisableShipperAccountComponent from "./DisableShipperAccountComponent";
+import ActiveCustomerAccountComponent from "../customer/ActiveCustomerAccountComponent";
 
 const formatDateTime = (oriDateTime) => {
     const dateTime = new Date(oriDateTime);
@@ -116,7 +117,7 @@ export default function ShipperAccountTableComponent() {
                     {account.userStatus==1 ?
                         <DisableShipperAccountComponent account={account} />
                     : account.userStatus==0 ?
-                        <ActiveCustomerAccountComponent account={account} />
+                        <DisableShipperAccountComponent account={account} />
                     : "Không xác định"
                     }
                     

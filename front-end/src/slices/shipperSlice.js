@@ -53,6 +53,14 @@ export const shipped = createAsyncThunk (
     }
 );
 
+export const searchOrderByShipperID = createAsyncThunk (
+    'order/searchByShipperID',
+    async (searchData) => {
+        const response = await axios.post(prefixAPI + '/api/order/byShipperId/search', searchData);
+        return response.data;
+    }
+)
+
 
 
 const shipperSlice = createSlice ({
@@ -65,6 +73,9 @@ const shipperSlice = createSlice ({
                 state.shippers = action.payload;
             })
             .addCase(fetchOrderByShipper.fulfilled, (state, action) => {
+                state.orderByShipper = action.payload;
+            })
+            .addCase(searchOrderByShipperID.fulfilled, (state, action) => {
                 state.orderByShipper = action.payload;
             })
     }

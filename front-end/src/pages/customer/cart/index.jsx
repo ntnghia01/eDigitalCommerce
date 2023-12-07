@@ -10,6 +10,7 @@ import {
   updateCartDetailQuantity,
   calcTotalCart,
   calcCart,
+  searchCartDetail,
 } from "../../../slices/cartSlice";
 
 // MUI
@@ -108,6 +109,13 @@ export default function Cart() {
     // Ví dụ: lọc danh sách sản phẩm theo searchText
   };
 
+  const changeSearchData = (e) => {
+    e.preventdefault;
+    console.log(e.target.value);
+    const searchData = { cartId: localStorage.getItem("customerID"), search: e.target.value };
+    dispatch(searchCartDetail(searchData));
+  };
+
   return (
     <>
       <Breadcrumbs aria-label="breadcrumb" sx={{ marginLeft: 3 }}>
@@ -136,8 +144,8 @@ export default function Cart() {
               id="search"
               label="Tìm kiếm"
               variant="outlined"
-              value={searchText}
-              onChange={handleSearch}
+              // value={searchText}
+              onChange={e=>{changeSearchData(e)}}
               size="small"
             />
             <IconButton>

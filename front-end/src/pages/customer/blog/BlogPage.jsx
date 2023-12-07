@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { fetchBlogs } from '../../../slices/blogSlice';
+import { fetchBlogAvailable, fetchBlogs, searchBlogAvailableByTitle } from '../../../slices/blogSlice';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import HomeIcon from '@mui/icons-material/Home';
 import { emphasize, styled } from '@mui/material/styles';
@@ -18,6 +18,7 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from 'react';
 import { Box, IconButton, TextField } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     const backgroundColor =
@@ -41,10 +42,12 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
 
 export default function BlogPage() {
 
+  const navigate = useNavigate();
+
     const dispatch = useDispatch();
 
     useEffect(() => {
-      dispatch(fetchBlogs());
+      dispatch(fetchBlogAvailable());
     }, [dispatch]);
   
     const blogs = useSelector((state) => state.blog.blogs);
@@ -54,6 +57,13 @@ export default function BlogPage() {
       setSearchText(event.target.value);
       // Điều chỉnh logic tìm kiếm dựa trên searchText ở đây
       // Ví dụ: lọc danh sách sản phẩm theo searchText
+    };
+
+    const changeSearchData = (e) => {
+      e.preventdefault;
+      console.log(e.target.value);
+      const searchData = { blogTitle: e.target.value };
+      dispatch(searchBlogAvailableByTitle(searchData));
     };
 
     return (
@@ -73,7 +83,7 @@ export default function BlogPage() {
         </Breadcrumbs>
         <Grid container alignItems="center" justifyContent="space-between" sx={{paddingLeft: 3}}>
         <Grid item>
-        <h3>Lịch sử mua hàng</h3>
+        <h3>Bài viết của chúng tôi</h3>
         </Grid>
         <Grid item xs={6} sm={4} md={3} lg={2}> {/* Điều chỉnh kích thước cho phù hợp */}
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
@@ -81,8 +91,7 @@ export default function BlogPage() {
               id="search"
               label="Tìm kiếm"
               variant="outlined"
-              value={searchText}
-              onChange={handleSearch}
+              onChange={e=>{changeSearchData(e)}}
               size="small"
             />
             <IconButton>
@@ -109,7 +118,7 @@ export default function BlogPage() {
                             </Typography>
                         </CardContent>
                         <CardActions>
-                            <Button size="small" startIcon={<RemoveRedEyeIcon />}>Xem chi tiết</Button>
+                            <Button size="small" startIcon={<RemoveRedEyeIcon />} onClick={()=>navigate(`/blog/${blog.blogId}`)}>Xem chi tiết</Button>
                             {/* <Button size="small">Learn More</Button> */}
                         </CardActions>
                     </Card>

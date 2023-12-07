@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from '@mui/material/Typography';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 import { green, yellow, blue, red, purple, grey } from '@mui/material/colors';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -21,6 +22,7 @@ import PriceCheckIcon from '@mui/icons-material/PriceCheck';
 import {
   Avatar,
   Button,
+  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -94,7 +96,15 @@ export default function OrderTable() {
                 >
                   <TableCell component="th" scope="row">#{order.orderId}</TableCell>
                   <TableCell align="left">{order.user.userName}</TableCell>
-                  <TableCell align="left">{order.orderCode}</TableCell>
+                  <TableCell align="left">{order.orderCode}<IconButton
+                      onClick={() =>
+                        navigator.clipboard.writeText(order.orderCode)
+                      }
+                      aria-label="Copy order code"
+                      size="small"
+                    >
+                      <ContentCopyIcon fontSize="small"/>
+                    </IconButton></TableCell>
                   <TableCell align="right">{formatDateTime(order.orderTime)}</TableCell>
                   {/* <TableCell align="right">{formatDateTime(order.orderShipExpected)}</TableCell> */}
                   <TableCell align="right">{formatNumberWithCommas(order.orderTotalAmount)}đ</TableCell>

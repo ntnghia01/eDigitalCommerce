@@ -30,6 +30,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
+import { searchOrderByShipperID } from "../../slices/shipperSlice";
 
 
 // import Component
@@ -37,6 +38,15 @@ import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 // example data
 
 export default function FilterShipperTable() {
+
+  const dispatch = useDispatch();
+
+  const changeSearchData = (e) => {
+    e.preventdefault;
+    console.log(e.target.value);
+    const searchData = { shipperId: localStorage.getItem("shipperID"), orderCode: e.target.value };
+    dispatch(searchOrderByShipperID(searchData));
+  };
   return (
     <>
       <Grid
@@ -184,7 +194,7 @@ export default function FilterShipperTable() {
               label="Tìm kiếm"
               variant="outlined"
               size="small"
-              // onChange={handleSearch} // Bạn cần triển khai hàm xử lý tìm kiếm tại đây
+              onChange={e=>{changeSearchData(e)}}
             />
             <IconButton type="submit" aria-label="search">
               <SearchIcon />

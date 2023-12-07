@@ -35,12 +35,22 @@ import { DataGrid } from "@mui/x-data-grid";
 import { fetchCategories } from "../../../slices/categorySlice";
 import { useEffect } from "react";
 import DataGridDemo from "../../../components/admin/Category/CategoryDataTable";
+import { searchReviewByContent } from "../../../slices/reviewSlice";
 
 // import Component
 
 // example data
 
 export default function FilterReviewTable() {
+
+  const dispatch = useDispatch();
+
+  const changeSearchData = (e) => {
+    e.preventdefault;
+    console.log(e.target.value);
+    const searchData = { reviewContent: e.target.value };
+    dispatch(searchReviewByContent(searchData));
+  };
   return (
     <>
       <Grid
@@ -112,9 +122,9 @@ export default function FilterReviewTable() {
               label="Tìm kiếm"
               variant="outlined"
               size="small"
-              // onChange={handleSearch} // Bạn cần triển khai hàm xử lý tìm kiếm tại đây
+              onChange={e=>{changeSearchData(e)}}
             />
-            <Box sx={{ minWidth: 100 }}>
+            {/* <Box sx={{ minWidth: 100 }}>
               <FormControl fullWidth size="small">
                 <InputLabel id="demo-simple-select-label">Loại</InputLabel>
                 <Select
@@ -129,7 +139,7 @@ export default function FilterReviewTable() {
                   <MenuItem value={30}>Thirty</MenuItem>
                 </Select>
               </FormControl>
-            </Box>
+            </Box> */}
             <IconButton type="submit" aria-label="search">
               <SearchIcon />
             </IconButton>

@@ -65,6 +65,14 @@ export const searchCategories = createAsyncThunk(
     }
 );
 
+export const searchCategoryByName = createAsyncThunk (
+    'category/searchByName',
+    async (searchData) => {
+        const response = await axios.post(prefixAPI + '/api/category/searchByName', searchData);
+        return response.data;
+    }
+)
+
 const categorySlice = createSlice({
     name: 'categories',
     initialState,
@@ -142,6 +150,11 @@ const categorySlice = createSlice({
                 state.isLoading = false;
                 state.error = action.payload;
             })
+            .addCase(searchCategoryByName.fulfilled, (state, action) => {
+                // state.isLoading = false;
+                state.categories = action.payload;
+            })
+
             ;
     },
     // cac reducers khac...

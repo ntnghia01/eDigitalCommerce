@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import com.backend.springboot.ecommerce.entity.User;
 import com.backend.springboot.ecommerce.payload.request.AvatarRequestDto;
 import com.backend.springboot.ecommerce.payload.request.UserRequestDto;
@@ -156,6 +155,39 @@ public class UserController {
         } else {
             return new ResponseEntity<>(new MessageResponse("Upload avatar failed"), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping("/searchCustomer")
+    public ResponseEntity<List<User>> searchCustomer(@RequestBody UserRequestDto searchData) {
+        List<User> users;
+        if (searchData.getUserName() == "") {
+            users = userRepository.findAllCustomer(); // Lấy tất cả sản phẩm nếu searchData rỗng
+        } else {
+            users = userRepository.findUserFollowRole(searchData.getUserName(), 1);
+        }
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @PostMapping("/searchAdmin")
+    public ResponseEntity<List<User>> searchAdmin(@RequestBody UserRequestDto searchData) {
+        List<User> users;
+        if (searchData.getUserName() == "") {
+            users = userRepository.findAllAdmin(); // Lấy tất cả sản phẩm nếu searchData rỗng
+        } else {
+            users = userRepository.findUserFollowRole(searchData.getUserName(), 2);
+        }
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @PostMapping("/searchShipper")
+    public ResponseEntity<List<User>> searchShipper(@RequestBody UserRequestDto searchData) {
+        List<User> users;
+        if (searchData.getUserName() == "") {
+            users = userRepository.findAllShipper(); // Lấy tất cả sản phẩm nếu searchData rỗng
+        } else {
+            users = userRepository.findUserFollowRole(searchData.getUserName(), 3);
+        }
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
 

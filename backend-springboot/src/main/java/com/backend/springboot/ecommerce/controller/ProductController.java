@@ -37,6 +37,7 @@ import com.backend.springboot.ecommerce.entity.Category;
 import com.backend.springboot.ecommerce.entity.Product;
 import com.backend.springboot.ecommerce.payload.request.ProductRequestDto;
 import com.backend.springboot.ecommerce.payload.response.MessageResponse;
+import com.backend.springboot.ecommerce.payload.response.ProductResponseDto;
 import com.backend.springboot.ecommerce.repository.BrandRepository;
 import com.backend.springboot.ecommerce.repository.CategoryRepository;
 import com.backend.springboot.ecommerce.repository.ProductRepository;
@@ -122,8 +123,12 @@ public class ProductController {
             newProduct.setProUpdatedAt(LocalDateTime.now());
             newProduct.setProImage(productRequestDto.getProImage());
 
-            productRepository.save(newProduct);
-            return ResponseEntity.ok(new MessageResponse("Add product successfully!"));
+            Product savedProduct = productRepository.save(newProduct);
+            ProductResponseDto productResponseDto = new ProductResponseDto();
+            productResponseDto.setMessage("Add product successfully!");
+            productResponseDto.setProductObject(savedProduct);
+
+            return ResponseEntity.ok(productResponseDto);
         } else {
             return new ResponseEntity<>(new MessageResponse("Add product failed"), HttpStatus.BAD_REQUEST);
         }
@@ -232,9 +237,20 @@ public class ProductController {
         // return new ResponseEntity<>(productList, HttpStatus.OK);
         List<Product> productList;
         if (searchData.getProName() == "") {
-            productList = productRepository.findAllProductAvailable(); // Lấy tất cả sản phẩm nếu searchData rỗng
+            productList = productRepository.findAllProduct(); // Lấy tất cả sản phẩm nếu searchData rỗng
         } else {
             productList = productRepository.findProductByName(searchData.getProName());
+        }
+        return new ResponseEntity<>(productList, HttpStatus.OK);
+    }
+
+    @PostMapping("/available/search")
+    public ResponseEntity<List<Product>> searchProductAvailableByName(@RequestBody ProductRequestDto searchData) {
+        List<Product> productList;
+        if (searchData.getProName() == "") {
+            productList = productRepository.findAllProductAvailable(); // Lấy tất cả sản phẩm nếu searchData rỗng
+        } else {
+            productList = productRepository.findProductAvailableByName(searchData.getProName());
         }
         return new ResponseEntity<>(productList, HttpStatus.OK);
     }

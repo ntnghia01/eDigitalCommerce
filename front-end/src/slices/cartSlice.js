@@ -80,6 +80,14 @@ export const calcCart = createAsyncThunk (
     }
 )
 
+export const searchCartDetail = createAsyncThunk (
+    'cartDetail/search',
+    async (searchData) => {
+        const response = await axios.post(prefixAPI + '/api/cart/cartDetail/search', searchData);
+        return response.data;
+    }
+)
+
 const cartSlice = createSlice ({
     name: 'cart',
     initialState,
@@ -97,6 +105,9 @@ const cartSlice = createSlice ({
             })
             .addCase(calcCart.fulfilled, (state, action) => {
                 state.calcCartData = action.payload;
+            })
+            .addCase(searchCartDetail.fulfilled, (state, action) => {
+                state.cart = action.payload;
             })
     }
 });

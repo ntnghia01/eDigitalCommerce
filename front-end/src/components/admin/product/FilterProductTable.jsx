@@ -35,12 +35,23 @@ import { DataGrid } from "@mui/x-data-grid";
 import { fetchCategories } from "../../../slices/categorySlice";
 import { useEffect } from "react";
 import DataGridDemo from "../../../components/admin/Category/CategoryDataTable";
+import { searchProductByName } from "../../../slices/productSlice";
 
 // import Component
 
 // example data
 
 export default function FilterProductTable() {
+
+  const dispatch = useDispatch();
+
+  const changeSearchData = (e) => {
+    e.preventdefault;
+    // setInputChat(e.target.value);
+    console.log(e.target.value);
+    const searchData = { proName: e.target.value };
+    dispatch(searchProductByName(searchData));
+  };
   return (
     <>
       <Grid
@@ -177,7 +188,7 @@ export default function FilterProductTable() {
               label="Tìm kiếm"
               variant="outlined"
               size="small"
-              // onChange={handleSearch} // Bạn cần triển khai hàm xử lý tìm kiếm tại đây
+              onChange={e=>{changeSearchData(e)}} // Bạn cần triển khai hàm xử lý tìm kiếm tại đây
             />
             <IconButton type="submit" aria-label="search">
               <SearchIcon />

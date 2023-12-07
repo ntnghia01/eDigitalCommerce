@@ -83,6 +83,30 @@ export const activeComment = createAsyncThunk (
     }
 );
 
+export const searchCustomerAccount = createAsyncThunk (
+    'account/searchCustomer',
+    async (searchData) => {
+        const response = await axios.post(prefixAPI + '/api/account/searchCustomer', searchData);
+        return response.data;
+    }
+)
+
+export const searchAdminAccount = createAsyncThunk (
+    'account/searchAdmin',
+    async (searchData) => {
+        const response = await axios.post(prefixAPI + '/api/account/searchAdmin', searchData);
+        return response.data;
+    }
+)
+
+export const searchShipperAccount = createAsyncThunk (
+    'account/searchShipper',
+    async (searchData) => {
+        const response = await axios.post(prefixAPI + '/api/account/searchShipper', searchData);
+        return response.data;
+    }
+)
+
 
 export const uploadAvatar = createAsyncThunk (
     'account/uploadAvatar',
@@ -126,6 +150,15 @@ const accountSlice = createSlice ({
             })
             .addCase(fetchAdminAccounts.fulfilled, (state, action) => {
                 state.adminAccounts = action.payload;
+            })
+            .addCase(searchCustomerAccount.fulfilled, (state, action) => {
+                state.customerAccounts = action.payload;
+            })
+            .addCase(searchAdminAccount.fulfilled, (state, action) => {
+                state.adminAccounts = action.payload;
+            })
+            .addCase(searchShipperAccount.fulfilled, (state, action) => {
+                state.shipperAccounts = action.payload;
             })
     }
 })

@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import { deleteBrand, fetchBrands } from '../../../slices/brandSlice';
 import { deleteSupplier, fetchSuppliers } from '../../../slices/supplierSlice';
 import { deleteProduct, fetchProducts } from '../../../slices/productSlice';
+import { confirmContact, fetchContacts } from '../../../slices/contactSlice';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -48,16 +49,16 @@ export default function ConfirmContactComponent(props) {
   const dispatch = useDispatch();
   const handleSubmit = (e) => {
     e.preventDefault();
-    // dispatch(deleteProduct(props.deleteID))
-    //   .then(() => {
-    //     dispatch(fetchProducts());
-    //     setOpen(false);
-    //     handleOpenSuccessSnackbar();
-    //     console.log('Delete product successfully');
-    //   })
-    //   .catch((error) => {
-    //     console.log("Delete product failed");
-    //   });
+    dispatch(confirmContact(contact.contactId))
+      .then(() => {
+        dispatch(fetchContacts());
+        setOpen(false);
+        handleOpenSuccessSnackbar();
+        console.log('Confirm contact successfully');
+      })
+      .catch((error) => {
+        console.log("Confirm contact failed");
+      });
   }
 
   return (
@@ -85,7 +86,7 @@ export default function ConfirmContactComponent(props) {
       </Dialog>
       <Snackbar open={openSuccessSnackbar} autoHideDuration={3000} onClose={handleCloseSuccessSnackbar}>
         <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%', color: 'white' }}>
-          Xóa thành công!
+          xác nhận thành công!
         </Alert>
       </Snackbar>
     </div>

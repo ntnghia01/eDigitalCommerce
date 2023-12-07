@@ -14,10 +14,13 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("SELECT p FROM Product p WHERE p.proStatus <> -1 ORDER BY p.proCreatedAt DESC")
     List<Product> findAllProduct();
 
-    @Query("SELECT p FROM Product p WHERE p.proStatus = 1 ORDER BY p.proCreatedAt DESC")
+    @Query("SELECT p FROM Product p WHERE p.proStatus = 1")
     List<Product> findAllProductAvailable();
 
-    @Query("SELECT p FROM Product p WHERE p.proName LIKE %:proName% AND p.proStatus <> -1")
+    @Query("SELECT p FROM Product p WHERE (p.proName LIKE %:proName% OR p.proDesc LIKE %:proName%) AND p.proStatus =1")
+    List<Product> findProductAvailableByName(@Param("proName") String proName);
+
+    @Query("SELECT p FROM Product p WHERE (p.proName LIKE %:proName% OR p.proDesc LIKE %:proName%) AND p.proStatus <> -1 ORDER BY p.proCreatedAt DESC")
     List<Product> findProductByName(@Param("proName") String proName);
 
     @Query("SELECT p FROM Product p WHERE p.category.cateId = :cateId AND p.proStatus <> -1 ORDER BY p.proCreatedAt DESC")

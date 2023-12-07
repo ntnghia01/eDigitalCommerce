@@ -8,6 +8,7 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import HomeIcon from "@mui/icons-material/Home";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
@@ -217,7 +218,15 @@ export default function LookupPage() {
               <Stack spacing={2} sx={{padding: 5}}>
                 <div>Tên khách hàng: {order.user.userName}</div>
                 <div>Hình thức thanh toán: {order.payment.paymentName}</div>
-                <div>Mã đơn hàng: {order.orderCode}</div>
+                <div>Mã đơn hàng: {order.orderCode}<IconButton
+                      onClick={() =>
+                        navigator.clipboard.writeText(order.orderCode)
+                      }
+                      aria-label="Copy order code"
+                      size="small"
+                    >
+                      <ContentCopyIcon fontSize="small"/>
+                    </IconButton></div>
                 <div>Thời gian đặt hàng: {formatDateTime(order.orderTime)}</div>
                 <div>Tên người nhận: {order.orderName}</div>
                 <div>Số điện thoại người nhận: {order.orderPhone}</div>

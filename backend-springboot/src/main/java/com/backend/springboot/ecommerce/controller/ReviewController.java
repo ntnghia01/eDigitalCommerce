@@ -64,4 +64,15 @@ public class ReviewController {
             return new ResponseEntity<>(new MessageResponse("Order or User not found!"), HttpStatus.NOT_FOUND);
         }
     }
+
+    @PostMapping("/searchByContent")
+    public ResponseEntity<List<Review>> searchReviewByContent(@RequestBody ReviewRequestDto searchData) {
+        List<Review> reviews;
+        if (searchData.getReviewContent() == "") {
+            reviews = reviewRepository.findAll(); // Lấy tất cả sản phẩm nếu searchData rỗng
+        } else {
+            reviews = reviewRepository.findReviewByContent(searchData.getReviewContent());
+        }
+        return new ResponseEntity<>(reviews, HttpStatus.OK);
+    }
 }

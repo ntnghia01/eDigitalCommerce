@@ -168,7 +168,7 @@ export default function AdminTopBar() {
                     <Typography
                       textAlign="center"
                       onClick={() => {
-                        navigate("/information");
+                        navigate("/admin/information");
                         handleCloseUserMenu();
                       }}
                     >

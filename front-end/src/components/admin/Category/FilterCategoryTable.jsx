@@ -32,7 +32,7 @@ import IconButton from "@mui/material/IconButton";
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 
 import { DataGrid } from "@mui/x-data-grid";
-import { fetchCategories } from "../../../slices/categorySlice";
+import { fetchCategories, searchCategoryByName } from "../../../slices/categorySlice";
 import { useEffect } from "react";
 import DataGridDemo from "../../../components/admin/Category/CategoryDataTable";
 
@@ -41,6 +41,16 @@ import DataGridDemo from "../../../components/admin/Category/CategoryDataTable";
 // example data
 
 export default function FilterCategoryTable() {
+
+  const dispatch = useDispatch();
+
+  const changeSearchData = (e) => {
+    e.preventdefault;
+    console.log(e.target.value);
+    const searchData = { categoryName: e.target.value };
+    dispatch(searchCategoryByName(searchData));
+  };
+
   return (
     <>
       <Grid
@@ -128,7 +138,7 @@ export default function FilterCategoryTable() {
               label="Tìm kiếm"
               variant="outlined"
               size="small"
-              // onChange={handleSearch} // Bạn cần triển khai hàm xử lý tìm kiếm tại đây
+              onChange={e=>{changeSearchData(e)}}
             />
             <IconButton type="submit" aria-label="search">
               <SearchIcon />

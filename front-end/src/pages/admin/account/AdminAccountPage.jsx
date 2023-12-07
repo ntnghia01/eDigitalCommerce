@@ -6,6 +6,7 @@ import AdminAccountTableComponent from "../../../components/admin/account/admin/
 import FilterCustomerAccountTable from "../../../components/admin/account/customer/FilterCustomerAccountTable";
 import { Button, Grid } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import FilterAdminAccountTable from "../../../components/admin/account/admin/FilterAdminAccountTable";
 
 export default function AdminAccountPage() {
   return (
@@ -39,7 +40,7 @@ export default function AdminAccountPage() {
           >
           </Grid>
         </Grid>
-        <FilterCustomerAccountTable />
+        <FilterAdminAccountTable />
         <AdminAccountTableComponent />
       </div>
     </>

@@ -21,6 +21,7 @@ import commentSlice from '../slices/commentSlice';
 import accountSlice from '../slices/accountSlice';
 import blogSlice from '../slices/blogSlice';
 import contactSlice from '../slices/contactSlice';
+import imageSlice from '../slices/imageSlice';
 
 
 // const store = createStore(rootReducer, applyMiddleware(thunk));
@@ -43,7 +44,8 @@ const store = configureStore ({
         comment: commentSlice,
         account: accountSlice,
         blog: blogSlice,
-        contact: contactSlice
+        contact: contactSlice,
+        image: imageSlice
     },
 });
 

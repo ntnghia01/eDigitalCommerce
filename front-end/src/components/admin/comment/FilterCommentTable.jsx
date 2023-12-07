@@ -35,12 +35,21 @@ import { DataGrid } from "@mui/x-data-grid";
 import { fetchCategories } from "../../../slices/categorySlice";
 import { useEffect } from "react";
 import DataGridDemo from "../../../components/admin/Category/CategoryDataTable";
+import { searchCommentByContent } from "../../../slices/commentSlice";
 
 // import Component
 
 // example data
 
 export default function FilterCommentTable() {
+  const dispatch = useDispatch();
+
+  const changeSearchData = (e) => {
+    e.preventdefault;
+    console.log(e.target.value);
+    const searchData = { cmtContent: e.target.value };
+    dispatch(searchCommentByContent(searchData));
+  };
   return (
     <>
       <Grid
@@ -158,7 +167,7 @@ export default function FilterCommentTable() {
               label="Tìm kiếm"
               variant="outlined"
               size="small"
-              // onChange={handleSearch} // Bạn cần triển khai hàm xử lý tìm kiếm tại đây
+              onChange={e=>{changeSearchData(e)}}
             />
             <IconButton type="submit" aria-label="search">
               <SearchIcon />

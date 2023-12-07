@@ -21,6 +21,7 @@ import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 // import Icons
 import AddIcon from "@mui/icons-material/Add";
@@ -160,7 +161,15 @@ export default function OrderDetailShipperComponent(props) {
                   Người duyệt:{" "}
                   {order.admin != null ? order.admin.userName : "Trống"}
                 </div>
-                <div>Mã đơn hàng: {order.orderCode}</div>
+                <div>Mã đơn hàng: {order.orderCode}<IconButton
+                      onClick={() =>
+                        navigator.clipboard.writeText(order.orderCode)
+                      }
+                      aria-label="Copy order code"
+                      size="small"
+                    >
+                      <ContentCopyIcon fontSize="small"/>
+                    </IconButton></div>
                 <div>Thời gian đặt hàng: {formatDateTime(order.orderTime)}</div>
                 <div>Tên người nhận: {order.orderName}</div>
                 <div>Số điện thoại người nhận: {order.orderPhone}</div>

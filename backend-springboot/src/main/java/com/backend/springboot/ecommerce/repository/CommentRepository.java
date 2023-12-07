@@ -17,4 +17,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
     @Query("SELECT c FROM Comment c WHERE c.product.proId = :proId AND c.cmtStatus = 1 ORDER BY c.cmtTime DESC")
     List<Comment> findCommentByProductID(@Param("proId") int proId);
+
+    @Query("SELECT b FROM Comment b WHERE (b.cmtContent LIKE %:cmtContent% OR b.product.proName LIKE %:cmtContent% OR b.user.userName LIKE %:cmtContent%) AND b.cmtStatus <> -1")
+    List<Comment> findCommentByContent(@Param("cmtContent") String cmtContent);
 }

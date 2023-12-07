@@ -66,6 +66,7 @@ import ReviewPage from "./review/ReviewPage";
 import CommentPage from "./comment/CommentPage";
 import AdminBlogPage from "./blog/AdminBlogPage";
 import AdminContactPage from "./contact/AdminContactPage";
+import AdminInformationPage from "./adminInformation/AdminInformationPage";
 
 // import '../../../public/avatar.png'
 
@@ -367,7 +368,7 @@ function Admin() {
         <div style={{ width: "100%", padding: 20 }}>
           <AdminTopBar />
           <Routes>
-            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/" element={<AdminDashboard />} />
             <Route path="/admin/login" element={<AdminLoginPage />} />
             <Route path="/dashboard" element={<AdminDashboard />} />
             <Route path="/categories" element={<Categories />} />
@@ -384,6 +385,7 @@ function Admin() {
             <Route path="/comment" element={<CommentPage />} />
             <Route path="/blog" element={<AdminBlogPage />} />
             <Route path="/contact" element={<AdminContactPage />} />
+            <Route path="/information" element={<AdminInformationPage />} />
           </Routes>
         </div>
       </div>

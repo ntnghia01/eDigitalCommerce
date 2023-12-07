@@ -12,4 +12,5 @@ public class ImportRequestDto {
     private LocalDateTime importDate;
     private Integer importTotal;
     private Integer importStatus;
+    private String supplierName;
 }

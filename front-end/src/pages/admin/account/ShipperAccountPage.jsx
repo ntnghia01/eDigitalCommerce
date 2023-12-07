@@ -6,6 +6,7 @@ import ShipperAccountTableComponent from "../../../components/admin/account/ship
 import FilterCustomerAccountTable from "../../../components/admin/account/customer/FilterCustomerAccountTable";
 import { Button, Grid } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import FilterShipperAccountTable from "../../../components/admin/account/shipper/FilterShipperAccountTable";
 
 export default function ShipperAccountPage() {
   return (
@@ -39,7 +40,7 @@ export default function ShipperAccountPage() {
           >
           </Grid>
         </Grid>
-        <FilterCustomerAccountTable />
+        <FilterShipperAccountTable />
         <ShipperAccountTableComponent />
       </div>
     </>

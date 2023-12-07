@@ -35,13 +35,15 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchOrder } from "../../slices/orderSlice";
 import { useEffect } from "react";
-import { fetchOrderByShipper } from "../../slices/shipperSlice";
+import { fetchOrderByShipper, searchOrderByShipperID } from "../../slices/shipperSlice";
 import StartShipComponent from "../../components/shipper/StartShipComponent";
 import ShippedComponent from "../../components/shipper/ShippedComponent";
 import OrderDetailShipperComponent from "../../components/shipper/OrderDetailShipperComponent";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import FilterShipperTable from "../../components/shipper/FilterShipperTable";
+import ShipperInformationPage from "./ShipperInformationPage";
+import ShipperTable from "./ShipperTable";
 
 // import "../../../public/avatar.png";
 
@@ -108,6 +110,14 @@ export default function Shipper() {
     navigate("/shipper/login")
   };
 
+
+  const changeSearchData = (e) => {
+    e.preventdefault;
+    console.log(e.target.value);
+    const searchData = { shipperId: localStorage.getItem("shipperID"), orderCode: e.target.value };
+    dispatch(searchOrderByShipperID(searchData));
+  };
+
   return (
     <>
       <Box sx={{ flexGrow: 1, padding: 3 }}>
@@ -122,6 +132,7 @@ export default function Shipper() {
                 label="Tìm kiếm"
                 variant="outlined"
                 style={{ width: "100%" }}
+                onChange={e=>{changeSearchData(e)}}
               />
             </Box>
           </Grid>
@@ -203,10 +214,23 @@ export default function Shipper() {
                     </MenuItem>
                   ))} */}
                   <MenuItem>
+                  
+                  <Typography
+                    textAlign="center"
+                    onClick={() => {
+                      navigate("/shipper")
+                      handleCloseUserMenu();
+                    }}
+                  >
+                    Trang chủ
+                  </Typography>
+                </MenuItem>
+                  <MenuItem>
+                  
                     <Typography
                       textAlign="center"
                       onClick={() => {
-                        navigate("/information");
+                        navigate("/shipper/info")
                         handleCloseUserMenu();
                       }}
                     >
@@ -224,64 +248,13 @@ export default function Shipper() {
       </Box>
       <Box  sx={{padding: 2}}>
 
-      <FilterShipperTable />
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell align="left">Khách hàng</TableCell>
-              <TableCell align="right">Số điện thoại</TableCell>
-              <TableCell align="left">Mã đơn hàng</TableCell>
-              <TableCell align="right">Tổng tiền</TableCell>
-              <TableCell align="left">Hình thức thanh toán</TableCell>
-              <TableCell align="left">Thanh toán</TableCell>
-              <TableCell align="left">Ghi chú</TableCell>
-              <TableCell align="left">Trạng thái</TableCell>
-              <TableCell align="center">Thao Tác</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {orders.map((order) => (
-              <TableRow
-                key={order.orderId}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  #{order.orderId}
-                </TableCell>
-                <TableCell align="left">{order.user.userName}</TableCell>
-                <TableCell align="right">
-                  {order.orderPhone}
-                </TableCell>
-                <TableCell align="left">{order.orderCode}</TableCell>
-                <TableCell align="right">
-                  {formatNumberWithCommas(order.orderTotalAmount)}đ
-                </TableCell>
-                <TableCell align="left">{order.payment.paymentName}</TableCell>
-                <TableCell align="left">
-                  {order.orderPaid == null ? "Chưa" : "Đã thanh toán"}
-                </TableCell>
-                <TableCell align="left">{order.orderNote}</TableCell>
-                <TableCell align="left">
-                { order.orderStatus == 1 ? <Typography variant="body1" sx={{color: '#3f51b5'}}>Đang chờ xử lý</Typography>
-                    : order.orderStatus == 2 ? <Typography variant="body1" sx={{color: '#b2a429'}}>Đang chờ giao</Typography>
-                    : order.orderStatus == 3 ? <Typography variant="body1" sx={{color: '#b23c17'}}>Đang giao</Typography>
-                    : order.orderStatus == 4 ? <Typography variant="body1" sx={{color: '#618833'}}>Đã giao</Typography>
-                    : order.orderStatus == 5 ? <Typography variant="body1" sx={{color: '#00a152'}}>Đã hoàn thành</Typography>
-                    : order.orderStatus == -1 ? <Typography variant="body1" sx={{color: '#ab003c'}}>Đã hủy</Typography>
-                    : "Không xác định"}
-                </TableCell>
-                <TableCell align="center">
-                    <Stack spacing={2}>
-                    {order.orderStatus == 2 ? <StartShipComponent order={order} /> : order.orderStatus == 3 ? <ShippedComponent order={order} /> : ""}
-                    <OrderDetailShipperComponent order={order} /></Stack>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer></Box>
+      <Routes>
+
+        <Route path="/info" element={<ShipperInformationPage />} />
+        <Route path="/" element={<ShipperTable />} />
+      </Routes>
+      
+      </Box>
     </>
   );
 }

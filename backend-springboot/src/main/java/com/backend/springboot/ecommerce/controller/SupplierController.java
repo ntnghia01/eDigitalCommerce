@@ -78,4 +78,15 @@ public class SupplierController {
         }
     }
 
+    @PostMapping("/searchByName")
+    public ResponseEntity<List<Supplier>> searchSupplierByName(@RequestBody SupplierRequestDto searchData) {
+        List<Supplier> suppliers;
+        if (searchData.getSupplierName() == "") {
+            suppliers = supplierRepository.findAllSupplier(); // Lấy tất cả sản phẩm nếu searchData rỗng
+        } else {
+            suppliers = supplierRepository.findSupplierByName(searchData.getSupplierName());
+        }
+        return new ResponseEntity<>(suppliers, HttpStatus.OK);
+    }
+
 }

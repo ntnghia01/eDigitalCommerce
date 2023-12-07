@@ -39,6 +39,15 @@ export const deleteBrand = createAsyncThunk (
     }
 )
 
+export const searchBrandByName = createAsyncThunk (
+    'brand/searchByName',
+    async (searchData) => {
+        const response = await axios.post(prefixAPI + '/api/brand/searchByName', searchData);
+        console.log("ok");
+        return response.data;
+    }
+)
+
 const brandSlice = createSlice ({
     name: 'brands', // not important
     initialState,
@@ -46,6 +55,9 @@ const brandSlice = createSlice ({
     extraReducers: (builder) => {
         builder
             .addCase(fetchBrands.fulfilled, (state, action) => {
+                state.brands = action.payload;
+            })
+            .addCase(searchBrandByName.fulfilled, (state, action) => {
                 state.brands = action.payload;
             })
     }

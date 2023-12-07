@@ -32,7 +32,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { countCartDetail } from "../../slices/cartSlice";
 import { deleteCustomerInfo, getCustomerInfo } from "../../slices/customerSlice";
-import { searchProductByName } from "../../slices/productSlice";
+import { searchProductAvailable, searchProductByName } from "../../slices/productSlice";
 import { getOrderCountByCustomerId } from "../../slices/orderSlice";
 import { Grid } from "@mui/material";
 
@@ -157,7 +157,7 @@ export default function CustomerTopBar() {
     setInputChat(e.target.value);
     console.log(e.target.value);
     const searchData = { proName: e.target.value };
-    dispatch(searchProductByName(searchData));
+    dispatch(searchProductAvailable(searchData));
   };
   const products = useSelector((state) => state.product.products);
 
@@ -185,7 +185,7 @@ export default function CustomerTopBar() {
       // console.log(event.results[0][0]);
       setInputChat(transcript);
       const searchData = { proName: transcript };
-      dispatch(searchProductByName(searchData));
+      dispatch(searchProductAvailable(searchData));
       setIsListening(false);
     };
 

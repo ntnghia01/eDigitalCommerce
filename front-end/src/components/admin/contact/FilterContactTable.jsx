@@ -35,12 +35,21 @@ import { DataGrid } from "@mui/x-data-grid";
 import { fetchCategories } from "../../../slices/categorySlice";
 import { useEffect } from "react";
 import DataGridDemo from "../../../components/admin/Category/CategoryDataTable";
+import { searchContact } from "../../../slices/contactSlice";
 
 // import Component
 
 // example data
 
 export default function FilterContactTable() {
+  const dispatch = useDispatch();
+
+  const changeSearchData = (e) => {
+    e.preventdefault;
+    console.log(e.target.value);
+    const searchData = { contactContent: e.target.value };
+    dispatch(searchContact(searchData));
+  };
   return (
     <>
       <Grid
@@ -113,7 +122,7 @@ export default function FilterContactTable() {
               label="Tìm kiếm"
               variant="outlined"
               size="small"
-              // onChange={handleSearch} // Bạn cần triển khai hàm xử lý tìm kiếm tại đây
+              onChange={e=>{changeSearchData(e)}}
             />
             <IconButton type="submit" aria-label="search">
               <SearchIcon />

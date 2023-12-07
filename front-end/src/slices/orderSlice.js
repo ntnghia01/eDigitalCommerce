@@ -89,6 +89,22 @@ export const lookupOrder = createAsyncThunk (
     }
 );
 
+export const searchOrderByUserName = createAsyncThunk (
+    'order/searchByUserName',
+    async (searchData) => {
+        const response = await axios.post(prefixAPI + '/api/order/searchByUserName', searchData);
+        return response.data;
+    }
+)
+
+export const searchOrderHistory = createAsyncThunk (
+    'orderHistory/search',
+    async (searchData) => {
+        const response = await axios.post(prefixAPI + '/api/order/history/search', searchData);
+        return response.data;
+    }
+)
+
 const orderSlice = createSlice ({
     name: 'order',
     initialState,
@@ -112,6 +128,12 @@ const orderSlice = createSlice ({
             })
             .addCase(lookupOrder.fulfilled, (state, action) => {
                 state.lookedUpOrder = action.payload;
+            })
+            .addCase(searchOrderByUserName.fulfilled, (state, action) => {
+                state.orders = action.payload;
+            })
+            .addCase(searchOrderHistory.fulfilled, (state, action) => {
+                state.orderHistory = action.payload;
             })
     }
 })

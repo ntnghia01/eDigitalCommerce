@@ -30,7 +30,7 @@ function App() {
           {/* <Route path='/signup' element={<CustomerSignupPage />}></Route> */}
           <Route path='/admin/*' element={<Admin />}></Route>
           <Route path="/admin/login" element={<AdminLoginPage />} />
-          <Route path="/shipper" element={<Shipper />} />
+          <Route path="/shipper/*" element={<Shipper />} />
           <Route path="/shipper/login" element={<ShipperLoginPage />} />
         </Routes>
       </BrowserRouter>

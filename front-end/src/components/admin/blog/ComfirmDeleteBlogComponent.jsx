@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import { deleteBrand, fetchBrands } from '../../../slices/brandSlice';
 import { deleteSupplier, fetchSuppliers } from '../../../slices/supplierSlice';
 import { deleteProduct, fetchProducts } from '../../../slices/productSlice';
+import { deleteBlog, fetchBlogs } from '../../../slices/blogSlice';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -48,16 +49,16 @@ export default function ConfirmDeleteBlogComponent(props) {
   const dispatch = useDispatch();
   const handleSubmit = (e) => {
     e.preventDefault();
-    // dispatch(deleteProduct(props.deleteID))
-    //   .then(() => {
-    //     dispatch(fetchProducts());
-    //     setOpen(false);
-    //     handleOpenSuccessSnackbar();
-    //     console.log('Delete product successfully');
-    //   })
-    //   .catch((error) => {
-    //     console.log("Delete product failed");
-    //   });
+    dispatch(deleteBlog(blog.blogId))
+      .then(() => {
+        dispatch(fetchBlogs());
+        setOpen(false);
+        handleOpenSuccessSnackbar();
+        console.log('Delete blog successfully');
+      })
+      .catch((error) => {
+        console.log("Delete blog failed");
+      });
   }
 
   return (

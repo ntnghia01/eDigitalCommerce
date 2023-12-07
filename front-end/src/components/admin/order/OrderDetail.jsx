@@ -14,7 +14,8 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
-import CheckIcon from '@mui/icons-material/Check';
+import CheckIcon from "@mui/icons-material/Check";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 // import Icons
 import AddIcon from "@mui/icons-material/Add";
@@ -159,7 +160,18 @@ export default function OrderDetail(props) {
                   Người duyệt:{" "}
                   {order.admin != null ? order.admin.userName : "Trống"}
                 </div>
-                <div>Mã đơn hàng: {order.orderCode}</div>
+                <div>
+                  Mã đơn hàng: {order.orderCode}{" "}
+                  <IconButton
+                    onClick={() =>
+                      navigator.clipboard.writeText(order.orderCode)
+                    }
+                    aria-label="Copy order code"
+                    size="small"
+                  >
+                    <ContentCopyIcon fontSize="small" />
+                  </IconButton>
+                </div>
                 <div>Thời gian đặt hàng: {formatDateTime(order.orderTime)}</div>
                 <div>Tên người nhận: {order.orderName}</div>
                 <div>Số điện thoại người nhận: {order.orderPhone}</div>
@@ -238,25 +250,69 @@ export default function OrderDetail(props) {
                     </Grid>
                   </Grid>
                 ))}
-                
-                
               </Stack>
-              <Stack spacing={3} sx={{marginTop: 10}}>
-                  <h4>Phí giao hàng: {formatNumberWithCommas(order.orderShipFee)}đ</h4>
-                  <h4>
-                    Tổng tiền: {formatNumberWithCommas(order.orderTotalAmount)}đ
-                  </h4>
-                  <h4>
-                    Trạng thái: 
-                    { order.orderStatus == 1 ? <Typography variant="body1" sx={{color: '#3f51b5', display: 'inline'}}> Đang chờ xử lý</Typography>
-                    : order.orderStatus == 2 ? <Typography variant="body1" sx={{color: '#b2a429', display: 'inline'}}> Đang chờ giao</Typography>
-                    : order.orderStatus == 3 ? <Typography variant="body1" sx={{color: '#b23c17', display: 'inline'}}> Đang giao</Typography>
-                    : order.orderStatus == 4 ? <Typography variant="body1" sx={{color: '#618833', display: 'inline'}}> Đã giao</Typography>
-                    : order.orderStatus == 5 ? <Typography variant="body1" sx={{color: '#00a152', display: 'inline'}}> Đã hoàn thành</Typography>
-                    : order.orderStatus == -1 ? <Typography variant="body1" sx={{color: '#ab003c', display: 'inline'}}> Đã hủy</Typography>
-                    : "Không xác định"}
-                    </h4>
-                </Stack>
+              <Stack spacing={3} sx={{ marginTop: 10 }}>
+                <h4>
+                  Phí giao hàng: {formatNumberWithCommas(order.orderShipFee)}đ
+                </h4>
+                <h4>
+                  Tổng tiền: {formatNumberWithCommas(order.orderTotalAmount)}đ
+                </h4>
+                <h4>
+                  Trạng thái:
+                  {order.orderStatus == 1 ? (
+                    <Typography
+                      variant="body1"
+                      sx={{ color: "#3f51b5", display: "inline" }}
+                    >
+                      {" "}
+                      Đang chờ xử lý
+                    </Typography>
+                  ) : order.orderStatus == 2 ? (
+                    <Typography
+                      variant="body1"
+                      sx={{ color: "#b2a429", display: "inline" }}
+                    >
+                      {" "}
+                      Đang chờ giao
+                    </Typography>
+                  ) : order.orderStatus == 3 ? (
+                    <Typography
+                      variant="body1"
+                      sx={{ color: "#b23c17", display: "inline" }}
+                    >
+                      {" "}
+                      Đang giao
+                    </Typography>
+                  ) : order.orderStatus == 4 ? (
+                    <Typography
+                      variant="body1"
+                      sx={{ color: "#618833", display: "inline" }}
+                    >
+                      {" "}
+                      Đã giao
+                    </Typography>
+                  ) : order.orderStatus == 5 ? (
+                    <Typography
+                      variant="body1"
+                      sx={{ color: "#00a152", display: "inline" }}
+                    >
+                      {" "}
+                      Đã hoàn thành
+                    </Typography>
+                  ) : order.orderStatus == -1 ? (
+                    <Typography
+                      variant="body1"
+                      sx={{ color: "#ab003c", display: "inline" }}
+                    >
+                      {" "}
+                      Đã hủy
+                    </Typography>
+                  ) : (
+                    "Không xác định"
+                  )}
+                </h4>
+              </Stack>
             </Grid>
           </Grid>
         </DialogContent>

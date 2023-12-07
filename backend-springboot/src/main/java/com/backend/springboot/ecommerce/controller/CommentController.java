@@ -98,4 +98,15 @@ public class CommentController {
         List<Comment> comments = commentRepository.findCommentByProductID(proId);
         return new ResponseEntity<List<Comment>>(comments, HttpStatus.OK);
     }
+
+    @PostMapping("/searchByContent")
+    public ResponseEntity<List<Comment>> searchCommentByContent(@RequestBody CommentRequestDto searchData) {
+        List<Comment> comments;
+        if (searchData.getCmtContent() == "") {
+            comments = commentRepository.findComments(); // Lấy tất cả sản phẩm nếu searchData rỗng
+        } else {
+            comments = commentRepository.findCommentByContent(searchData.getCmtContent());
+        }
+        return new ResponseEntity<>(comments, HttpStatus.OK);
+    }
 }

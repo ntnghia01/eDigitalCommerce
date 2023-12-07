@@ -24,6 +24,14 @@ export const reviewOrder = createAsyncThunk (
     }
 );
 
+export const searchReviewByContent = createAsyncThunk (
+    'review/searchByContent',
+    async (searchData) => {
+        const response = await axios.post(prefixAPI + '/api/review/searchByContent', searchData);
+        return response.data;
+    }
+)
+
 
 
 const reviewSlice = createSlice ({
@@ -33,6 +41,9 @@ const reviewSlice = createSlice ({
     extraReducers: (builder) => {
         builder
             .addCase(fetchReviews.fulfilled, (state, action) => {
+                state.reviews = action.payload;
+            })
+            .addCase(searchReviewByContent.fulfilled, (state, action) => {
                 state.reviews = action.payload;
             })
     }

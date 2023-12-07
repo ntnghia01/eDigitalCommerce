@@ -16,7 +16,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 // import Icons
 import UpdateIcon from "@mui/icons-material/Update";
-import { FormControl, FormControlLabel, Radio, RadioGroup, Select, Stack, TextField } from "@mui/material";
+import { Box, FormControl, FormControlLabel, Radio, RadioGroup, Select, Stack, TextField, Typography } from "@mui/material";
 import FormLabel from '@mui/material/FormLabel';
 import { useDispatch, useSelector } from "react-redux";
 import { editBrand, fetchBrands } from "../../../slices/brandSlice";
@@ -96,7 +96,7 @@ export default function ProductEditForm(props) {
     proName: proName,
     proPrice: proPrice,
     proDesc: proDesc,
-    // proQuantity: proQuantity,
+    proQuantity: proQuantity,
     cateId: proCategory,
     brandId: proBrand,
     proStatus: proStatus,
@@ -247,7 +247,8 @@ export default function ProductEditForm(props) {
             loading="lazy"
             style={{width: "100px", height: "100px"}}
           />
-            <Button
+          
+            {/* <Button
               component="label"
               variant="contained"
               style={{ marginTop: 20 }}
@@ -260,9 +261,9 @@ export default function ProductEditForm(props) {
                   setImage(e.target.files[0]);
                 }}
               />
-            </Button>
+            </Button> */}
           </Stack>
-          <StandardImageList />
+          {/* <StandardImageList proId={proId}/> */}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleSubmit}>Xác nhận</Button>

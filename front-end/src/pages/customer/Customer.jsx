@@ -38,6 +38,7 @@ import SlideShowComponent from "../../components/customer/SlideShowComponent";
 import BlogPage from "./blog/BlogPage";
 import ContactPage from "./contact/ContactPage";
 import LookupPage from "./lookup/LookupPage";
+import BlogDetailPage from "./blog/BlogDetailPage";
 
 const actions = [
   { icon: <FileCopyIcon />, name: "Copy" },
@@ -98,6 +99,9 @@ export default function CustomerPage() {
         <CustomerTopBar />
         <CategoryListComponent key={1}/>
         <BrandListComponent key={2}/>
+        <Routes>
+              <Route path="/" element={<SlideShowComponent />} />
+            </Routes>
         {/* <SlideShowComponent key={3}/> */}
         <Grid container spacing={2} sx={{marginTop: 1}}>
           <Grid item xs={2} sm={0} md={0} lg={0}></Grid>
@@ -112,24 +116,16 @@ export default function CustomerPage() {
               <Route path="/" element={<ProductListComponent />} />
               <Route path="/login" element={<CustomerLoginPage />} />
               <Route path="/signup" element={<CustomerSignupPage />} />
-              <Route
-                path="/product/detail/:proId"
-                element={<ProductDetail />}
-              />
+              <Route path="/product/detail/:proId" element={<ProductDetail />} />
               <Route path="/cart/:customerId" element={<Cart />} />
               <Route path="/checkout/:customerId" element={<CheckoutPage />} />
-              <Route
-                path="/history/:customerId"
-                element={<OrderHistoryPage />}
-              />
-              <Route
-                path="/successfulpayment"
-                element={<SuccessfulPaymentPage />}
-              />
+              <Route path="/history/:customerId" element={<OrderHistoryPage />} />
+              <Route path="/successfulpayment" element={<SuccessfulPaymentPage />} />
               <Route path="/personal" element={<PersonalPage />} />
               <Route path="/blog" element={<BlogPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/lookup" element={<LookupPage />} />
+              <Route path="/blog/:blogId" element={<BlogDetailPage />} />
             </Routes>
             
             <Box>

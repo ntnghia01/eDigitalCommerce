@@ -24,6 +24,14 @@ export const fetchImportDetails = createAsyncThunk (
     }
 )
 
+export const searchImportBySupplierName = createAsyncThunk (
+    'import/searchByName',
+    async (searchData) => {
+        const response = await axios.post(prefixAPI + '/api/import/searchBySupplierName', searchData);
+        return response.data;
+    }
+)
+
 export const addImport = createAsyncThunk (
     'import/add',
     async ({importData, importDetailData}) => {
@@ -61,6 +69,9 @@ const importSlice = createSlice ({
             })
             .addCase(fetchImportDetails.fulfilled, (state, action) => {
                 state.importDetails = action.payload;
+            })
+            .addCase(searchImportBySupplierName.fulfilled, (state, action) => {
+                state.imports = action.payload;
             })
     }
 });

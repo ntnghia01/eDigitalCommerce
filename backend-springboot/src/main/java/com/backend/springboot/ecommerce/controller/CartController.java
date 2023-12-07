@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.springboot.ecommerce.entity.Cart;
 import com.backend.springboot.ecommerce.entity.CartDetail;
+import com.backend.springboot.ecommerce.entity.Order;
 import com.backend.springboot.ecommerce.entity.Product;
 import com.backend.springboot.ecommerce.payload.request.CartDetailRequestDto;
+import com.backend.springboot.ecommerce.payload.request.OrderRequestDto;
 import com.backend.springboot.ecommerce.payload.response.CartResponseDto;
 import com.backend.springboot.ecommerce.payload.response.MessageResponse;
 import com.backend.springboot.ecommerce.repository.CartDetailRepository;
@@ -119,6 +121,17 @@ public class CartController {
         cartResponseDto.setTotalQuantityItem(totalQuantityItem);
         
         return ResponseEntity.ok(cartResponseDto);
+    }
+
+    @PostMapping("/cartDetail/search")
+    public ResponseEntity<List<CartDetail>> searchCart(@RequestBody CartDetailRequestDto searchData) {
+        List<CartDetail> cartDetails;
+        if (searchData.getSearch() == "") {
+            cartDetails = cartDetailRepository.findCartDetailByCustomerID(searchData.getCartId());
+        } else {
+            cartDetails = cartDetailRepository.searchCartDetail(searchData.getCartId(), searchData.getSearch());
+        }
+        return new ResponseEntity<>(cartDetails, HttpStatus.OK);
     }
 
 }

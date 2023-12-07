@@ -35,6 +35,14 @@ export const getProductDetail = createAsyncThunk (
     }
 )
 
+export const searchProductAvailable = createAsyncThunk (
+    'productAvailable/search',
+    async (searchData) => {
+        const response = await axios.post(prefixAPI + '/api/product/available/search', searchData);
+        return response.data;
+    }
+)
+
 export const addProduct = createAsyncThunk (
     'product/add',
     async (productData) => {
@@ -159,6 +167,12 @@ const productSlice = createSlice ({
             })
             .addCase(getProductByBrand.fulfilled, (state, action) => {
                 state.productByBrand = action.payload;
+            })
+            .addCase(addProduct.fulfilled, (state, action) => {
+                state.productByBrand = action.payload;
+            })
+            .addCase(searchProductAvailable.fulfilled, (state, action) => {
+                state.products = action.payload;
             })
     }
 });

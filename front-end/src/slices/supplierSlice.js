@@ -39,6 +39,14 @@ export const deleteSupplier = createAsyncThunk (
     }
 )
 
+export const searchSupplierByName = createAsyncThunk (
+    'supplier/searchByName',
+    async (searchData) => {
+        const response = await axios.post(prefixAPI + '/api/supplier/searchByName', searchData);
+        return response.data;
+    }
+)
+
 const supplierSlice = createSlice ({
     name: 'suppliers',
     initialState,
@@ -46,6 +54,9 @@ const supplierSlice = createSlice ({
     extraReducers: (builder) => {
         builder
             .addCase(fetchSuppliers.fulfilled, (state, action) => {
+                state.suppliers = action.payload;
+            })
+            .addCase(searchSupplierByName.fulfilled, (state, action) => {
                 state.suppliers = action.payload;
             })
     }

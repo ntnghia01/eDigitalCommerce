@@ -15,4 +15,7 @@ public interface CartDetailRepository extends JpaRepository<CartDetail, Integer>
 
     @Query("SELECT c FROM CartDetail c WHERE c.cart.user.userId = :customerId")
     List<CartDetail> findCartDetailByCustomerID(@Param("customerId") int customerId);
+
+    @Query("SELECT o FROM CartDetail o WHERE o.cart.cartId = :cartId AND (o.product.proName LIKE %:search% OR o.product.category.cateName LIKE %:search% OR o.product.brand.brandName LIKE %:search%)")
+    List<CartDetail> searchCartDetail(@Param("cartId") int cartId, @Param("search") String search);
 }

@@ -24,8 +24,9 @@ import com.backend.springboot.ecommerce.entity.User;
 import com.backend.springboot.ecommerce.entity.Order;
 import com.backend.springboot.ecommerce.entity.OrderDetail;
 import com.backend.springboot.ecommerce.entity.Payment;
-import com.backend.springboot.ecommerce.entity.Product;
+import com.backend.springboot.ecommerce.entity.Supplier;
 import com.backend.springboot.ecommerce.payload.request.OrderRequestDto;
+import com.backend.springboot.ecommerce.payload.request.SupplierRequestDto;
 import com.backend.springboot.ecommerce.payload.response.MessageResponse;
 import com.backend.springboot.ecommerce.payload.response.OrderResponseDto;
 import com.backend.springboot.ecommerce.repository.CartDetailRepository;
@@ -73,6 +74,17 @@ public class OrderController {
     public ResponseEntity<List<Order>> getOrderByCustomerId(@PathVariable Integer customerId) {
         List<Order> orders = orderRepository.findOrderByCustomerID(customerId);
         return new ResponseEntity<List<Order>>(orders, HttpStatus.OK);
+    }
+
+    @PostMapping("/history/search")
+    public ResponseEntity<List<Order>> searchOrderHistory(@RequestBody OrderRequestDto searchData) {
+        List<Order> orders;
+        if (searchData.getOrderCode() == "") {
+            orders = orderRepository.findOrderByCustomerID(searchData.getCustomerId());
+        } else {
+            orders = orderRepository.searchOrder(searchData.getCustomerId(), searchData.getOrderCode());
+        }
+        return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
     @PostMapping
@@ -199,6 +211,17 @@ public class OrderController {
         return new ResponseEntity<List<Order>>(orders, HttpStatus.OK);
     }
 
+    @PostMapping("/byShipperId/search")
+    public ResponseEntity<List<Order>> searchOrderByShipperID(@RequestBody OrderRequestDto searchData) {
+        List<Order> orders;
+        if (searchData.getOrderCode() == "") {
+            orders = orderRepository.findOrderByShipperID(searchData.getShipperId());
+        } else {
+            orders = orderRepository.searchOrderByShipperId(searchData.getShipperId(), searchData.getOrderCode());
+        }
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
+
     @PutMapping("/confirmPayment/{orderId}")
     public ResponseEntity<?> confirmPayment(@PathVariable Integer orderId) {
         Optional<Order> orderOptional = orderRepository.findById(orderId);
@@ -239,7 +262,16 @@ public class OrderController {
         }
     }
 
-
+    @PostMapping("/searchByUserName")
+    public ResponseEntity<List<Order>> searchOrderByUserName(@RequestBody OrderRequestDto searchData) {
+        List<Order> orders;
+        if (searchData.getOrderName() == "") {
+            orders = orderRepository.findAll(); // Lấy tất cả sản phẩm nếu searchData rỗng
+        } else {
+            orders = orderRepository.findOrderByUserName(searchData.getOrderName());
+        }
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
 
 
 }

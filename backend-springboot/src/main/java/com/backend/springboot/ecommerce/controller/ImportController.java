@@ -14,14 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-// import com.backend.springboot.ecommerce.entity.Admin;
 import com.backend.springboot.ecommerce.entity.Import;
 import com.backend.springboot.ecommerce.entity.Supplier;
 import com.backend.springboot.ecommerce.entity.User;
 import com.backend.springboot.ecommerce.payload.request.ImportRequestDto;
 import com.backend.springboot.ecommerce.payload.response.ImportResponseDto;
 import com.backend.springboot.ecommerce.payload.response.MessageResponse;
-// import com.backend.springboot.ecommerce.repository.AdminRepository;
 import com.backend.springboot.ecommerce.repository.ImportRepository;
 import com.backend.springboot.ecommerce.repository.SupplierRepository;
 import com.backend.springboot.ecommerce.repository.UserRepository;
@@ -70,5 +68,16 @@ public class ImportController {
         } else {
             return new ResponseEntity<>(new MessageResponse("Supplier or Admin not found!"), HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PostMapping("/searchBySupplierName")
+    public ResponseEntity<List<Import>> searchImportByName(@RequestBody ImportRequestDto searchData) {
+        List<Import> imports;
+        if (searchData.getSupplierName() == "") {
+            imports = importRepository.findAllImport(); // Lấy tất cả sản phẩm nếu searchData rỗng
+        } else {
+            imports = importRepository.findImportBySupplierName(searchData.getSupplierName());
+        }
+        return new ResponseEntity<>(imports, HttpStatus.OK);
     }
 }

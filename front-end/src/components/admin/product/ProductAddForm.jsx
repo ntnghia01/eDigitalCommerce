@@ -6,7 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import AddIcon from "@mui/icons-material/Add";
-import { Select, Stack, TextField } from "@mui/material";
+import { Box, Select, Stack, TextField, Typography } from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import InputLabel from "@mui/material/InputLabel";
@@ -21,6 +21,8 @@ import { fetchCategories } from "../../../slices/categorySlice";
 import { fetchBrands } from "../../../slices/brandSlice";
 import { addProduct, fetchProducts } from "../../../slices/productSlice";
 import StandardImageList from "./ProductImageList";
+import { useState } from "react";
+import { addImage } from "../../../slices/imageSlice";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -93,16 +95,85 @@ export default function ProductAddForm() {
       image: image,
     };
     console.log(newProduct);
+    console.log(imagesDetail);
+    // dispatch(addProduct(newProduct))
+    //   .then(() => {
+    //     // add image
+    //     const proId = resultAction.payload.productObject.proId;
+    //     dispatch(addImage({ proId, image: imageData }));
+
+    //     dispatch(fetchProducts());
+    //     handleOpenSnackbar();
+    //     console.log("Thêm sản phẩm thành công!");
+    //     setOpen(false);
+    //   })
+    //   .catch((error) => {
+    //     console.log("Thêm thất bại: " + error);
+    //   });
     dispatch(addProduct(newProduct))
-      .then(() => {
-        dispatch(fetchProducts());
-        handleOpenSnackbar();
-        console.log("Thêm sản phẩm thành công!");
-        setOpen(false);
-      })
-      .catch((error) => {
-        console.log("Thêm thất bại: " + error);
-      });
+  .then((resultAction) => {
+    // Lấy proId từ response của addProduct
+    const proId = resultAction.payload.productObject.proId;
+
+    // Tạo một mảng promises để lưu trữ các hàm addImage cho từng image trong imagesDetail
+    const addImagePromises = imagesDetail.map((item) => {
+      return dispatch(addImage({ proId, image: item.file }));
+    });
+
+    // Sử dụng Promise.all để đợi tất cả các hàm addImage hoàn thành
+    return Promise.all(addImagePromises);
+  })
+  .then(() => {
+    // Thực hiện các thao tác sau khi đã thêm hình ảnh thành công
+    dispatch(fetchProducts());
+    handleOpenSnackbar();
+    console.log("Thêm sản phẩm và hình ảnh thành công!");
+    setOpen(false);
+  })
+  .catch((error) => {
+    console.log("Thêm sản phẩm hoặc hình ảnh thất bại: " + error);
+  });
+
+  };
+
+  const [imageURL, setImageURL] = useState("");
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const uploadedImageURL = e.target.result;
+        setImageURL(uploadedImageURL);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const [imagesDetail, setImagesDetail] = useState([]);
+
+  // const handleImageUploadDetail = (files) => {
+  //   const updatedImagesDetail = [...imagesDetail];
+  //   for (let i = 0; i < files.length; i++) {
+  //     const reader = new FileReader();
+  //     reader.onload = (e) => {
+  //       const uploadedImageURL = e.target.result;
+  //       updatedImagesDetail.push({ image: uploadedImageURL });
+  //       setImagesDetail(updatedImagesDetail);
+  //     };
+  //     reader.readAsDataURL(files[i]);
+  //   }
+  // };
+
+  const handleImageUploadDetail = (files) => {
+    const updatedImagesDetail = [...imagesDetail];
+  
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      updatedImagesDetail.push({ file }); // Lưu trữ file vào mảng imagesDetail
+    }
+  
+    setImagesDetail(updatedImagesDetail);
   };
 
   return (
@@ -218,11 +289,36 @@ export default function ProductAddForm() {
               Upload hình ảnh chính
               <VisuallyHiddenInput
                 type="file"
+                accept="image/*"
                 onChange={(e) => {
                   setImage(e.target.files[0]);
+                  handleImageUpload(e);
                 }}
               />
             </Button>
+            {imageURL && (
+              <Box
+                mt={2}
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+              >
+                <Typography variant="subtitle1">Hình ảnh chính:</Typography>
+                {imageURL && (
+                  <img
+                    src={imageURL}
+                    alt="Uploaded"
+                    style={{
+                      maxWidth: "20%",
+                      marginTop: "8px",
+                      marginLeft: "auto",
+                      marginRight: "auto",
+                      display: "block",
+                    }}
+                  />
+                )}
+              </Box>
+            )}
             <Button
               component="label"
               variant="contained"
@@ -232,11 +328,63 @@ export default function ProductAddForm() {
               Upload hình ảnh liên quan
               <VisuallyHiddenInput
                 type="file"
+                accept="image/*"
+                multiple
                 onChange={(e) => {
-                  setImage(e.target.files[0]);
+                  const files = e.target.files;
+                  handleImageUploadDetail(files);
                 }}
               />
             </Button>
+            {/* {imagesDetail.map((item, index) => (
+              <Box
+                key={index}
+                mt={2}
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+              >
+                <Typography variant="subtitle1">
+                  Hình ảnh {index + 1}:
+                </Typography>
+                <img
+                  src={item.image}
+                  alt={`Uploaded ${index + 1}`}
+                  style={{
+                    maxWidth: "20%",
+                    marginTop: "8px",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    display: "block",
+                  }}
+                />
+              </Box>
+            ))} */}
+            {imagesDetail.map((item, index) => (
+  <Box
+    key={index}
+    mt={2}
+    display="flex"
+    flexDirection="column"
+    alignItems="center"
+  >
+    <Typography variant="subtitle1">
+      Hình ảnh {index + 1}:
+    </Typography>
+    <img
+      src={URL.createObjectURL(item.file)}
+      alt={`Uploaded ${index + 1}`}
+      style={{
+        maxWidth: "20%",
+        marginTop: "8px",
+        marginLeft: "auto",
+        marginRight: "auto",
+        display: "block",
+      }}
+    />
+  </Box>
+))}
+
           </Stack>
           {/* <StandardImageList /> */}
         </DialogContent>

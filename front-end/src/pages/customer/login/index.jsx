@@ -38,7 +38,7 @@ export default function CustomerLoginPage() {
           dispatch(getOrderCountByCustomerId(localStorage.getItem("customerID")));
           dispatch(getCustomerInfo(localStorage.getItem("customerID")));
         } else {
-          alert("Sai TK hoặc MK")
+          alert("Sai tài khoản & mật khẩu hoặc tài khoản đã bị khóa")
         }
         console.log("Đăng nhập thành công");
       })

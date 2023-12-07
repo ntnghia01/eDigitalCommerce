@@ -5,6 +5,7 @@ import Chip from "@mui/material/Chip";
 import InputBase from "@mui/material/InputBase";
 
 import MuiAlert from "@mui/material/Alert";
+import { Slide } from "@mui/material";
 
 export const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     const backgroundColor =
@@ -89,4 +90,8 @@ export const VisuallyHiddenInput = styled('input')({
   left: 0,
   whiteSpace: 'nowrap',
   width: 1,
+});
+
+export const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
 });

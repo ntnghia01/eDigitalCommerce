@@ -36,4 +36,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("SELECT u FROM User u WHERE u.userRole = 3 and u.userStatus <> -1")
     List<User> findAllShipper();
 
+    @Query("SELECT b FROM User b WHERE (b.userName LIKE %:search% OR b.userPhone LIKE %:search% OR b.userEmail LIKE %:search%) AND b.userRole = :userRole AND b.userStatus <> -1")
+    List<User> findUserFollowRole(@Param("search") String search, @Param("userRole") Integer userRole);
+
 }

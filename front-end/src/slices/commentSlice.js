@@ -49,6 +49,14 @@ export const activeComment = createAsyncThunk (
     }
 );
 
+export const searchCommentByContent = createAsyncThunk (
+    'comment/searchByContent',
+    async (searchData) => {
+        const response = await axios.post(prefixAPI + '/api/comment/searchByContent', searchData);
+        return response.data;
+    }
+)
+
 
 const commentSlice = createSlice ({
     name: 'comment',
@@ -60,6 +68,9 @@ const commentSlice = createSlice ({
                 state.comments = action.payload;
             })
             .addCase(fetchComments.fulfilled, (state, action) => {
+                state.comments = action.payload;
+            })
+            .addCase(searchCommentByContent.fulfilled, (state, action) => {
                 state.comments = action.payload;
             })
     }

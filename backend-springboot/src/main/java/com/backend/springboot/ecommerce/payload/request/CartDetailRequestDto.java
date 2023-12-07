@@ -9,4 +9,5 @@ public class CartDetailRequestDto {
     private Integer proId;
     private Integer cartDetailQuantity;
     private Integer customerId;
+    private String search;
 }

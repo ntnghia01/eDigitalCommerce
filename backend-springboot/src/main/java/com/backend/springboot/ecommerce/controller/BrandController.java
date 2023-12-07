@@ -5,10 +5,10 @@ import com.backend.springboot.ecommerce.repository.BrandRepository;
 
 import com.backend.springboot.ecommerce.entity.Brand;
 import com.backend.springboot.ecommerce.payload.request.BrandRequestDto;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -89,5 +89,15 @@ public class BrandController {
     //         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     //     }
     // }
+    @PostMapping("/searchByName")
+    public ResponseEntity<List<Brand>> searchBrandByName(@RequestBody BrandRequestDto searchData) {
+        List<Brand> brands;
+        if (searchData.getBrandName() == "") {
+            brands = brandRepository.findAllBrand(); // Lấy tất cả sản phẩm nếu searchData rỗng
+        } else {
+            brands = brandRepository.findBrandByName(searchData.getBrandName());
+        }
+        return new ResponseEntity<>(brands, HttpStatus.OK);
+    }
 
 }

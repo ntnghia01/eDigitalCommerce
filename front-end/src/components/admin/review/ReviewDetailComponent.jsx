@@ -9,9 +9,10 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 import RateReviewIcon from '@mui/icons-material/RateReview';
-import { TextField } from "@mui/material";
+import { IconButton, TextField } from "@mui/material";
 import { fetchReviews, reviewOrder } from "../../../slices/reviewSlice";
 import { getOrderByCustomerId } from "../../../slices/orderSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -88,7 +89,15 @@ export default function ReviewDetailComponent (props) {
                     onChange={(e) => setReviewRate(e.target.value)}
                 /> */}
                 <Typography component="legend">Khách hàng: {review.user.userName}</Typography>
-                <Typography component="legend">Mã đơn hàng: {review.order.orderCode}</Typography>
+                <Typography component="legend">Mã đơn hàng: {review.order.orderCode}<IconButton
+                      onClick={() =>
+                        navigator.clipboard.writeText(order.orderCode)
+                      }
+                      aria-label="Copy order code"
+                      size="small"
+                    >
+                      <ContentCopyIcon fontSize="small"/>
+                    </IconButton></Typography>
                 <Typography component="legend">Thời điểm đánh giá: {review.reviewTime}</Typography>
                 <Typography component="legend">Mức đánh giá</Typography>
                 <Rating

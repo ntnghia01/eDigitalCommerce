@@ -7,8 +7,10 @@ import { useSelector, useDispatch } from "react-redux";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from '@mui/material/Typography';
+import CollectionsIcon from '@mui/icons-material/Collections';
 
 import {
+  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -19,9 +21,10 @@ import {
 
 
 
-import { fetchProducts } from "../../../slices/productSlice";
+import { fetchProducts, searchProductByName } from "../../../slices/productSlice";
 import ProductEditForm from "./ProductEditForm";
 import ConfirmDeleteProduct from "./ConfirmDeleteProduct";
+import ProductImageComponent from "./ProductImageComponent";
 
 const formatDateTime = (oriDateTime) => {
     const dateTime = new Date(oriDateTime);
@@ -48,6 +51,7 @@ const uploadDirectory = "D:/Projects/eDigitalCommerce/backend-springboot/src/mai
 
 export default function ProductTable() {
 
+    console.log("Check");
     const dispatch = useDispatch();
     const products = useSelector((state) => state.product.products);
 
@@ -55,6 +59,8 @@ export default function ProductTable() {
         dispatch(fetchProducts());
     }, [dispatch]);
     // console.log(products);
+
+
     return (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -86,7 +92,11 @@ export default function ProductTable() {
                 >
                   <TableCell component="th" scope="row">#{product.proId}</TableCell>
                   <TableCell align="left">{product.proName}</TableCell>
-                  <TableCell align="left"><img src={`http://localhost:9004/api/product/images/${product.proImage}`} alt="" style={{width: "100px", height: "100px"}}/></TableCell>
+                  <TableCell align="left">
+                    <Stack direction="row">
+                    <img src={`http://localhost:9004/api/product/images/${product.proImage}`} alt="" style={{width: "100px", height: "100px"}}/>
+                    <ProductImageComponent product={product} /></Stack>
+                    </TableCell>
                   <TableCell align="right">{formatNumberWithCommas(product.proPrice)}</TableCell>
                   <TableCell align="left">{product.proDesc.slice(0,100)}</TableCell>
                   <TableCell align="right">{product.proQuantity}</TableCell>
@@ -94,10 +104,10 @@ export default function ProductTable() {
                   <TableCell align="left">{product.brand.brandName}</TableCell>
                   <TableCell align="left">
                     {product.proStatus == 1 ? 
-                        <Typography sx={{backgroundColor:'#4caf50', color:'white', paddingLeft: '1rem', borderRadius: '5rem', width: "10vh"}}>Hoạt động</Typography>
+                        <Typography sx={{backgroundColor:'#4caf50', color:'white', textAlign: 'center', borderRadius: '5rem', width: "10vh"}}>Hoạt động</Typography>
                     : product.proStatus == 0 ?
-                        <Typography sx={{backgroundColor:'orange', color:'white', paddingLeft: '0.6rem', borderRadius: '5rem'}}>Vô hiệu hóa</Typography>
-                    :   <Typography sx={{backgroundColor:'#ff3d00', color:'white', paddingLeft: '1rem', borderRadius: '5rem'}}>Đã xóa</Typography>
+                        <Typography sx={{backgroundColor:'orange', color:'white', textAlign: 'center', borderRadius: '5rem'}}>Vô hiệu hóa</Typography>
+                    :   <Typography sx={{backgroundColor:'#ff3d00', color:'white', textAlign: 'center', borderRadius: '5rem'}}>Đã xóa</Typography>
                     }
                     </TableCell>
                   <TableCell align="right">{formatDateTime(product.proCreatedAt)}</TableCell>

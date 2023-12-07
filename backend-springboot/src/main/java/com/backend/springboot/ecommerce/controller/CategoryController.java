@@ -86,4 +86,17 @@ public class CategoryController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @PostMapping("/searchByName")
+    public ResponseEntity<List<Category>> searchCategoryByName(@RequestBody CategoryRequestDto searchData) {
+        List<Category> categories;
+        if (searchData.getCategoryName() == "") {
+            categories = categoryRepository.findAllCategory(); // Lấy tất cả sản phẩm nếu searchData rỗng
+        } else {
+            categories = categoryRepository.findCategoryByName(searchData.getCategoryName());
+        }
+        return new ResponseEntity<>(categories, HttpStatus.OK);
+    }
+
+
 }
