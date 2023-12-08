@@ -2,7 +2,11 @@ import * as React from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { getProductByBrand, getProductByCategory, getProductDetail } from "../../slices/productSlice";
+import {
+  getProductByBrand,
+  getProductByCategory,
+  getProductDetail,
+} from "../../slices/productSlice";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { Button, CardMedia, Stack, TextField, makeStyles } from "@mui/material";
@@ -16,13 +20,20 @@ import Rating from "@mui/material/Rating";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import Paper from '@mui/material/Paper';
-import CommentIcon from '@mui/icons-material/Comment';
-import Avatar from '@mui/material/Avatar';
+import Paper from "@mui/material/Paper";
+import CommentIcon from "@mui/icons-material/Comment";
+import Avatar from "@mui/material/Avatar";
 import { addToCart, countCartDetail } from "../../slices/cartSlice";
 import { useState } from "react";
 import { addComment, fetchCommentByProductID } from "../../slices/commentSlice";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 import ProductImageList from "../../components/admin/product/ProductImageList";
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
@@ -95,7 +106,7 @@ function stringToColor(string) {
     hash = string.charCodeAt(i) + ((hash << 5) - hash);
   }
 
-  let color = '#';
+  let color = "#";
 
   for (i = 0; i < 3; i += 1) {
     const value = (hash >> (i * 8)) & 0xff;
@@ -111,10 +122,9 @@ function stringAvatar(name) {
     sx: {
       bgcolor: stringToColor(name),
     },
-    children: `${name.split(' ')[0][0]}${name.split(' ')[2][0]}`,
+    children: `${name.split(" ")[0][0]}${name.split(" ")[2][0]}`,
   };
 }
-
 
 export default function ProductDetail() {
   console.log("Check render ProductDetail");
@@ -145,24 +155,18 @@ export default function ProductDetail() {
   const { proId } = useParams();
   const product = useSelector((state) => state.product.product);
   useEffect(() => {
-    console.log(proId);
-    dispatch(getProductDetail(proId)).then(() => {
-      // console.log(product);
-      // if(product.category.cateId) {dispatch(getProductByCategory(product.category.cateId))}
-      // if(product.brand.brandId) {dispatch(getProductByBrand(product.brand.brandId))}
-      if(product.category.cateId) {dispatch(getProductByCategory(1))}
-      if(product.brand.brandId) {dispatch(getProductByBrand(1))}
-    });
-    dispatch(fetchCommentByProductID(proId))
-  }, [dispatch]);
-  
+    dispatch(getProductDetail(proId));
+  }, [dispatch, proId]);
 
   useEffect(() => {
-      // dispatch(getProductByCategory(product.category.cateId))
-      // dispatch(getProductByBrand(product.brand.brandId))
-      dispatch(getProductByCategory(1))
-      dispatch(getProductByBrand(1))
-  }, []);
+    if (product.category && product.category.cateId) {
+      dispatch(getProductByCategory(product.category.cateId));
+    }
+    if (product.brand && product.brand.brandId) {
+      dispatch(getProductByBrand(product.brand.brandId));
+    }
+    dispatch(fetchCommentByProductID(proId));
+  }, [dispatch, product, proId]);
 
   const comments = useSelector((state) => state.comment.comments);
   const productByCate = useSelector((state) => state.product.productByCate);
@@ -179,7 +183,7 @@ export default function ProductDetail() {
     dispatch(addToCart(cartDetailData)).then(() => {
       console.log("Thêm vào giỏ thành công");
       handleOpenSnackbar();
-      
+
       dispatch(countCartDetail(localStorage.getItem("customerID")));
     });
     console.log("re-render");
@@ -190,14 +194,14 @@ export default function ProductDetail() {
     const commentData = {
       cmtContent: cmtContent,
       product: proId,
-      customer: localStorage.getItem("customerID")
-    }
+      customer: localStorage.getItem("customerID"),
+    };
     console.log(commentData);
     dispatch(addComment(commentData)).then(() => {
       handleOpenSnackbarComment();
-      dispatch(fetchCommentByProductID(proId))
-    })
-  }
+      dispatch(fetchCommentByProductID(proId));
+    });
+  };
 
   return (
     <>
@@ -240,143 +244,141 @@ export default function ProductDetail() {
                 label="Nhập số lượng muốn mua"
                 type="number"
                 variant="filled"
+                defaultValue={cartDetailQuantity}
                 onChange={(e) => {
                   setCartDetailQuantity(e.target.value);
                 }}
               />
-              <Button variant="outlined" startIcon={<PaymentIcon />}>
-                Mua ngay
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={() => handleAddToCart(product.proId)}
-                startIcon={<ShoppingCartIcon />}
-              >
-                Thêm vào giỏ hàng
-              </Button>
+              {product.proQuantity <= 0 ? (
+                <>
+                  <Button variant="outlined" startIcon={<PaymentIcon />}>
+                    Mua ngay
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    onClick={() => handleAddToCart(product.proId)}
+                    startIcon={<ShoppingCartIcon />}
+                  >
+                    Thêm vào giỏ hàng
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    disabled
+                    variant="outlined"
+                    startIcon={<PaymentIcon />}
+                  >
+                    Mua ngay
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    onClick={() => handleAddToCart(product.proId)}
+                    startIcon={<ShoppingCartIcon />}
+                    disabled
+                  >
+                    Thêm vào giỏ hàng
+                  </Button>
+                </>
+              )}
+
               <Typography variant="body1" gutterBottom>
-                {/* Mô tả: {product.proDesc} */}
-                <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Thông số</TableCell>
-            <TableCell>Chi tiết</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow>
-            <TableCell>Màn hình</TableCell>
-            <TableCell>Super Retina XDR OLED, 6.1 inches</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Hệ điều hành</TableCell>
-            <TableCell>iOS 16</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Bộ nhớ trong</TableCell>
-            <TableCell>128GB / 256GB / 512GB</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>RAM</TableCell>
-            <TableCell>6GB</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Camera chính</TableCell>
-            <TableCell>Triple 12 MP, f/1.6, f/2.2, f/2.4</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Camera selfie</TableCell>
-            <TableCell>12 MP, f/2.2</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Pin</TableCell>
-            <TableCell>Li-Ion 3700 mAh, sạc nhanh 20W</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Màu sắc</TableCell>
-            <TableCell>Đen, Trắng, Xanh, Đỏ</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
+                Mô tả: {product.proDesc}
+
               </Typography>
             </Stack>
           </Grid>
         </Grid>
       </Box>
       <Grid container spacing={2} sx={{ padding: 6 }}>
-          <Grid item xs={9}>
-            <Paper sx={{padding: 3}}>
-              <Typography variant="h6" gutterBottom>
-                Bình luận
-              </Typography>
-              <Stack
-                direction={{ xs: 'column', sm: 'row' }}
-                spacing={{ xs: 1, sm: 2, md: 4 }}
+        <Grid item xs={9}>
+          <Paper sx={{ padding: 3 }}>
+            <Typography variant="h6" gutterBottom>
+              Bình luận
+            </Typography>
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              spacing={{ xs: 1, sm: 2, md: 4 }}
+            >
+              <TextField
+                fullWidth
+                id="outlined-basic"
+                label="Viết bình luận của bạn"
+                variant="outlined"
+                onChange={(e) => setCmtContent(e.target.value)}
+              />
+              <Button
+                size="small"
+                startIcon={<CommentIcon />}
+                variant="contained"
+                sx={{ marginTop: 2 }}
+                onClick={() => handleAddComment()}
               >
-                <TextField fullWidth id="outlined-basic" label="Viết bình luận của bạn" variant="outlined" onChange={(e)=>setCmtContent(e.target.value)}/>
-                <Button size="small" startIcon={<CommentIcon />} variant="contained" sx={{marginTop: 2}} onClick={() => handleAddComment()}>Gửi bình luận</Button>
-              </Stack>
-              
-              <Typography variant="h6" gutterBottom sx={{marginTop: 2}}>
-                {comments.length} bình luận về sản phẩm này
-              </Typography>
-              <Box sx={{marginTop: 2}}>
-                <Stack spacing={2}>
+                Gửi bình luận
+              </Button>
+            </Stack>
 
-                  {comments.map((comment) => (
-                    <Stack key={comment.cmtId} direction="row" spacing={2}>
-                      
-                      {comment.user.userImage == null ? (
-                        <Avatar {...stringAvatar(`${comment.user.userName}`)} />
-                      ) : 
-                      (<Avatar
+            <Typography variant="h6" gutterBottom sx={{ marginTop: 2 }}>
+              {comments.length} bình luận về sản phẩm này
+            </Typography>
+            <Box sx={{ marginTop: 2 }}>
+              <Stack spacing={2}>
+                {comments.map((comment) => (
+                  <Stack key={comment.cmtId} direction="row" spacing={2}>
+                    {comment.user.userImage == null ? (
+                      <Avatar {...stringAvatar(`${comment.user.userName}`)} />
+                    ) : (
+                      <Avatar
                         alt="Remy Sharp"
                         src={`http://localhost:9004/api/product/images/${comment.user.userImage}`}
-                      />)
-                    }
-                      <Stack spacing={1}>
-                        <div><b>{comment.user.userName}</b></div>
-                        <div>{comment.cmtContent}</div>
-                        <div>{formatDateTime(comment.cmtTime)}</div>
-                      </Stack>
-                    </Stack>
-                  ))}
-
-                </Stack>
-              </Box>
-            </Paper>
-          </Grid>
-          <Grid item xs={3}>
-              <Typography variant="h6" gutterBottom>
-                Sản phẩm tương tự
-              </Typography>
-            <Stack spacing={2}>
-              {productByCate.slice(0, 5).map((product) => (
-                <Paper key={product.proId}>
-                  <Grid container>
-                    <Grid item xs={4} sx={{padding: 1}}>
-                      <CardMedia
-                        sx={{ height: "5rem", maxWidth: "5rem" }}
-                        image={`http://localhost:9004/api/product/images/${product.proImage}`}
-                        title="green iguana"
-                        style={{ textAlign: "center" }}
                       />
-                    </Grid>
-                    <Grid item xs={8}>
-                      <Stack spacing={2}>
-                        <div>{product.proName}</div>
-                        <div>{product.proPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</div>
-                      </Stack>
-                    </Grid>
-                  </Grid>
-                </Paper>
-              ))}
-              
-            </Stack>
-          </Grid>
+                    )}
+                    <Stack spacing={1}>
+                      <div>
+                        <b>{comment.user.userName}</b>
+                      </div>
+                      <div>{comment.cmtContent}</div>
+                      <div>{formatDateTime(comment.cmtTime)}</div>
+                    </Stack>
+                  </Stack>
+                ))}
+              </Stack>
+            </Box>
+          </Paper>
         </Grid>
+        <Grid item xs={3}>
+          <Typography variant="h6" gutterBottom>
+            Sản phẩm tương tự
+          </Typography>
+          <Stack spacing={2}>
+            {productByCate.slice(0, 5).map((product) => (
+              <Paper key={product.proId}>
+                <Grid container>
+                  <Grid item xs={4} sx={{ padding: 1 }}>
+                    <CardMedia
+                      sx={{ height: "5rem", maxWidth: "5rem" }}
+                      image={`http://localhost:9004/api/product/images/${product.proImage}`}
+                      title="green iguana"
+                      style={{ textAlign: "center" }}
+                    />
+                  </Grid>
+                  <Grid item xs={8}>
+                    <Stack spacing={2}>
+                      <div>{product.proName}</div>
+                      <div>
+                        {product.proPrice.toLocaleString("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        })}
+                      </div>
+                    </Stack>
+                  </Grid>
+                </Grid>
+              </Paper>
+            ))}
+          </Stack>
+        </Grid>
+      </Grid>
 
       <Snackbar
         open={openSnackbar}

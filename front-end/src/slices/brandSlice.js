@@ -48,6 +48,14 @@ export const searchBrandByName = createAsyncThunk (
     }
 )
 
+export const fetchBrandsAvailable = createAsyncThunk(
+    'brands/fetchBrandsAvailable',
+    async () => {
+        const response = await axios.get(prefixAPI + '/api/brand/available');
+        return response.data;
+    }
+);
+
 const brandSlice = createSlice ({
     name: 'brands', // not important
     initialState,
@@ -58,6 +66,9 @@ const brandSlice = createSlice ({
                 state.brands = action.payload;
             })
             .addCase(searchBrandByName.fulfilled, (state, action) => {
+                state.brands = action.payload;
+            })
+            .addCase(fetchBrandsAvailable.fulfilled, (state, action) => {
                 state.brands = action.payload;
             })
     }

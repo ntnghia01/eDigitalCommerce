@@ -5,6 +5,7 @@ import {
   Routes,
   Link,
   useNavigate,
+  useParams,
 } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
@@ -21,16 +22,14 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Rating from "@mui/material/Rating";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchAvailableProducts,
-  fetchProducts,
-} from "../../slices/productSlice";
+
 import { useState } from "react";
-import { addToCart, countCartDetail } from "../../slices/cartSlice";
+import { addToCart, countCartDetail } from "../../../slices/cartSlice";
 import { MenuItem, Select, Stack } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
-import FilterProductComponent from "../../components/customer/FilterProductComponent";
+import FilterProductComponent from "../../../components/customer/FilterProductComponent";
+import { getProductByCategory } from "../../../slices/productSlice";
 
 function formatNumberWithCommas(input) {
   if (typeof input === "number" && Number.isInteger(input)) {
@@ -49,11 +48,11 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function ProductListComponent() {
-  const navigate = useNavigate();
+export default function SearchCategoryPage() {
+    console.log("Check render");
 
-  const customer = useSelector((state) => state.customer.customer);
-  // console.log(customer);
+    const {cateId} = useParams();
+  const navigate = useNavigate();
 
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const handleOpenSnackbar = () => {
@@ -67,15 +66,17 @@ export default function ProductListComponent() {
   };
 
   const dispatch = useDispatch();
-  const products = useSelector((state) => state.product.products);
 
   const [userLogin, setUserLogin] = useState(
     localStorage.getItem("customerID")
   );
 
   React.useEffect(() => {
-    dispatch(fetchAvailableProducts());
-  }, [dispatch]);
+    dispatch(getProductByCategory(cateId));
+  }, [dispatch, cateId]);
+
+  
+  const products = useSelector((state) => state.product.productByCate);
 
   const handleAddToCart = (proId) => {
     const cartDetailData = {

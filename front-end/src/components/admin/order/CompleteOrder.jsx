@@ -92,7 +92,7 @@ export default function CompleteOrder(props) {
   return (
     <>
       <Button startIcon={<CheckIcon />} variant="outlined" onClick={() => {handleClickOpen();}}
-        disabled={order.orderShipped!=null && order.orderPaid!=null ? false : true}
+        disabled={(order.orderShipped!=null && order.orderPaid!=null && order.orderCompleted==null) ? false : true}
       >Đánh dấu hoàn thành</Button>
       <Dialog
         open={open}

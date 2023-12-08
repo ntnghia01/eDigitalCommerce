@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 // import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,6 +44,9 @@ import com.backend.springboot.ecommerce.repository.BrandRepository;
 import com.backend.springboot.ecommerce.repository.CategoryRepository;
 import com.backend.springboot.ecommerce.repository.ProductRepository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/product")
@@ -52,6 +57,9 @@ public class ProductController {
     private CategoryRepository categoryRepository;
     @Autowired
     private BrandRepository brandRepository;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Value("${file.upload.directory}")
     private String uploadDirectory;
@@ -65,6 +73,12 @@ public class ProductController {
     @GetMapping("/available")
     public ResponseEntity<List<Product>> getAllProductAvailable() {
         List<Product> productList = productRepository.findAllProductAvailable();
+        return new ResponseEntity<>(productList, HttpStatus.OK);
+    }
+
+    @GetMapping("/availableDESC")
+    public ResponseEntity<List<Product>> getAllProductAvailableDESC() {
+        List<Product> productList = productRepository.findAllProductAvailableDESC();
         return new ResponseEntity<>(productList, HttpStatus.OK);
     }
 
@@ -253,6 +267,87 @@ public class ProductController {
             productList = productRepository.findProductAvailableByName(searchData.getProName());
         }
         return new ResponseEntity<>(productList, HttpStatus.OK);
+    }
+
+    @GetMapping("/most-sold")
+    public ResponseEntity<List<Product>> getMostSoldProducts() {
+        String jpql = "SELECT p FROM Product p " +
+                      "JOIN OrderDetail od ON p.proId = od.product.proId " +
+                      "GROUP BY p " +
+                      "ORDER BY SUM(od.orderDetailQuantity) DESC";
+
+        TypedQuery<Product> query = entityManager.createQuery(jpql, Product.class);
+        query.setMaxResults(10); // Lấy 10 sản phẩm được bán nhiều nhất
+
+        List<Product> mostSoldProducts = query.getResultList();
+        
+        return ResponseEntity.ok(mostSoldProducts);
+    }
+
+    @GetMapping("/recently-ordered-category-products/{userId}")
+    public ResponseEntity<List<Product>> getProductsFromRecentlyOrderedCategory(@PathVariable Integer userId) {
+        String jpql = "SELECT p FROM Product p " +
+                      "JOIN OrderDetail od ON p.proId = od.product.proId " +
+                      "WHERE od.order.orderStatus = 1 " + // Trạng thái đơn hàng
+                      "AND od.order.user.userId = :userId " + // Xác định người dùng
+                      "ORDER BY od.order.orderTime DESC";
+
+        TypedQuery<Product> query = entityManager.createQuery(jpql, Product.class);
+        query.setParameter("userId", userId); // Truyền userId vào tham số truy vấn
+        query.setMaxResults(1); // Lấy sản phẩm đặt hàng gần nhất
+
+        List<Product> recentlyOrderedProducts = query.getResultList();
+
+        if (!recentlyOrderedProducts.isEmpty()) {
+            Product latestOrderedProduct = recentlyOrderedProducts.get(0);
+            Integer categoryId = latestOrderedProduct.getCategory().getCateId();
+
+            String jpqlCategoryProducts = "SELECT p FROM Product p " +
+                                          "WHERE p.category.cateId = :categoryId AND p.proStatus=1";
+                                          
+            TypedQuery<Product> queryCategoryProducts = entityManager.createQuery(jpqlCategoryProducts, Product.class);
+            queryCategoryProducts.setParameter("categoryId", categoryId);
+            queryCategoryProducts.setMaxResults(10); // Lấy 10 sản phẩm cùng danh mục
+
+            List<Product> categoryProducts = queryCategoryProducts.getResultList();
+
+            return ResponseEntity.ok(categoryProducts);
+        }
+
+        return ResponseEntity.ok(new ArrayList<>()); // Trả về danh sách rỗng nếu không có sản phẩm
+    }
+
+    @GetMapping("/recently-ordered-brand-products/{userId}")
+    public ResponseEntity<List<Product>> getProductsFromRecentlyOrderedBrand(@PathVariable Integer userId) {
+        String jpql = "SELECT p FROM Product p " +
+                      "JOIN OrderDetail od ON p.proId = od.product.proId " +
+                      "WHERE od.order.orderStatus = 1 " + // Trạng thái đơn hàng
+                      "AND od.order.user.userId = :userId " + // Xác định người dùng
+                      "ORDER BY od.order.orderTime DESC";
+
+        TypedQuery<Product> query = entityManager.createQuery(jpql, Product.class);
+        query.setParameter("userId", userId); // Truyền userId vào tham số truy vấn
+        query.setMaxResults(1); // Lấy sản phẩm đặt hàng gần nhất
+
+        List<Product> recentlyOrderedProducts = query.getResultList();
+
+        if (!recentlyOrderedProducts.isEmpty()) {
+            Product latestOrderedProduct = recentlyOrderedProducts.get(0);
+            Integer brandId = latestOrderedProduct.getBrand().getBrandId();
+
+            String jpqlBrandProducts = "SELECT p FROM Product p " +
+                                       "WHERE p.brand.brandId = :brandId AND p.proStatus=1";
+
+            TypedQuery<Product> queryBrandProducts = entityManager.createQuery(jpqlBrandProducts, Product.class);
+            queryBrandProducts.setParameter("brandId", brandId);
+            queryBrandProducts.setMaxResults(10); // Lấy 10 sản phẩm cùng thương hiệu
+
+            List<Product> brandProducts = queryBrandProducts.getResultList();
+
+            return ResponseEntity.ok(brandProducts);
+        }
+
+        return ResponseEntity.ok(new ArrayList<>()); // Trả về danh sách rỗng nếu không có sản phẩm
     }
 
 }

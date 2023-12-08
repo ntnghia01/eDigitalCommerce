@@ -8,13 +8,19 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 
 import CancelIcon from '@mui/icons-material/Cancel';
-import { DialogContentText } from "@mui/material";
+import { DialogContentText, Snackbar } from "@mui/material";
+import { getOrderByCustomerId, requestCancelOrder } from "../../../slices/orderSlice";
+import { Alert } from "../../customize/CustomizeComponent";
+import { useDispatch } from "react-redux";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
   });
 
 export default function CancelOrderComponent (props) {
+
+    const dispatch = useDispatch();
+    const {order} = props;
     const [open, setOpen] = React.useState(false);
     const handleClickOpen = () => {
         setOpen(true);
@@ -22,6 +28,29 @@ export default function CancelOrderComponent (props) {
     const handleClose = () => {
         setOpen(false);
     };
+
+    const [openSnackbar, setOpenSnackbar] = React.useState(false);
+    const handleOpenSnackbar = () => {
+      setOpenSnackbar(true);
+    };
+    const handleCloseSnackbar = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+      setOpenSnackbar(false);
+    };
+
+
+    const handleSubmit = (e) => {
+        console.log("request cancel", order.orderId);
+        dispatch(requestCancelOrder(order.orderId))
+          .then(() => {
+            handleClose();
+            dispatch(getOrderByCustomerId(localStorage.getItem("customerID")));
+            handleOpenSnackbar();
+          });
+      }
+
     return (
         <>
         <Button size="small" variant="outlined" startIcon={<CancelIcon />} color="error" onClick={handleClickOpen}>Yêu cầu hủy</Button>
@@ -37,14 +66,27 @@ export default function CancelOrderComponent (props) {
 
             
                 <DialogContentText id="alert-dialog-description">
-            Bạn có chắc muốn hủy đơn hàng này?
+            Bạn có chắc muốn hủy đơn hàng #{order.orderId} này?
           </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose}>Xác nhận</Button>
+                <Button onClick={handleSubmit}>Xác nhận</Button>
                 <Button onClick={handleClose}>Hủy</Button>
             </DialogActions>
         </Dialog>
+        <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: "100%", color: "white" }}
+        >
+         Yêu cầu hủy đơn hàng thành công!
+        </Alert>
+      </Snackbar>
         </>
     )
 }

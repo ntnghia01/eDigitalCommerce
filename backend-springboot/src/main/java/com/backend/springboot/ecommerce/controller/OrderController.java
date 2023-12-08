@@ -24,6 +24,7 @@ import com.backend.springboot.ecommerce.entity.User;
 import com.backend.springboot.ecommerce.entity.Order;
 import com.backend.springboot.ecommerce.entity.OrderDetail;
 import com.backend.springboot.ecommerce.entity.Payment;
+import com.backend.springboot.ecommerce.entity.Product;
 import com.backend.springboot.ecommerce.entity.Supplier;
 import com.backend.springboot.ecommerce.payload.request.OrderRequestDto;
 import com.backend.springboot.ecommerce.payload.request.SupplierRequestDto;
@@ -35,6 +36,7 @@ import com.backend.springboot.ecommerce.service.EmailService;
 import com.backend.springboot.ecommerce.repository.OrderDetailRepository;
 import com.backend.springboot.ecommerce.repository.OrderRepository;
 import com.backend.springboot.ecommerce.repository.PaymentRepository;
+import com.backend.springboot.ecommerce.repository.ProductRepository;
 
 
 @CrossOrigin(origins = "*")
@@ -52,6 +54,8 @@ public class OrderController {
     private CartDetailRepository cartDetailRepository;
     @Autowired
     private OrderDetailRepository orderDetailRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
     @Autowired
     private EmailService emailService;
@@ -125,6 +129,14 @@ public class OrderController {
             List<CartDetail> cartDetails = cartDetailRepository.findCartDetailByCustomerID(orderRequestDto.getCustomerId());
 
             for (CartDetail cartDetail : cartDetails) {
+                Optional<Product> productOptional = productRepository.findById(cartDetail.getProduct().getProId());
+
+                Product product = productOptional.get();
+                product.setProQuantity(product.getProQuantity()-cartDetail.getCartDetailQuantity());
+
+                productRepository.save(product);
+                System.err.println("Reduce: " + product.getProId());
+
                 OrderDetail newOrderDetail = new OrderDetail();
                 newOrderDetail.setOrder(savedOrder);
                 newOrderDetail.setProduct(cartDetail.getProduct());
@@ -271,6 +283,64 @@ public class OrderController {
             orders = orderRepository.findOrderByUserName(searchData.getOrderName());
         }
         return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
+
+    @PutMapping("/cancel/{orderId}")
+    public ResponseEntity<?> cancelOrder(@PathVariable Integer orderId) {
+        Optional<Order> orderOptional = orderRepository.findById(orderId);
+        if (orderOptional.isPresent()) {
+            Order order = orderOptional.get();
+            order.setOrderCancelled(LocalDateTime.now());
+            Order savedOrder = orderRepository.save(order);
+            System.out.println("Request cancel order: " + savedOrder.getOrderId());
+            return ResponseEntity.ok(new MessageResponse("Request cancel successfully!"));
+        } else {
+            return new ResponseEntity<>(new MessageResponse("Order not found!"), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/confirmCancel/{orderId}")
+    public ResponseEntity<?> confirmCancelOrder(@PathVariable Integer orderId) {
+        Optional<Order> orderOptional = orderRepository.findById(orderId);
+        if (orderOptional.isPresent()) {
+            Order order = orderOptional.get();
+            order.setOrderStatus(-1);
+            order.setOrderUpdatedAt(LocalDateTime.now());
+            Order savedOrder = orderRepository.save(order);
+
+            List<OrderDetail> orderDetails = orderDetailRepository.findOrderDetailByOrderId(savedOrder.getOrderId());
+
+            for (OrderDetail orderDetail : orderDetails) {
+                Optional<Product> productOptional = productRepository.findById(orderDetail.getProduct().getProId());
+
+                Product product = productOptional.get();
+                product.setProQuantity(product.getProQuantity()+orderDetail.getOrderDetailQuantity());
+
+                productRepository.save(product);
+                System.err.println("Incre: " + product.getProId());
+
+
+            }
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            String formattedOrderTime = savedOrder.getOrderTime().format(formatter);
+            
+            String to = savedOrder.getUser().getUserEmail(); // Địa chỉ email của người nhận
+            String subject = "E-STORE ANNOUNCEMENT OF SUCCESSFUL ORDER CANCELLATION!!!";
+            String message = "Xin chào, " + savedOrder.getUser().getUserName() + "!<br/><br/>"
+                    + "Đơn hàng của bạn đã được hủy!<br/><br/>"
+                    + "THÔNG TIN ĐƠN HÀNG:<br/>"
+                    + "Mã đơn hàng: " + savedOrder.getOrderCode() + "<br/>"
+                    + "Thời gian đặt hàng: " + formattedOrderTime + "<br/><br/>"
+                    + "Thời gian hủy: " + savedOrder.getOrderCancelled() + "<br/><br/>"
+                    + "Xin lỗi nếu bạn không hài lòng với đơn hàng và mong bạn sẽ trở lại mua hàng!";
+            
+            // Gửi email khi đặt hàng thành công
+            emailService.sendEmail(to, subject, message);
+            System.out.println("confirm cancel order: " + savedOrder.getOrderId());
+            return ResponseEntity.ok(new MessageResponse("confirm cancel successfully!"));
+        } else {
+            return new ResponseEntity<>(new MessageResponse("Order not found!"), HttpStatus.NOT_FOUND);
+        }
     }
 
 

@@ -105,6 +105,22 @@ export const searchOrderHistory = createAsyncThunk (
     }
 )
 
+export const requestCancelOrder = createAsyncThunk (
+    'order/requestCancel',
+    async (orderId) => {
+        const response = await axios.put(prefixAPI + `/api/order/cancel/${orderId}`);
+        return response.data;
+    }
+)
+
+export const confirmCancelOrder = createAsyncThunk (
+    'order/confirmCancel',
+    async (orderId) => {
+        const response = await axios.put(prefixAPI + `/api/order/confirmCancel/${orderId}`);
+        return response.data;
+    }
+)
+
 const orderSlice = createSlice ({
     name: 'order',
     initialState,

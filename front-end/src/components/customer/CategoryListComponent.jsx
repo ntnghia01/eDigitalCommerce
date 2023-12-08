@@ -9,7 +9,7 @@ import CategoryIcon from '@mui/icons-material/Category';
 import { Grid, Paper } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { fetchCategories } from "../../slices/categorySlice";
+import { fetchCategories, fetchCategoriesAvailable } from "../../slices/categorySlice";
 import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 import LaptopIcon from '@mui/icons-material/Laptop';
 import HeadphonesIcon from '@mui/icons-material/Headphones';
@@ -21,6 +21,7 @@ import CableIcon from '@mui/icons-material/Cable';
 import UsbIcon from '@mui/icons-material/Usb';
 import SdCardIcon from '@mui/icons-material/SdCard';
 import { fetchBrands } from "../../slices/brandSlice";
+import { useNavigate } from "react-router-dom";
 
 
 export default function CategoryListComponent() {
@@ -28,12 +29,14 @@ export default function CategoryListComponent() {
   const [value, setValue] = React.useState("");
 
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   useEffect(() => {
-    dispatch(fetchBrands());
+    dispatch(fetchCategoriesAvailable());
   },[dispatch])
 
   const categories = useSelector((state) => state.categories.categories)
+  console.log(categories);
 
   return (
     <Box sx={{marginTop: 4}}>
@@ -56,7 +59,13 @@ export default function CategoryListComponent() {
                 <BottomNavigationAction key={category.cateId} label={category.cateName} icon={<CategoryIcon />} />
             ))} */}
 
-            <BottomNavigationAction label="Điện thoại" icon={<PhoneAndroidIcon />} />
+            {categories && (
+              categories.slice(0,10).map((category) => (
+                <BottomNavigationAction key={category.cateId} label={category.cateName} icon={<CategoryIcon />} onClick={()=>navigate(`/category/${category.cateId}`)}/>
+              ))
+            )}
+
+            {/* <BottomNavigationAction label="Điện thoại" icon={<PhoneAndroidIcon />} />
             <BottomNavigationAction label="Laptop" icon={<LaptopIcon />} />
             <BottomNavigationAction label="Tai nghe" icon={<HeadphonesIcon />} />
             <BottomNavigationAction label="Máy tính bảng" icon={<TabletIcon />} />
@@ -65,7 +74,7 @@ export default function CategoryListComponent() {
             <BottomNavigationAction label="Máy in" icon={<AdfScannerIcon />} />
             <BottomNavigationAction label="Cáp" icon={<CableIcon />} />
             <BottomNavigationAction label="USB" icon={<UsbIcon />} />
-            <BottomNavigationAction label="Thẻ nhớ" icon={<SdCardIcon />} />
+            <BottomNavigationAction label="Thẻ nhớ" icon={<SdCardIcon />} /> */}
 
           </BottomNavigation>
         </Grid>

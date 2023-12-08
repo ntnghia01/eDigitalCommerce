@@ -10,6 +10,10 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views';
 import { autoPlay } from 'react-swipeable-views-utils';
 import { Grid } from '@mui/material';
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from 'react';
+import { fetchBlogAvailable } from '../../slices/blogSlice';
+import { useNavigate } from 'react-router-dom';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
@@ -53,6 +57,15 @@ function SlideShowComponent() {
     setActiveStep(step);
   };
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(fetchBlogAvailable())
+  }, [dispatch])
+
+  const blogs = useSelector((state) => state.blog.blogs);
+
   return (<>
     <Grid container spacing={2}>
         <Grid item xs={2} sm={0} md={0} lg={0}></Grid>
@@ -62,7 +75,7 @@ function SlideShowComponent() {
           sx={{ backgroundColor: "white" }}
           style={{ paddingLeft: 0 }}
         >
-<Box sx={{ maxWidth: '100%', flexGrow: 1 }}>
+        <Box sx={{ maxWidth: '100%', flexGrow: 1 }}>
       {/* <Paper
         square
         elevation={0}
@@ -81,7 +94,7 @@ function SlideShowComponent() {
         onChangeIndex={handleStepChange}
         enableMouseEvents
       >
-        {images.map((step, index) => (
+        {/* {images.map((step, index) => (
           <div key={step.label}>
             {Math.abs(activeStep - index) <= 2 ? (
               <Box
@@ -96,6 +109,26 @@ function SlideShowComponent() {
                 }}
                 src={step.imgPath}
                 // alt={step.label}
+              />
+            ) : null}
+          </div>
+        ))} */}
+        {blogs.map((blog, index) => (
+          <div key={blog.blogId}>
+            {Math.abs(activeStep - index) <= 2 ? (
+              <Box
+                component="img"
+                sx={{
+                  height: '100%',
+                  display: 'block',
+                  maxWidth: '100%',
+                  overflow: 'hidden',
+                  width: '100%',
+                  borderRadius: 3,
+                  cursor: "pointer"
+                }}
+                src={`http://localhost:9004/api/product/images/${blog.blogImage}`}
+                onClick={()=>navigate(`/blog/${blog.blogId}`)}
               />
             ) : null}
           </div>

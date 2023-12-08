@@ -100,7 +100,7 @@ export default function OrderHistoryPage() {
         />
       </Breadcrumbs>
 
-      <Box sx={{ flexGrow: 1, padding: 2, height: "80vh" }}>
+      <Box sx={{ flexGrow: 1, padding: 2, height: "100%" }}>
         <Grid
           container
           alignItems="center"
@@ -214,7 +214,13 @@ export default function OrderHistoryPage() {
               <Grid item xs={2}>
                 <Stack spacing={2}>
                   <OrderHistoryDetailComponent order={order} />
-                  {order.orderConfirmed == null ? <CancelOrderComponent /> : ""}
+                  {
+                  order.orderConfirmed == null && order.orderCancelled == null ? (
+
+                  <CancelOrderComponent order={order}/>)
+                   : order.orderConfirmed == null && order.orderCancelled != null ? <Button disabled variant="error">Đã yêu cầu hủy</Button>
+                   : ""
+                   }
                   <ReviewOrderComponent order={order} />
                 </Stack>
               </Grid>

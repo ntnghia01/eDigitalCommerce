@@ -4,9 +4,12 @@ import ImageListItem from '@mui/material/ImageListItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { fetchImageByProductID } from '../../../slices/imageSlice';
+import { useParams } from 'react-router-dom';
 
 export default function StandardImageList(props) {
-  const {proId} = props;
+  // const {proId} = props;
+
+  const {proId} = useParams();
 
   console.log("Check");
   const dispatch = useDispatch();
@@ -16,7 +19,7 @@ export default function StandardImageList(props) {
   const images = useSelector((state) => state.image.images);
 
   return (
-    <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
+    <ImageList sx={{ width: 500, height: '100%' }} cols={3} rowHeight={164}>
       {images.map((item) => (
         <ImageListItem key={item.img}>
           <img

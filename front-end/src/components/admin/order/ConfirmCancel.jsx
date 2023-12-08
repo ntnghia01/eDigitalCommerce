@@ -18,10 +18,11 @@ import CancelIcon from '@mui/icons-material/Cancel';
 
 // import Icons
 import AddIcon from "@mui/icons-material/Add";
-import { Grid, InputAdornment, Stack, TextField } from "@mui/material";
+import { Badge, Grid, InputAdornment, Stack, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { getOrderDetailByOrderId } from "../../../slices/orderSlice";
+import { confirmCancelOrder, fetchOrder, getOrderDetailByOrderId } from "../../../slices/orderSlice";
+import { Alert } from "../../customize/CustomizeComponent";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -62,11 +63,37 @@ export default function ConfirmCancel(props) {
     setOpen(false);
   };
 
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  const handleOpenSnackbar = () => {
+    setOpenSnackbar(true);
+  };
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
   const dispatch = useDispatch();
+
+  const handleSubmit = (e) => {
+    console.log("confirm cancel", order.orderId);
+    dispatch(confirmCancelOrder(order.orderId))
+      .then(() => {
+        handleClose();
+        dispatch(fetchOrder());
+        handleOpenSnackbar();
+      });
+  }
 
   return (
     <>
-      <Button startIcon={<CancelIcon />} variant="outlined" onClick={() => {handleClickOpen();}}>Xác nhận hủy</Button>
+      <Badge color="secondary" variant="dot" invisible={order.orderCancelled!=null && order.orderStatus!=-1? false : true} sx={{marginLeft: 1}}>
+        <Button startIcon={<CancelIcon />} variant="outlined" onClick={() => {handleClickOpen();}} 
+        disabled={order.orderConfirmed!= null || order.orderStatus==-1  ? true : false}
+        >Xác nhận hủy</Button>
+      </Badge>
+      
       <Dialog
         open={open}
         onClose={handleClose}
@@ -78,16 +105,29 @@ export default function ConfirmCancel(props) {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Bạn có chắc muốn xác nhận yêu cầu hủy đơn hàng này?
+            Bạn có chắc muốn xác nhận yêu cầu hủy đơn hàng #{order.orderId} này?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Có</Button>
+          <Button onClick={handleSubmit}>Có</Button>
           <Button onClick={handleClose} autoFocus>
             Không
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: "100%", color: "white" }}
+        >
+         Xác nhận hủy đơn hàng thành công!
+        </Alert>
+      </Snackbar>
     </>
   );
 }

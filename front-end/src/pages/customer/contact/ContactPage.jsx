@@ -9,6 +9,10 @@ import HomeIcon from '@mui/icons-material/Home';
 import { emphasize, styled } from '@mui/material/styles';
 import Chip from '@mui/material/Chip';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
+import { useDispatch, useSelector } from "react-redux";
+import { addContact } from "../../../slices/contactSlice";
+import { Snackbar } from "@mui/material";
+import { Alert } from "../../../components/customize/CustomizeComponent";
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
@@ -42,10 +46,11 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
+    contactUsername: "",
+    contactUseremail: "",
+    contactUserphone: "",
+    contactTitle: "",
+    contactContent: "",
   });
 
   const handleChange = (e) => {
@@ -56,10 +61,27 @@ export default function ContactPage() {
     });
   };
 
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  const handleOpenSnackbar = () => {
+    setOpenSnackbar(true);
+  };
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
+  const dispatch = useDispatch();
   const handleSubmit = (e) => {
     e.preventDefault();
     // Xử lý dữ liệu form tại đây, ví dụ: gửi dữ liệu qua API hoặc xử lý logic khác
     console.log(formData);
+    dispatch(addContact(formData))
+      .then(() => {
+        handleOpenSnackbar();
+      });
+    
   };
 
   return (<>
@@ -85,8 +107,8 @@ export default function ContactPage() {
               <TextField
                 fullWidth
                 label="Họ và Tên"
-                name="name"
-                value={formData.name}
+                name="contactUsername"
+                value={formData.contactUsername}
                 onChange={handleChange}
                 required
               />
@@ -95,8 +117,8 @@ export default function ContactPage() {
               <TextField
                 fullWidth
                 label="Số điện thoại"
-                name="name"
-                value={formData.name}
+                name="contactUserphone"
+                value={formData.contactUserphone}
                 onChange={handleChange}
                 required
               />
@@ -105,9 +127,9 @@ export default function ContactPage() {
               <TextField
                 fullWidth
                 label="Email"
-                name="email"
+                name="contactUseremail"
                 type="email"
-                value={formData.email}
+                value={formData.contactUseremail}
                 onChange={handleChange}
                 required
               />
@@ -116,8 +138,8 @@ export default function ContactPage() {
               <TextField
                 fullWidth
                 label="Tiêu Đề"
-                name="subject"
-                value={formData.subject}
+                name="contactTitle"
+                value={formData.contactTitle}
                 onChange={handleChange}
                 required
               />
@@ -126,10 +148,10 @@ export default function ContactPage() {
               <TextField
                 fullWidth
                 label="Nội Dung"
-                name="message"
+                name="contactContent"
                 multiline
                 rows={4}
-                value={formData.message}
+                value={formData.contactContent}
                 onChange={handleChange}
                 required
               />
@@ -151,6 +173,21 @@ export default function ContactPage() {
           <AnyReactComponent lat={59.955413} lng={30.337844} text="My Marker" />
         </GoogleMapReact>
       </Grid>
-    </Grid></>
+    </Grid>
+    <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: "100%", color: "white" }}
+        >
+         Gửi liên hệ thành công!
+        </Alert>
+      </Snackbar>
+    
+    </>
   );
 }

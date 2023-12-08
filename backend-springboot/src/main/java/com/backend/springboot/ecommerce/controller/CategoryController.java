@@ -37,6 +37,12 @@ public class CategoryController {
         return new ResponseEntity<>(categoryList, HttpStatus.OK);
     }
 
+    @GetMapping("/available")
+    public ResponseEntity<List<Category>> getAllCategoryAvailable() {
+        List<Category> categoryList = categoryRepository.findAllCategoryAvailable();
+        return new ResponseEntity<>(categoryList, HttpStatus.OK);
+    }
+
     @GetMapping("/{categoryId}")
     public ResponseEntity<Category> getCategoryById(@PathVariable Integer categoryId) {
         Optional<Category> cateOptional = categoryRepository.findById(categoryId);

@@ -68,10 +68,18 @@ export const searchCategories = createAsyncThunk(
 export const searchCategoryByName = createAsyncThunk (
     'category/searchByName',
     async (searchData) => {
-        const response = await axios.post(prefixAPI + '/api/category/searchByName', searchData);
+        const response = await axios.post(pathAPI + '/api/category/searchByName', searchData);
         return response.data;
     }
 )
+
+export const fetchCategoriesAvailable = createAsyncThunk(
+    'categories/fetchCategoriesAvailable',
+    async () => {
+        const response = await axios.get(pathAPI + '/api/category/available');
+        return response.data;
+    }
+);
 
 const categorySlice = createSlice({
     name: 'categories',
@@ -152,6 +160,9 @@ const categorySlice = createSlice({
             })
             .addCase(searchCategoryByName.fulfilled, (state, action) => {
                 // state.isLoading = false;
+                state.categories = action.payload;
+            })
+            .addCase(fetchCategoriesAvailable.fulfilled, (state, action) => {
                 state.categories = action.payload;
             })
 

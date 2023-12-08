@@ -29,6 +29,12 @@ public class BrandController {
         return new ResponseEntity<>(brandList, HttpStatus.OK);
     }
 
+    @GetMapping("/available")
+    public ResponseEntity<List<Brand>> getAllBrandsAvailable() {
+        List<Brand> brands = brandRepository.findAllBrandAvailable();
+        return new ResponseEntity<>(brands, HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Brand> getBrandById(@PathVariable Integer id) {
         Optional<Brand> brandOptional = brandRepository.findById(id);

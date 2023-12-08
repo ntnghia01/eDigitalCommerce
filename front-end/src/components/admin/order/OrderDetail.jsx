@@ -210,12 +210,7 @@ export default function OrderDetail(props) {
                     ? formatDateTime(order.orderCompleted)
                     : "Chưa hoàn thành"}
                 </div>
-                <div>
-                  Ngày hủy:{" "}
-                  {order.orderCancelled != null
-                    ? formatDateTime(order.orderCancelled)
-                    : "Không"}
-                </div>
+                
               </Stack>
             </Grid>
             <Grid item xs={12} sm={6} sx={{ borderLeft: 1 }}>
@@ -312,6 +307,16 @@ export default function OrderDetail(props) {
                     "Không xác định"
                   )}
                 </h4>
+                {order.orderStatus == -1 ?
+                <div>
+                Ngày hủy:{" "}
+                {order.orderCancelled != null
+                  ? formatDateTime(order.orderCancelled)
+                  : "Không"}
+              </div>
+              :""
+                }
+                
               </Stack>
             </Grid>
           </Grid>

@@ -15,6 +15,9 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     @Query("SELECT c FROM Category c WHERE c.cateStatus <> -1")
     List<Category> findAllCategory();
 
+    @Query("SELECT c FROM Category c WHERE c.cateStatus =1")
+    List<Category> findAllCategoryAvailable();
+
     @Query("SELECT c FROM Category c WHERE (c.cateName LIKE %:cateName% OR c.cateDesc LIKE %:cateName%) AND c.cateStatus <> -1")
     List<Category> findCategoryByName(@Param("cateName") String cateName);
 }

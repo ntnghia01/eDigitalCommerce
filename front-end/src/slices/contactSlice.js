@@ -41,6 +41,14 @@ export const deleteContact = createAsyncThunk (
     }
 )
 
+export const addContact = createAsyncThunk (
+    'contact/addd',
+    async (contactData) => {
+        const response = await axios.post(prefixAPI + "/api/contact", contactData);
+        return response.data;
+    }
+)
+
 
 const contactSlice = createSlice ({
     name: 'contact',

@@ -13,6 +13,9 @@ public interface BrandRepository extends JpaRepository<Brand, Integer> {
     @Query("SELECT b FROM Brand b WHERE b.brandStatus <> -1")
     List<Brand> findAllBrand();
 
+    @Query("SELECT b FROM Brand b WHERE b.brandStatus = 1")
+    List<Brand> findAllBrandAvailable();
+
     @Query("SELECT b FROM Brand b WHERE (b.brandName LIKE %:brandName% OR b.brandDesc LIKE %:brandName%) AND b.brandStatus <> -1")
     List<Brand> findBrandByName(@Param("brandName") String brandName);
 }

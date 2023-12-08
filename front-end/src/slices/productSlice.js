@@ -7,7 +7,11 @@ const initialState = {
     products: [],
     product: {},
     productByCate: [],
-    productByBrand: []
+    productByBrand: [],
+    productNews: [],
+    productMostSold: [],
+    productRecentOrder: [],
+    productRecentOrderBrand: []
 }
 
 export const fetchProducts = createAsyncThunk (
@@ -22,6 +26,14 @@ export const fetchAvailableProducts = createAsyncThunk (
     'product/available',
     async () => {
         const response = await axios.get(prefixAPI + '/api/product/available');
+        return response.data;
+    }
+)
+
+export const fetchAvailableProductsDESC = createAsyncThunk (
+    'product/availableDESC',
+    async () => {
+        const response = await axios.get(prefixAPI + '/api/product/availableDESC');
         return response.data;
     }
 )
@@ -42,6 +54,7 @@ export const searchProductAvailable = createAsyncThunk (
         return response.data;
     }
 )
+
 
 export const addProduct = createAsyncThunk (
     'product/add',
@@ -144,6 +157,30 @@ export const getProductByBrand = createAsyncThunk (
     }
 )
 
+export const getProductMostSold = createAsyncThunk (
+    'product/mostSold',
+    async () => {
+        const response = await axios.get(prefixAPI + '/api/product/most-sold');
+        return response.data;
+    }
+)
+
+export const getProductRecentOrder = createAsyncThunk (
+    'product/recentOrder',
+    async (userId) => {
+        const response = await axios.get(prefixAPI + `/api/product/recently-ordered-category-products/${userId}`);
+        return response.data;
+    }
+)
+
+export const getProductRecentOrderBrand = createAsyncThunk (
+    'product/recentOrderBrand',
+    async (userId) => {
+        const response = await axios.get(prefixAPI + `/api/product/recently-ordered-brand-products/${userId}`);
+        return response.data;
+    }
+)
+
 const productSlice = createSlice ({
     name: 'products',
     initialState,
@@ -173,6 +210,18 @@ const productSlice = createSlice ({
             })
             .addCase(searchProductAvailable.fulfilled, (state, action) => {
                 state.products = action.payload;
+            })
+            .addCase(fetchAvailableProductsDESC.fulfilled, (state, action) => {
+                state.productNews = action.payload;
+            })
+            .addCase(getProductMostSold.fulfilled, (state, action) => {
+                state.productMostSold = action.payload;
+            })
+            .addCase(getProductRecentOrder.fulfilled, (state, action) => {
+                state.productRecentOrder = action.payload;
+            })
+            .addCase(getProductRecentOrderBrand.fulfilled, (state, action) => {
+                state.productRecentOrderBrand = action.payload;
             })
     }
 });

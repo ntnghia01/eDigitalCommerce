@@ -39,6 +39,11 @@ import BlogPage from "./blog/BlogPage";
 import ContactPage from "./contact/ContactPage";
 import LookupPage from "./lookup/LookupPage";
 import BlogDetailPage from "./blog/BlogDetailPage";
+import SearchCategoryPage from "./search/SearchCategoryPage";
+import SearchBrandPage from "./search/SearchBrandPage";
+import TodayRecommend from "../../components/customer/recommend/TodayRecomment";
+import ProductMostSold from "../../components/customer/recommend/ProductMostSold";
+import ProductRecentOrder from "../../components/customer/recommend/ProductRecentOrder";
 
 const actions = [
   { icon: <FileCopyIcon />, name: "Copy" },
@@ -101,7 +106,16 @@ export default function CustomerPage() {
         <BrandListComponent key={2}/>
         <Routes>
               <Route path="/" element={<SlideShowComponent />} />
-            </Routes>
+        </Routes>
+        <Routes>
+          <Route path="/" element={<TodayRecommend />} />
+        </Routes>
+        <Routes>
+          <Route path="/" element={<ProductMostSold />} />
+        </Routes>
+        <Routes>
+          <Route path="/" element={<ProductRecentOrder />} />
+        </Routes>
         {/* <SlideShowComponent key={3}/> */}
         <Grid container spacing={2} sx={{marginTop: 1}}>
           <Grid item xs={2} sm={0} md={0} lg={0}></Grid>
@@ -126,6 +140,8 @@ export default function CustomerPage() {
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/lookup" element={<LookupPage />} />
               <Route path="/blog/:blogId" element={<BlogDetailPage />} />
+              <Route path="/category/:cateId" element={<SearchCategoryPage />} />
+              <Route path="/brand/:cateId" element={<SearchBrandPage />} />
             </Routes>
             
             <Box>

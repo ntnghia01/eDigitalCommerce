@@ -6,21 +6,26 @@ import { Card, CardMedia, Grid, Paper, Stack } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchCategories } from "../../slices/categorySlice";
+import { fetchBrandsAvailable } from "../../slices/brandSlice";
+import BrandingWatermarkIcon from '@mui/icons-material/BrandingWatermark';
+import { useNavigate } from "react-router-dom";
 
 export default function BrandListComponent() {
   console.log("check render");
   const [value, setValue] = React.useState("");
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(fetchCategories());
+    dispatch(fetchBrandsAvailable());
   }, [dispatch]);
 
-  const categories = useSelector((state) => state.categories.categories);
+  const brands = useSelector((state) => state.brand.brands);
+  console.log(brands);
 
   return (
-    <Box sx={{ marginTop: 3 }}>
+    <Box sx={{ marginTop: 3, marginBottom: 1 }}>
       <Grid container spacing={2}>
         <Grid item xs={2} sm={0} md={0} lg={0}></Grid>
         <Grid
@@ -29,17 +34,32 @@ export default function BrandListComponent() {
           sx={{ backgroundColor: "white" }}
           style={{ paddingLeft: 0 }}
         >
+
+          
           <BottomNavigation
-            // showLabels
+            showLabels
             value={value}
             onChange={(event, newValue) => {
               setValue(newValue);
             }}
           >
-            {/* {categories.slice(0,10).map((category)=> (
-                <BottomNavigationAction key={category.cateId} label={category.cateName} icon={<CategoryIcon />} />
-            ))} */}
-            <BottomNavigationAction
+
+            {brands && (
+              brands.slice(0,10).map((brand) => (
+                <BottomNavigationAction
+                  key={brand.brandId}
+                  label={brand.brandName}
+                  // icon={<img
+                  //   alt="Apple Logo"
+                  //   src="https://cdn.hoanghamobile.com/i/cat/Uploads/2022/09/07/logoooooooooooooooo.png"
+                  //   style={{ width: "40px", height: "40px", objectFit: "contain" }}
+                  // />}
+                  icon={<BrandingWatermarkIcon />}
+                  onClick={()=>navigate(`/brand/${brand.brandId}`)}
+                />
+              ))
+            )}
+            {/* <BottomNavigationAction
               label="Apple"
               // classes={{ root: classes.root, label: classes.label }}
               icon={<img
@@ -129,7 +149,7 @@ export default function BrandListComponent() {
                 src="https://cdn.hoanghamobile.com/i/cat/Uploads/2020/11/07/logo-acer.png"
                 style={{ width: "40px", height: "40px", objectFit: "contain" }}
               />}
-            />
+            /> */}
 
             </BottomNavigation>
         </Grid>
