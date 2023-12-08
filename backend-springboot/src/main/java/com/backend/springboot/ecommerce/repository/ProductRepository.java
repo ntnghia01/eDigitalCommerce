@@ -29,7 +29,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("SELECT p FROM Product p WHERE p.category.cateId = :cateId AND p.proStatus =1 ORDER BY p.proCreatedAt DESC")
     List<Product> findProductByCateID(@Param("cateId") Integer cateId);
 
-    @Query("SELECT p FROM Product p WHERE p.brand.brandId = :brandId AND p.proStatus <> -1 ORDER BY p.proCreatedAt DESC")
+    @Query("SELECT p FROM Product p WHERE p.brand.brandId = :brandId AND p.proStatus =1 ORDER BY p.proCreatedAt DESC")
     List<Product> findProductByBrandID(@Param("brandId") Integer brandId);
     
 
@@ -38,6 +38,11 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     "GROUP BY od.product " +
     "ORDER BY totalSoldQuantity DESC")
 List<Product> findMostSoldProducts();
+
+    List<Product> findByProStatusNot(int proStatus);
+
+    @Query("SELECT COALESCE(SUM(od.orderDetailQuantity), 0) FROM OrderDetail od WHERE od.product = :product")
+    Long getTotalQuantitySoldByProduct(@Param("product") Product product);
 
 
 }

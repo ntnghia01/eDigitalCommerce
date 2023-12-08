@@ -64,13 +64,19 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrder() {
-        List<Order> orders = orderRepository.findAll();
+        List<Order> orders = orderRepository.findAllOrder();
         return new ResponseEntity<List<Order>>(orders, HttpStatus.OK);
     }
 
     @GetMapping("/{orderId}")
     public ResponseEntity<List<OrderDetail>> getOrderDetailByOrderId(@PathVariable Integer orderId) {
         List<OrderDetail> orderDetails = orderDetailRepository.findOrderDetailByOrderId(orderId);
+        return new ResponseEntity<List<OrderDetail>>(orderDetails, HttpStatus.OK);
+    }
+
+    @GetMapping("/orderDetailByCode/{orderCode}")
+    public ResponseEntity<List<OrderDetail>> getOrderDetailByOrderCode(@PathVariable String orderCode) {
+        List<OrderDetail> orderDetails = orderDetailRepository.findOrderDetailByOrderCode(orderCode);
         return new ResponseEntity<List<OrderDetail>>(orderDetails, HttpStatus.OK);
     }
 
@@ -198,6 +204,20 @@ public class OrderController {
             order.setOrderStatus(2);
             Order savedOrder = orderRepository.save(order);
             System.out.println("Saved Order: " + savedOrder);
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            String formattedOrderTime = savedOrder.getOrderTime().format(formatter);
+            
+            String to = shipper.getUserEmail(); // Địa chỉ email của người nhận
+            String subject = "E-STORE DELIVERY NOTIFICATION!!!";
+            String message = "Xin chào, " + shipper.getUserName() + "!<br/><br/>"
+                    + "Bạn có một đơn hàng mới vừa được phân công. Vui lòng kiểm tra và thực hiện sớm.<br/><br/>"
+                    + "THÔNG TIN ĐƠN HÀNG:<br/>"
+                    + "Mã đơn hàng: " + savedOrder.getOrderCode() + "<br/>"
+                    + "Thời gian đặt hàng: " + formattedOrderTime + "<br/><br/>"
+                    + "Xin cảm ơn và chúc bạn một ngày tốt lành!";
+            emailService.sendEmail(to, subject, message);
+
             return ResponseEntity.ok(new MessageResponse("Confirm Order successfully!"));
         } else {
             return new ResponseEntity<>(new MessageResponse("Order or Shipper not found!"), HttpStatus.NOT_FOUND);

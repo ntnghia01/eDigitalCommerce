@@ -22,6 +22,7 @@ import accountSlice from '../slices/accountSlice';
 import blogSlice from '../slices/blogSlice';
 import contactSlice from '../slices/contactSlice';
 import imageSlice from '../slices/imageSlice';
+import revenueSlice from '../slices/revenueSlice';
 
 
 // const store = createStore(rootReducer, applyMiddleware(thunk));
@@ -45,7 +46,8 @@ const store = configureStore ({
         account: accountSlice,
         blog: blogSlice,
         contact: contactSlice,
-        image: imageSlice
+        image: imageSlice,
+        revenue: revenueSlice
     },
 });
 

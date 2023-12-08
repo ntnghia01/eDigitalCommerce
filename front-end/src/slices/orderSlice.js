@@ -35,6 +35,14 @@ export const getOrderDetailByOrderId = createAsyncThunk (
     }
 );
 
+export const getOrderDetailByOrderCode = createAsyncThunk (
+    'order/getOrderDetailByCode',
+    async (lookupKeyword) => {
+        const response = await axios.get(prefixAPI + `/api/order/orderDetailByCode/${lookupKeyword}`);
+        return response.data;
+    }
+);
+
 export const confirmOrder = createAsyncThunk (
     'order/confirm',
     async ({orderId, confirmData}) => {
@@ -150,6 +158,9 @@ const orderSlice = createSlice ({
             })
             .addCase(searchOrderHistory.fulfilled, (state, action) => {
                 state.orderHistory = action.payload;
+            })
+            .addCase(getOrderDetailByOrderCode.fulfilled, (state, action) => {
+                state.orderDetails = action.payload;
             })
     }
 })

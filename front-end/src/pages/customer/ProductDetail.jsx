@@ -151,6 +151,7 @@ export default function ProductDetail() {
   };
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { proId } = useParams();
   const product = useSelector((state) => state.product.product);
@@ -187,6 +188,22 @@ export default function ProductDetail() {
       dispatch(countCartDetail(localStorage.getItem("customerID")));
     });
     console.log("re-render");
+  };
+
+  const handleAddToCartAndPay = (proId) => {
+    const cartDetailData = {
+      proId: proId,
+      cartDetailQuantity: cartDetailQuantity,
+      customerId: localStorage.getItem("customerID"),
+    };
+    dispatch(addToCart(cartDetailData)).then(() => {
+      console.log("Thêm vào giỏ thành công");
+      handleOpenSnackbar();
+
+      dispatch(countCartDetail(localStorage.getItem("customerID")));
+    });
+    console.log("re-render");
+    navigate(`/checkout/${localStorage.getItem("customerID")}`)
   };
 
   const [cmtContent, setCmtContent] = useState();
@@ -249,9 +266,9 @@ export default function ProductDetail() {
                   setCartDetailQuantity(e.target.value);
                 }}
               />
-              {product.proQuantity <= 0 ? (
+              {product.proQuantity > 0 ? (
                 <>
-                  <Button variant="outlined" startIcon={<PaymentIcon />}>
+                  <Button variant="outlined" startIcon={<PaymentIcon />} onClick={() => handleAddToCartAndPay(product.proId)}>
                     Mua ngay
                   </Button>
                   <Button
@@ -268,6 +285,7 @@ export default function ProductDetail() {
                     disabled
                     variant="outlined"
                     startIcon={<PaymentIcon />}
+                    onClick={() => handleAddToCartAndPay(product.proId)}
                   >
                     Mua ngay
                   </Button>

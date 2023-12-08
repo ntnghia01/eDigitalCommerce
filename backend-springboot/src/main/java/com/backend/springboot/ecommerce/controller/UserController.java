@@ -40,11 +40,18 @@ public class UserController {
     @Value("${file.upload.directory}")
     private String uploadDirectory;
 
+    @GetMapping
+    public ResponseEntity<List<User>> getAllAccount() {
+        List<User> customers = userRepository.findAllUser();
+        return new ResponseEntity<>(customers, HttpStatus.OK);
+    }
+
     @GetMapping("/customer")
     public ResponseEntity<List<User>> getAllCustomer() {
         List<User> customers = userRepository.findAllCustomer();
         return new ResponseEntity<>(customers, HttpStatus.OK);
     }
+
 
     
     @GetMapping("/admin")

@@ -7,6 +7,7 @@ import FilterCustomerAccountTable from "../../../components/admin/account/custom
 import { Button, Grid } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import FilterAdminAccountTable from "../../../components/admin/account/admin/FilterAdminAccountTable";
+import AddAdminAccount from "../../../components/admin/account/admin/AddAdminAccount";
 
 export default function AdminAccountPage() {
   return (
@@ -22,13 +23,14 @@ export default function AdminAccountPage() {
             justifyContent="flex-start"
             alignItems="center"
           >
-            <Button 
+            {/* <Button 
               variant="contained" 
               startIcon={<AddIcon />} 
               // onClick={handleClickOpen}
               >
               Thêm tài khoản
-            </Button>
+            </Button> */}
+            <AddAdminAccount />
           </Grid>
           <Grid
             item

@@ -13,4 +13,7 @@ import com.backend.springboot.ecommerce.entity.ImportDetail;
 public interface ImportDetailRepository extends JpaRepository<ImportDetail, Integer> {
     @Query("SELECT i FROM ImportDetail i WHERE i.importImport.importId = :importId")
     List<ImportDetail> findByImportID(@Param("importId") int ImportId);
+
+    @Query("SELECT id FROM ImportDetail id WHERE id.importImport.importId = :importId")
+    List<ImportDetail> findByImportImport_ImportId(@Param("importId") Integer importId);
 }

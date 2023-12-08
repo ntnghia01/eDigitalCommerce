@@ -95,3 +95,11 @@ export const VisuallyHiddenInput = styled('input')({
 export const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
+export function formatCurrency(number) {
+  const formatter = new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+  });
+  return formatter.format(number);
+}

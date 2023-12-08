@@ -110,7 +110,7 @@ export default function ReviewDetailComponent (props) {
                 />
                 <TextField
                     margin="normal"
-                    label="Nhập nội dung đánh giá"
+                    // label="Nhập nội dung đánh giá"
                     multiline
                     rows={4}
                     fullWidth
@@ -119,7 +119,7 @@ export default function ReviewDetailComponent (props) {
                 />
             </DialogContent>
             <DialogActions>
-                <Button>OK</Button>
+                <Button onClick={()=>handleClose()}>OK</Button>
             </DialogActions>
         </Dialog>
         <Snackbar

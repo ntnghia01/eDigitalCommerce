@@ -91,13 +91,13 @@ const dataset = [
   {
     london: 61,
     paris: 70,
-    newYork: 103,
+    newYork: 10,
     seoul: 25,
     month: 'Dec',
   },
 ];
 
-const valueFormatter = (value) => `${value}mm`;
+const valueFormatter = (value) => `${value}000 VND`;
 
 export default function BarsChart() {
   return (

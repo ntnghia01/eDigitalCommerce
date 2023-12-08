@@ -75,4 +75,29 @@ public class ReviewController {
         }
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
+
+    @GetMapping("/average-rating-for-orders")
+    public ResponseEntity<Integer> getAverageRatingForOrders() {
+        List<Review> reviewsForOrders = reviewRepository.findAll(); // Lấy tất cả đánh giá
+
+        if (!reviewsForOrders.isEmpty()) {
+            double totalRating = 0.0;
+            int count = 0;
+
+            // Tính tổng đánh giá và đếm số lượng đánh giá
+            for (Review review : reviewsForOrders) {
+                totalRating += review.getReviewRate();
+                count++;
+            }
+
+            if (count > 0) {
+                double averageRating = totalRating / count;
+                int roundedAverage = (int) Math.round(averageRating);
+                return ResponseEntity.ok(roundedAverage);
+            }
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
 }

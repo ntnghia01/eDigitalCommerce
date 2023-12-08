@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.backend.springboot.ecommerce.entity.Comment;
+import com.backend.springboot.ecommerce.entity.Product;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
@@ -20,4 +21,6 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
     @Query("SELECT b FROM Comment b WHERE (b.cmtContent LIKE %:cmtContent% OR b.product.proName LIKE %:cmtContent% OR b.user.userName LIKE %:cmtContent%) AND b.cmtStatus <> -1")
     List<Comment> findCommentByContent(@Param("cmtContent") String cmtContent);
+
+
 }

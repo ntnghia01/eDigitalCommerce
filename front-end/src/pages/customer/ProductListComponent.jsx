@@ -141,6 +141,7 @@ export default function ProductListComponent() {
                       <Button
                         variant="contained"
                         onClick={() => handleAddToCart(product.proId)}
+                        disabled={product.proQuantity <= 0}
                       >
                         <ShoppingCartIcon />
                       </Button>

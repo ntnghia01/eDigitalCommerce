@@ -38,6 +38,7 @@ import {
 } from "../../../components/customize/CustomizeComponent";
 
 export default function Cart() {
+  console.log("check");
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const handleOpenSnackbar = () => {
     setOpenSnackbar(true);
@@ -65,21 +66,48 @@ export default function Cart() {
     };
   }, [dispatch]);
 
-  const handleUpdateCartQuantity = (quantity, cartDetailId) => {
-    console.log(quantity);
-    console.log(cartDetailId);
-    const updateCartDetailQuantityData = {
-      cartDetailId: cartDetailId,
-      cartDetailQuantity: quantity,
-    };
-    dispatch(updateCartDetailQuantity(updateCartDetailQuantityData)).then(
-      () => {
-        dispatch(fetchCartDetail(customerId));
+  // const handleUpdateCartQuantity = (quantity, cartDetailId) => {
+  //   console.log(quantity);
+  //   console.log(cartDetailId);
+  //   const updateCartDetailQuantityData = {
+  //     cartDetailId: cartDetailId,
+  //     cartDetailQuantity: quantity,
+  //   };
+  //   dispatch(updateCartDetailQuantity(updateCartDetailQuantityData)).then(
+  //     () => {
+  //       dispatch(fetchCartDetail(customerId));
 
-        dispatch(calcCart(customerId)).then(() => {});
-        handleOpenSnackbar();
+  //       dispatch(calcCart(customerId)).then(() => {});
+  //       handleOpenSnackbar();
+  //     }
+  //   );
+  // };
+  const handleUpdateCartQuantity = async (quantity, cartDetailId) => {
+    const cartDetail = cart.find((item) => item.cartDetailId === cartDetailId);
+  
+    try {
+      const response = await fetch(`http://localhost:9004/api/product/${cartDetail.product.proId}`);
+      const { proQuantity } = await response.json();
+  
+      if (quantity > proQuantity) {
+        alert("Số lượng sản phẩm vượt quá trong kho");
+        return;
       }
-    );
+  
+      const updateCartDetailQuantityData = {
+        cartDetailId: cartDetailId,
+        cartDetailQuantity: quantity,
+      };
+  
+      dispatch(updateCartDetailQuantity(updateCartDetailQuantityData)).then(() => {
+        dispatch(fetchCartDetail(customerId));
+        dispatch(calcCart(customerId));
+        handleOpenSnackbar();
+      });
+    } catch (error) {
+      console.error("Error fetching product quantity:", error);
+      // Xử lý lỗi khi gọi API lấy số lượng sản phẩm
+    }
   };
 
   const [totalCart, setTotalCart] = useState();
@@ -114,6 +142,24 @@ export default function Cart() {
     console.log(e.target.value);
     const searchData = { cartId: localStorage.getItem("customerID"), search: e.target.value };
     dispatch(searchCartDetail(searchData));
+  };
+
+  const handleCheckout = async () => {
+    // Kiểm tra số lượng sản phẩm trong giỏ hàng
+    for (const cartDetail of cart) {
+      // Gọi API để lấy proQuantity dựa trên cartDetail.product.proId
+      const response = await fetch(`http://localhost:9004/api/product/${cartDetail.product.proId}`);
+      const { proQuantity } = await response.json();
+      
+      // So sánh proQuantity với số lượng sản phẩm trong giỏ hàng
+      if (cartDetail.cartDetailQuantity > proQuantity) {
+        alert("Số lượng sản phẩm vượt quá trong kho");
+        return; // Dừng kiểm tra khi gặp sản phẩm vượt quá
+      }
+    }
+
+    // Nếu không có sản phẩm nào vượt quá, thực hiện chuyển hướng đến trang thanh toán
+    navigate(`/checkout/${customerId}`);
   };
 
   return (
@@ -269,7 +315,7 @@ export default function Cart() {
         <h2>Tổng số lượng: {calcCartData.totalQuantityItem}</h2>
         {countCart > 0 ? (
           <Button
-            onClick={() => navigate(`/checkout/${customerId}`)}
+            onClick={() => handleCheckout()}
             variant="contained"
             size="large"
             startIcon={<ShoppingCartCheckoutIcon />}

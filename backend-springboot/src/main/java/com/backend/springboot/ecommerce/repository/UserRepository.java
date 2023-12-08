@@ -1,7 +1,9 @@
 package com.backend.springboot.ecommerce.repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -38,5 +40,17 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("SELECT b FROM User b WHERE (b.userName LIKE %:search% OR b.userPhone LIKE %:search% OR b.userEmail LIKE %:search%) AND b.userRole = :userRole AND b.userStatus <> -1")
     List<User> findUserFollowRole(@Param("search") String search, @Param("userRole") Integer userRole);
+
+    @Query("SELECT u FROM User u WHERE u.userStatus <> -1")
+    List<User> findAllUser();
+
+    @Query(value = "SELECT COUNT(u.user_id) as value, "
+            + "CASE u.user_sex "
+            + "WHEN 1 THEN 'Nam' "
+            + "WHEN 2 THEN 'Nữ' "
+            + "ELSE 'Khác' END as label "
+            + "FROM tbl_user u WHERE u.user_status <> -1 "
+            + "GROUP BY u.user_sex", nativeQuery = true)
+    List<Object[]> getUserCountByGender();
 
 }

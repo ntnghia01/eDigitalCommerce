@@ -7,7 +7,8 @@ const prefixAPI = 'http://localhost:9004';
 const initialState = {
     customerAccounts: [],
     shipperAccounts: [],
-    adminAccounts: []
+    adminAccounts: [],
+    users: []
 }
 
 export const fetchCustomerAccounts = createAsyncThunk (
@@ -107,6 +108,15 @@ export const searchShipperAccount = createAsyncThunk (
     }
 )
 
+export const fetchAllUserAccount = createAsyncThunk (
+    'account/fetchAllUserAccount',
+    async () => {
+        const response = await axios.get(prefixAPI + '/api/account');
+        return response.data;
+    }
+)
+
+
 
 export const uploadAvatar = createAsyncThunk (
     'account/uploadAvatar',
@@ -159,6 +169,9 @@ const accountSlice = createSlice ({
             })
             .addCase(searchShipperAccount.fulfilled, (state, action) => {
                 state.shipperAccounts = action.payload;
+            })
+            .addCase(fetchAllUserAccount.fulfilled, (state, action) => {
+                state.users = action.payload;
             })
     }
 })

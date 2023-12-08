@@ -24,6 +24,7 @@ import {
 } from "@mui/material";
 import Search from "@mui/icons-material/Search";
 import {
+  getOrderDetailByOrderCode,
   getOrderDetailByOrderId,
   lookupOrder,
 } from "../../../slices/orderSlice";
@@ -40,7 +41,7 @@ const steps1 = [
   "Đang giao",
   "Đã giao",
   "Hoàn thành",
-  "Đánh giá",
+  // "Đánh giá",
 ];
 
 export default function LookupPage() {
@@ -50,13 +51,15 @@ export default function LookupPage() {
   const [lookupKeyword, setLookupKeyword] = useState("");
 
   const handleLookup = () => {
+    console.log(lookupKeyword);
     const lookupData = {
       orderCode: lookupKeyword,
     };
     dispatch(lookupOrder(lookupData)).then(() => {
       console.log("OK");
     });
-    dispatch(getOrderDetailByOrderId(1));
+    // const orderCode = lookupKeyword;
+    dispatch(getOrderDetailByOrderCode(lookupKeyword));
   };
 
   const order = useSelector((state) => state.order.lookedUpOrder);
@@ -126,14 +129,18 @@ export default function LookupPage() {
               <Typography variant="h5" sx={{ textAlign: "center", margin: 1 }}>
                 Trạng thái đơn hàng
               </Typography>
-
+              {order.orderStatus==-1 ? (
+                <Typography variant="h4" sx={{color: 'red', textAlign: "center"}}>Đã hủy</Typography>
+              )
+              :
+            
               <Box sx={{ maxWidth: "100%", display: 'flex', justifyContent: 'center' }}>
                 <Stepper activeStep={order.orderStatus-1} orientation="vertical">
                   <Step key={1}>
                     <StepLabel>
                       <Stack>
                         <Typography variant="h6">Đang chờ xử lý</Typography>
-                        <div>{order.orderCreatedAt != null ? order.orderCreatedAt :""}</div>
+                        <div>{order.orderCreatedAt != null ? formatDateTime(order.orderCreatedAt) :""}</div>
                       </Stack>
                     </StepLabel>
                   </Step>
@@ -141,7 +148,7 @@ export default function LookupPage() {
                     <StepLabel>
                       <Stack>
                         <Typography variant="h6">Đang chờ giao</Typography>
-                        <div>{order.orderConfirmed != null ? order.orderConfirmed :""}</div>
+                        <div>{order.orderConfirmed != null ? formatDateTime(order.orderConfirmed) :""}</div>
                       </Stack>
                     </StepLabel>
                   </Step>
@@ -149,7 +156,7 @@ export default function LookupPage() {
                     <StepLabel>
                       <Stack>
                         <Typography variant="h6">Đang giao</Typography>
-                        <div>{order.orderShipping != null ? order.orderShipping :""}</div>
+                        <div>{order.orderShipping != null ? formatDateTime(order.orderShipping) :""}</div>
                       </Stack>
                     </StepLabel>
                   </Step>
@@ -157,7 +164,7 @@ export default function LookupPage() {
                     <StepLabel>
                       <Stack>
                         <Typography variant="h6">Đã giao</Typography>
-                        <div>{order.orderShipped != null ? order.orderShipped :""}</div>
+                        <div>{order.orderShipped != null ? formatDateTime(order.orderShipped) :""}</div>
                       </Stack>
                     </StepLabel>
                   </Step>
@@ -165,20 +172,20 @@ export default function LookupPage() {
                     <StepLabel>
                       <Stack>
                         <Typography variant="h6">Hoàn thành</Typography>
-                        <div>{order.orderCompleted != null ? order.orderCompleted :""}</div>
+                        <div>{order.orderCompleted != null ? formatDateTime(order.orderCompleted) :""}</div>
                       </Stack>
                     </StepLabel>
                   </Step>
-                  <Step key={6}>
+                  {/* <Step key={6}>
                     <StepLabel>
                       <Stack>
                         <Typography variant="h6">Đánh giá</Typography>
-                        {/* <div>{order.orderConfirmed != null ? order.orderConfirmed :""}</div> */}
                       </Stack>
                     </StepLabel>
-                  </Step>
+                  </Step> */}
                 </Stepper>
               </Box>
+              }
             </Grid>
             <Grid item xs={6} sx={{ borderLeft: 1 }}>
               <Typography variant="h5" sx={{ textAlign: "center", margin: 1 }}>
@@ -236,7 +243,7 @@ export default function LookupPage() {
                   Dự kiến giao vào: {formatDateTime(order.orderShipExpected)}
                 </div>
                 {order.shipper != null ? (
-                  <div>Tên người giao: {order.shipper.userName}</div>
+                  <div>Tên người giao: {order.shipper.userName} {order.shipper.userPhone}</div>
                 ) : (
                   ""
                 )}

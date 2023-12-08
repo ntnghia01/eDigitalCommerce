@@ -8,13 +8,22 @@ import PaidIcon from "@mui/icons-material/Paid";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
 import MessageIcon from "@mui/icons-material/Message";
 import StarBorderPurple500Icon from "@mui/icons-material/StarBorderPurple500";
-import { useEffect } from "react";
 import BarsChart from "./charts/BarsChart";
 import PieChartWithCenterLabel from "./charts/PieChartWithCenterLabel";
 import BarsChart2 from "./charts/BarsChart2";
 import StraightAnglePieChart from "./charts/StraightAnglePieChart";
 import StackChart from "./charts/StackChart";
 import PieChart2 from "./charts/PieChart2";
+
+import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import { reviewAVG, totalProductQuantity, totalRevenue, totalSoldProducts } from "../../../slices/revenueSlice";
+
+import { formatCurrency } from "../../../components/customize/CustomizeComponent";
+import { fetchOrder } from "../../../slices/orderSlice";
+import { fetchComments } from "../../../slices/commentSlice";
+import { fetchContacts } from "../../../slices/contactSlice";
+import { fetchAllUserAccount } from "../../../slices/accountSlice";
 
 const sample = [1, 10, 30, 50, 70, 90, 100];
 const data = [
@@ -61,6 +70,30 @@ const seriesC = {
 
 
 export default function AdminDashboard() {
+  console.log("check");
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(totalRevenue());
+    dispatch(fetchOrder());
+    dispatch(fetchComments());
+    dispatch(reviewAVG());
+    dispatch(totalProductQuantity());
+    dispatch(totalSoldProducts());
+    dispatch(fetchContacts());
+    dispatch(fetchAllUserAccount());
+    
+  },[dispatch])
+
+  const revenue = useSelector((state) => state.revenue.revenue);
+  const orders = useSelector((state) => state.order.orders);
+  const comments = useSelector((state) => state.comment.comments);
+  const reviewAvg = useSelector((state) => state.revenue.reviewAvg);
+  const totalProductQuantityValue = useSelector((state) => state.revenue.totalProductQuantityValue);
+  const totalSoldProductsValue = useSelector((state) => state.revenue.totalSoldProductsValue);
+  const contacts = useSelector((state) => state.contact.contacts);
+  const users = useSelector((state) => state.account.users);
 
   return (
     <>
@@ -79,7 +112,8 @@ export default function AdminDashboard() {
                   Tổng doanh thu
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                  23.390.000 VND
+                  {formatCurrency(revenue)
+                        }
                 </Typography>
               </div>
             </Stack>
@@ -97,7 +131,7 @@ export default function AdminDashboard() {
                   Tổng đơn hàng
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                  12
+                  {orders.length}
                 </Typography>
               </div>
             </Stack>
@@ -115,7 +149,7 @@ export default function AdminDashboard() {
                   Tổng bình luận
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                  23
+                  {comments.length}
                 </Typography>
               </div>
             </Stack>
@@ -133,7 +167,79 @@ export default function AdminDashboard() {
                   Đánh giá trung bình
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                  <Rating name="read-only" value={4} readOnly />
+                  <Rating name="read-only" value={reviewAvg} readOnly />
+                </Typography>
+              </div>
+            </Stack>
+          </Paper>
+        </Grid>
+        <Grid item xs={3}>
+          <Paper
+            elevation={3}
+            sx={{ padding: 4, boxShadow: "0px 4px 8px #78909c" }}
+          >
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <PaidIcon fontSize="large" />
+              <div>
+                <Typography variant="h6" gutterBottom>
+                  Tổng sản phẩm trong kho
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                  {totalProductQuantityValue}
+                </Typography>
+              </div>
+            </Stack>
+          </Paper>
+        </Grid>
+        <Grid item xs={3}>
+          <Paper
+            elevation={3}
+            sx={{ padding: 4, boxShadow: "0px 4px 8px #4db6ac" }}
+          >
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <Inventory2Icon fontSize="large" />
+              <div>
+                <Typography variant="h6" gutterBottom>
+                  Tổng sản phẩm đã bán
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                  {totalSoldProductsValue}
+                </Typography>
+              </div>
+            </Stack>
+          </Paper>
+        </Grid>
+        <Grid item xs={3}>
+          <Paper
+            elevation={3}
+            sx={{ padding: 4, boxShadow: "0px 4px 8px #c0ca33" }}
+          >
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <MessageIcon fontSize="large" />
+              <div>
+                <Typography variant="h6" gutterBottom>
+                  Lượt liên hệ
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                  {contacts.length}
+                </Typography>
+              </div>
+            </Stack>
+          </Paper>
+        </Grid>
+        <Grid item xs={3}>
+          <Paper
+            elevation={3}
+            sx={{ padding: 4, boxShadow: "0px 4px 8px #2e7d32", height: 133 }}
+          >
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <StarBorderPurple500Icon fontSize="large" />
+              <div>
+                <Typography variant="h6" gutterBottom>
+                  Tổng thành viên hiện tại
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                  {users.length}
                 </Typography>
               </div>
             </Stack>
@@ -145,6 +251,18 @@ export default function AdminDashboard() {
           </Paper>
         </Grid>
         <Grid item xs={4}>
+          <Paper elevation={3}>
+            <PieChartWithCenterLabel />
+            <PieChart2 />
+          </Paper>
+        </Grid>
+        <Grid item xs={4}>
+          
+          <Paper elevation={3}>
+              <BarsChart />
+            </Paper>
+        </Grid>
+        {/* <Grid item xs={4}>
           <Paper elevation={3}>
             <ScatterChart
               width={500}
@@ -163,6 +281,7 @@ export default function AdminDashboard() {
           </Paper>
         </Grid>
         <Grid item xs={4}>
+          
           <Paper elevation={3}>
             <BarChart
               width={500}
@@ -177,20 +296,9 @@ export default function AdminDashboard() {
         </Grid>
         <Grid item xs={4}>
           <Paper elevation={3}>
-            <BarsChart />
-          </Paper>
-        </Grid>
-        <Grid item xs={4}>
-          <Paper elevation={3}>
-            <PieChartWithCenterLabel />
-            <PieChart2 />
-          </Paper>
-        </Grid>
-        <Grid item xs={4}>
-          <Paper elevation={3}>
             <StackChart />
           </Paper>
-        </Grid>
+        </Grid> */}
 
 
       </Grid>

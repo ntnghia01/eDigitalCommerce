@@ -17,8 +17,8 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories } from "../../../slices/categorySlice";
-import { fetchBrands } from "../../../slices/brandSlice";
+import { fetchCategories, fetchCategoriesAvailable } from "../../../slices/categorySlice";
+import { fetchBrands, fetchBrandsAvailable } from "../../../slices/brandSlice";
 import { addProduct, fetchProducts } from "../../../slices/productSlice";
 import StandardImageList from "./ProductImageList";
 import { useState } from "react";
@@ -47,6 +47,9 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 export default function ProductAddForm() {
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
+    
+    dispatch(fetchCategoriesAvailable());
+    dispatch(fetchBrandsAvailable());
     setOpen(true);
   };
   const handleClose = () => {
@@ -66,13 +69,17 @@ export default function ProductAddForm() {
 
   const dispatch = useDispatch();
 
-  const categoryData = useSelector((state) => state.categories.categories);
-  const brandData = useSelector((state) => state.brand.brands);
+
 
   React.useEffect(() => {
-    dispatch(fetchCategories());
-    dispatch(fetchBrands());
+    dispatch(fetchCategoriesAvailable());
+    dispatch(fetchBrandsAvailable());
   }, [dispatch]);
+
+  
+
+  const categoryData = useSelector((state) => state.categories.categories);
+  const brandData = useSelector((state) => state.brand.brands);
 
   const [proName, setProName] = React.useState();
   const [proPrice, setProPrice] = React.useState();
