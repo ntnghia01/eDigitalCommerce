@@ -45,4 +45,5 @@ List<Product> findMostSoldProducts();
     Long getTotalQuantitySoldByProduct(@Param("product") Product product);
 
 
+    List<Product> findAllByOrderByProPriceDesc();
 }

@@ -181,6 +181,14 @@ export const getProductRecentOrderBrand = createAsyncThunk (
     }
 )
 
+export const lowToHigh = createAsyncThunk (
+    'product/lowToHigh',
+    async () => {
+        const response = await axios.get(prefixAPI + `/api/product/sorted-by-price-desc}`);
+        return response.data;
+    }
+)
+
 const productSlice = createSlice ({
     name: 'products',
     initialState,
@@ -222,6 +230,9 @@ const productSlice = createSlice ({
             })
             .addCase(getProductRecentOrderBrand.fulfilled, (state, action) => {
                 state.productRecentOrderBrand = action.payload;
+            })
+            .addCase(lowToHigh.fulfilled, (state, action) => {
+                state.products = action.payload;
             })
     }
 });

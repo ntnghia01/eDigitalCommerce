@@ -350,4 +350,10 @@ public class ProductController {
         return ResponseEntity.ok(new ArrayList<>()); // Trả về danh sách rỗng nếu không có sản phẩm
     }
 
+    @GetMapping("/sorted-by-price-desc")
+    public ResponseEntity<List<Product>> getProductsSortedByPriceDesc() {
+        List<Product> sortedProducts = productRepository.findAllByOrderByProPriceDesc();
+        return new ResponseEntity<>(sortedProducts, HttpStatus.OK);
+    }
+
 }

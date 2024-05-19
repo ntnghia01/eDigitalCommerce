@@ -24,6 +24,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchAvailableProducts,
   fetchProducts,
+  lowToHigh,
 } from "../../slices/productSlice";
 import { useState } from "react";
 import { addToCart, countCartDetail } from "../../slices/cartSlice";
@@ -93,6 +94,17 @@ export default function FilterProductComponent() {
   };
 
   const [sortByPrice, setSortByPrice] = useState("");
+  const [sortByPrice2, setSortByPrice2] = useState("");
+  const [sortByPrice3, setSortByPrice3] = useState("");
+  const [sortByPrice4, setSortByPrice4] = useState("");
+
+  const handleSortByPrice = (value) => {
+    setSortByPrice(value);
+    if (value === "priceLowToHigh") {
+      dispatch(lowToHigh()); // Gọi action dispatch lowToHigh
+    }
+    // Các điều kiện xử lý cho các lựa chọn sắp xếp khác nếu cần
+  };
 
   return (
     <>
@@ -234,7 +246,7 @@ export default function FilterProductComponent() {
               Độ mới: Cũ nhất đến mới nhất
             </MenuItem>
           </Select>
-          <Select
+          {/* <Select
             displayEmpty
             inputProps={{ "aria-label": "Sắp xếp sản phẩm" }}
             renderValue={(selected) =>
@@ -255,7 +267,23 @@ export default function FilterProductComponent() {
             <MenuItem value="oldestFirst">
               Độ mới: Cũ nhất đến mới nhất
             </MenuItem>
-          </Select>
+          </Select> */}
+                <Select
+        displayEmpty
+        inputProps={{ "aria-label": "Sắp xếp sản phẩm" }}
+        renderValue={(selected) =>
+          selected ? `Sắp xếp theo: ${selected}` : "Giá: Thấp đến cao"
+        }
+        sx={{ height: 30 }}
+        value={sortByPrice}
+        onChange={(e) => handleSortByPrice(e.target.value)}
+      >
+        <MenuItem value="" disabled>
+          Sắp xếp theo giá
+        </MenuItem>
+        <MenuItem value="priceLowToHigh">Giá: Thấp đến cao</MenuItem>
+        {/* Các MenuItem khác */}
+      </Select>
           <Select
             displayEmpty
             inputProps={{ "aria-label": "Sắp xếp sản phẩm" }}
