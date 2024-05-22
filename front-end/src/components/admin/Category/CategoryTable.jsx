@@ -1,12 +1,13 @@
 // import * as React from 'react';
 import Stack from "@mui/material/Stack";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Paper from "@mui/material/Paper";
 import Typography from '@mui/material/Typography';
-// import Input from '@mui/joy/Input';
+import EditIcon from '@mui/icons-material/Edit';
 
 import {
+  Button,
   Table,
   TableBody,
   TableCell,
@@ -32,18 +33,24 @@ const formatDateTime = (oriDateTime) => {
   return newDateTime;
 }
 
-export default function CategoryTable () {
-
+const CategoryTable = React.memo(() => {
+    console.log("CategoryTable");
     const dispatch = useDispatch();
     const categories = useSelector((state) => state.categories.categories);
     const isLoading = useSelector((state) => state.categories.isLoading);
     const error = useSelector((state) => state.categories.error);
+    const [selectedCategory, setSelectedCategory] = useState(null);
 
     useEffect(() => {
         dispatch(fetchCategories());
     }, [dispatch]);
 
-    console.log(categories);
+    const handleClickCategory = useCallback((category) => {
+      console.log("handleClickCategory: ", category.cateId);
+      setSelectedCategory(category);
+    }, []);
+
+    // console.log(categories);
 
     return (
         <TableContainer component={Paper}>
@@ -85,7 +92,15 @@ export default function CategoryTable () {
                   <TableCell align="right">{formatDateTime(category.cateUpdatedAt)}</TableCell>
                   <TableCell align="left">
                     <Stack direction="row" spacing={2}>
-                      <CategoryEditForm data={{id: category.cateId, name: category.cateName, desc: category.cateDesc, status: category.cateStatus}}/>
+                      {/* <CategoryEditForm data={{id: category.cateId, name: category.cateName, desc: category.cateDesc, status: category.cateStatus}}/> */}
+                      <Button
+                        variant="contained"
+                        color="warning"
+                        startIcon={<EditIcon />}
+                        onClick={() => handleClickCategory(category)}
+                      >
+                        Cập nhật
+                      </Button>
                       <DeleteCategory deleteID={category.cateId}/>
                     </Stack>
                   </TableCell>
@@ -93,6 +108,12 @@ export default function CategoryTable () {
               ))}
             </TableBody>
           </Table>
-        </TableContainer>
-    )
-}
+          {
+          selectedCategory && (
+            <CategoryEditForm category={selectedCategory} onClose={() => setSelectedCategory(null)}  />
+          )
+        }
+        </TableContainer> 
+    );
+});
+export default CategoryTable;

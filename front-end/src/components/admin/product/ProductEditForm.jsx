@@ -24,7 +24,7 @@ import { editSupplier, fetchSuppliers } from "../../../slices/supplierSlice";
 import { fetchCategories } from "../../../slices/categorySlice";
 import { editProduct, fetchProducts } from "../../../slices/productSlice";
 import StandardImageList from "./ProductImageList";
-
+import { useEffect, useCallback } from "react";
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -45,19 +45,20 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function ProductEditForm(props) {
-  console.log("Check");
+const ProductEditForm = React.memo(({ product, onClose }) => {
+  console.log("ProductEditForm");
 
-  const existProduct = props.data;
+  const existProduct = product;
   // console.log(existProduct);
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const handleClickOpen = () => {
     setOpen(true);
   };
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setOpen(false);
-  };
+    onClose();
+  }, [onClose]);
 
   const [openSuccessSnackbar, setOpenSuccessSnackbar] = React.useState(false);
   const handleOpenSuccessSnackbar = () => {
@@ -75,20 +76,20 @@ export default function ProductEditForm(props) {
   const categoryData = useSelector((state) => state.categories.categories);
   const brandData = useSelector((state) => state.brand.brands);
 
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(fetchCategories());
     dispatch(fetchBrands());
-  }, [dispatch]);
+  }, [dispatch, product.proId]);
 
-  const [proId, setProductID] = React.useState(existProduct.id);
-  const [proName, setProductName] = React.useState(existProduct.name);
-  const [proPrice, setProductPrice] = React.useState(existProduct.price);
-  const [proDesc, setProductDesc] = React.useState(existProduct.desc);
-  const [proQuantity, setProductQuantity] = React.useState(existProduct.quantity);
-  const [proStatus, setProductStatus] = React.useState(existProduct.status);
-  const [proCategory, setProductCategory] = React.useState(existProduct.category);
-  const [proBrand, setProductBrand] = React.useState(existProduct.brand);
-  const [proImage, setProImage] = React.useState(existProduct.image);
+  const [proId, setProductID] = React.useState(existProduct.proId);
+  const [proName, setProductName] = React.useState(existProduct.proName);
+  const [proPrice, setProductPrice] = React.useState(existProduct.proPrice);
+  const [proDesc, setProductDesc] = React.useState(existProduct.proDesc);
+  const [proQuantity, setProductQuantity] = React.useState(existProduct.proQuantity);
+  const [proStatus, setProductStatus] = React.useState(existProduct.proStatus);
+  const [proCategory, setProductCategory] = React.useState(existProduct.category.cateId);
+  const [proBrand, setProductBrand] = React.useState(existProduct.brand.brandId);
+  const [proImage, setProImage] = React.useState(existProduct.proImage);
   const [image, setImage] = React.useState();
 //   console.log(proCategory);
 
@@ -112,6 +113,7 @@ export default function ProductEditForm(props) {
         dispatch(fetchProducts());
         handleOpenSuccessSnackbar();
         console.log("Cập nhật sản phẩm thành công!");
+        onClose();
       })
       .catch((error) => {
         console.log('Cập nhật sản phẩm thất bại: ' + error);
@@ -121,8 +123,8 @@ export default function ProductEditForm(props) {
    
 
   return (
-    <div>
-      <Button
+    <>
+      {/* <Button
         variant="contained"
         color="warning"
         startIcon={<EditIcon />}
@@ -130,7 +132,7 @@ export default function ProductEditForm(props) {
         style={{width: '8rem'}}
       >
         Cập nhật
-      </Button>
+      </Button> */}
       <Dialog
         open={open}
         TransitionComponent={Transition}
@@ -138,7 +140,7 @@ export default function ProductEditForm(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{`Chỉnh Sửa Sản Phẩm #${props.data.id}`}</DialogTitle>
+        <DialogTitle>{`Chỉnh Sửa Sản Phẩm #${product.proId}`}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -242,8 +244,8 @@ export default function ProductEditForm(props) {
           </Button>
           <img
             // srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-            src={`http://localhost:9004/api/product/images/${existProduct.image}`}
-            alt={existProduct.name}
+            src={`http://localhost:9004/api/product/images/${existProduct.proImage}`}
+            alt={existProduct.proName}
             loading="lazy"
             style={{width: "100px", height: "100px"}}
           />
@@ -275,6 +277,8 @@ export default function ProductEditForm(props) {
           Cập nhật thành công!
         </Alert>
       </Snackbar>
-    </div>
+    </>
   );
-}
+});
+
+export default ProductEditForm;

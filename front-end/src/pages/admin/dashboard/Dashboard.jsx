@@ -70,7 +70,7 @@ const seriesC = {
 
 
 export default function AdminDashboard() {
-  console.log("check");
+  console.log("AdminDashboard");
 
   const dispatch = useDispatch();
 

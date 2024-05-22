@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.springboot.ecommerce.entity.Blog;
-import com.backend.springboot.ecommerce.entity.Brand;
 import com.backend.springboot.ecommerce.entity.User;
 import com.backend.springboot.ecommerce.payload.request.BlogRequestDto;
 import com.backend.springboot.ecommerce.payload.response.MessageResponse;

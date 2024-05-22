@@ -37,6 +37,7 @@ const formatDateTime = (oriDateTime) => {
 }
 
 export default function BrandTable() {
+    console.log("BrandTable");
 
     const dispatch = useDispatch();
     const brands = useSelector((state) => state.brand.brands);
@@ -44,7 +45,6 @@ export default function BrandTable() {
     React.useEffect(() => {
         dispatch((fetchBrands()));
     }, [dispatch]);
-    console.log(brands);
     return (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">

@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.backend.springboot.ecommerce.entity.Order;
-import com.backend.springboot.ecommerce.entity.Product;
 
 public interface OrderRepository extends JpaRepository<Order, Integer> {
 

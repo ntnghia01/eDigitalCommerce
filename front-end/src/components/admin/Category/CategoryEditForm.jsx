@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -9,7 +9,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import EditIcon from '@mui/icons-material/Edit';
 
 // import Icons
 import UpdateIcon from "@mui/icons-material/Update";
@@ -27,18 +26,19 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function CategoryEditForm(props) {
+const CategoryEditForm = React.memo(({ category, onClose }) => {
+  console.log("CategoryEditForm");
+  const existCategory = category;
+  console.log(category);
 
-  // console.log(props.data.id);
-  const existCategory = props.data;
-
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const handleClickOpen = () => {
     setOpen(true);
   };
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setOpen(false);
-  };
+    onClose();
+  }, [onClose]);
 
   const [openSuccessSnackbar, setOpenSuccessSnackbar] = React.useState(false);
   const handleOpenSuccessSnackbar = () => {
@@ -53,10 +53,10 @@ export default function CategoryEditForm(props) {
 
   const dispatch = useDispatch();
 
-  const [cateId, setCateID] = useState(existCategory.id);
-  const [cateName, setCateName] = useState(existCategory.name);
-  const [cateDesc, setCateDesc] = useState(existCategory.desc);
-  const [cateStatus, setCateStatus] = useState(existCategory.status);
+  const [cateId, setCateID] = useState(existCategory.cateId);
+  const [cateName, setCateName] = useState(existCategory.cateName);
+  const [cateDesc, setCateDesc] = useState(existCategory.cateDesc);
+  const [cateStatus, setCateStatus] = useState(existCategory.cateStatus);
   
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -71,6 +71,7 @@ export default function CategoryEditForm(props) {
         dispatch(fetchCategories());
         handleOpenSuccessSnackbar();
         console.log('Category updated successfully');
+        onClose();
       })
       .catch((error) => {
           console.log('Sủa danh mục thất bại: '+error);
@@ -80,14 +81,14 @@ export default function CategoryEditForm(props) {
 
   return (
     <div>
-      <Button
+      {/* <Button
         variant="contained"
         color="warning"
         startIcon={<EditIcon />}
         onClick={handleClickOpen}
       >
         Cập nhật
-      </Button>
+      </Button> */}
       <Dialog
         open={open}
         TransitionComponent={Transition}
@@ -95,7 +96,7 @@ export default function CategoryEditForm(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{`Chỉnh Sửa Danh Mục #${existCategory.id}`}</DialogTitle>
+        <DialogTitle>{`Chỉnh Sửa Danh Mục #${existCategory.cateId}`}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -142,4 +143,6 @@ export default function CategoryEditForm(props) {
       </Snackbar>
     </div>
   );
-}
+})
+
+export default CategoryEditForm;

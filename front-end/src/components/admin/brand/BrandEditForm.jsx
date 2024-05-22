@@ -26,6 +26,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 export default function BrandEditForm(props) {
+  console.log("BrandEditForm");
 
   const existBrand = props.data;
 

@@ -17,6 +17,7 @@ const xLabels = [
 ];
 
 export default function BarsChart2() {
+  console.log("BarsChart2");
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -27,8 +28,8 @@ export default function BarsChart2() {
   const totaAmountByQuarterValue = useSelector((state) => state.revenue.totaAmountByQuarterValue);
   const totaAmountByQuarterValue2 = useSelector((state) => state.revenue.totaAmountByQuarterValue2);
 
-  console.log(totaAmountByQuarterValue);
-  console.log(totaAmountByQuarterValue2);
+  // console.log(totaAmountByQuarterValue);
+  // console.log(totaAmountByQuarterValue2);
   return (
     <BarChart
       width={500}
