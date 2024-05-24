@@ -29,7 +29,9 @@ public class OrderDetail {
     @Column (name = "order_detail_quantity")
     private Integer orderDetailQuantity;
 
-    
+    @Column (name = "order_detail_price", nullable = true)
+    private Integer orderDetailPrice;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name="order_detail_created_at", nullable = true, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime orderDetailCreatedAt;

@@ -247,7 +247,7 @@ export default function OrderHistoryDetailComponent (props) {
                     <Grid item xs={5}>
                       <div>{orderDetail.product.proName}</div>
                       <div>
-                        {formatNumberWithCommas(orderDetail.product.proPrice)}{" "}
+                        {formatNumberWithCommas(orderDetail.orderDetailPrice)}{" "}
                         VNĐ
                       </div>
                     </Grid>

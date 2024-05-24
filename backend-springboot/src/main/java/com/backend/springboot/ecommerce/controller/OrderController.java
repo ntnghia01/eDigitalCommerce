@@ -147,6 +147,7 @@ public class OrderController {
                 newOrderDetail.setOrderDetailQuantity(cartDetail.getCartDetailQuantity());
                 newOrderDetail.setOrderDetailCreatedAt(LocalDateTime.now());
                 newOrderDetail.setOrderDetailUpdatedAt(LocalDateTime.now());
+                newOrderDetail.setOrderDetailPrice(product.getProPrice());
                 OrderDetail savedOrderDetail = orderDetailRepository.save(newOrderDetail);
                 System.out.println("Saved: #" + savedOrderDetail.getOrderDetailId());
                 // Delete cartDetail
@@ -156,20 +157,20 @@ public class OrderController {
 
             // Gửi email chúc mừng khi đặt hàng thành công
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-            String formattedOrderTime = savedOrder.getOrderTime().format(formatter);
+            // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            // String formattedOrderTime = savedOrder.getOrderTime().format(formatter);
             
-            String to = customer.getUserEmail(); // Địa chỉ email của người nhận
-            String subject = "E-STORE CONGRATULATES YOU ON YOUR SUCCESSFULLY ORDER!!!";
-            String message = "Xin chào, " + customer.getUserName() + "!<br/><br/>"
-                    + "Cảm ơn bạn đã đặt hàng tại cửa hàng của chúng tôi. Đơn hàng của bạn đã được nhận và đang được xử lý.<br/><br/>"
-                    + "THÔNG TIN ĐƠN HÀNG:<br/>"
-                    + "Mã đơn hàng: " + savedOrder.getOrderCode() + "<br/>"
-                    + "Thời gian đặt hàng: " + formattedOrderTime + "<br/><br/>"
-                    + "Xin cảm ơn và chúc bạn một ngày tốt lành!";
+            // String to = customer.getUserEmail(); // Địa chỉ email của người nhận
+            // String subject = "E-STORE CONGRATULATES YOU ON YOUR SUCCESSFULLY ORDER!!!";
+            // String message = "Xin chào, " + customer.getUserName() + "!<br/><br/>"
+            //         + "Cảm ơn bạn đã đặt hàng tại cửa hàng của chúng tôi. Đơn hàng của bạn đã được nhận và đang được xử lý.<br/><br/>"
+            //         + "THÔNG TIN ĐƠN HÀNG:<br/>"
+            //         + "Mã đơn hàng: " + savedOrder.getOrderCode() + "<br/>"
+            //         + "Thời gian đặt hàng: " + formattedOrderTime + "<br/><br/>"
+            //         + "Xin cảm ơn và chúc bạn một ngày tốt lành!";
             
-            // Gửi email khi đặt hàng thành công
-            emailService.sendEmail(to, subject, message);
+            // // Gửi email khi đặt hàng thành công
+            // emailService.sendEmail(to, subject, message);
 
             return ResponseEntity.ok(new MessageResponse("Create order successfully!!!"));
         } else {
