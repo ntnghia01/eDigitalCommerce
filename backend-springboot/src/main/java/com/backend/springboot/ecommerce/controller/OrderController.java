@@ -340,21 +340,23 @@ public class OrderController {
 
 
             }
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-            String formattedOrderTime = savedOrder.getOrderTime().format(formatter);
+
+            // Send Email Cancel
+            // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            // String formattedOrderTime = savedOrder.getOrderTime().format(formatter);
             
-            String to = savedOrder.getUser().getUserEmail(); // Địa chỉ email của người nhận
-            String subject = "E-STORE ANNOUNCEMENT OF SUCCESSFUL ORDER CANCELLATION!!!";
-            String message = "Xin chào, " + savedOrder.getUser().getUserName() + "!<br/><br/>"
-                    + "Đơn hàng của bạn đã được hủy!<br/><br/>"
-                    + "THÔNG TIN ĐƠN HÀNG:<br/>"
-                    + "Mã đơn hàng: " + savedOrder.getOrderCode() + "<br/>"
-                    + "Thời gian đặt hàng: " + formattedOrderTime + "<br/><br/>"
-                    + "Thời gian hủy: " + savedOrder.getOrderCancelled() + "<br/><br/>"
-                    + "Xin lỗi nếu bạn không hài lòng với đơn hàng và mong bạn sẽ trở lại mua hàng!";
+            // String to = savedOrder.getUser().getUserEmail(); // Địa chỉ email của người nhận
+            // String subject = "E-STORE ANNOUNCEMENT OF SUCCESSFUL ORDER CANCELLATION!!!";
+            // String message = "Xin chào, " + savedOrder.getUser().getUserName() + "!<br/><br/>"
+            //         + "Đơn hàng của bạn đã được hủy!<br/><br/>"
+            //         + "THÔNG TIN ĐƠN HÀNG:<br/>"
+            //         + "Mã đơn hàng: " + savedOrder.getOrderCode() + "<br/>"
+            //         + "Thời gian đặt hàng: " + formattedOrderTime + "<br/><br/>"
+            //         + "Thời gian hủy: " + savedOrder.getOrderCancelled() + "<br/><br/>"
+            //         + "Xin lỗi nếu bạn không hài lòng với đơn hàng và mong bạn sẽ trở lại mua hàng!";
             
-            // Gửi email khi đặt hàng thành công
-            emailService.sendEmail(to, subject, message);
+            // Gửi email khi hủy đơn hàng thành công
+            // emailService.sendEmail(to, subject, message);
             System.out.println("confirm cancel order: " + savedOrder.getOrderId());
             return ResponseEntity.ok(new MessageResponse("confirm cancel successfully!"));
         } else {

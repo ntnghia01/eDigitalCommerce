@@ -273,6 +273,7 @@ export default function Cart() {
                   // fullWidth
                   variant="filled"
                   defaultValue={cartDetail.cartDetailQuantity}
+                  inputProps={{ min: 1 }}
                   onChange={(e) => {
                     handleUpdateCartQuantity(
                       e.target.value,

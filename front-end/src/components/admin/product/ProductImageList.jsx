@@ -21,7 +21,7 @@ export default function StandardImageList(props) {
   return (
     <ImageList sx={{ width: 500, height: '100%' }} cols={3} rowHeight={164}>
       {images.map((item) => (
-        <ImageListItem key={item.img}>
+        <ImageListItem key={item.imageId}>
           <img
             srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
             src={`http://localhost:9004/api/product/images/${item.image}`}
