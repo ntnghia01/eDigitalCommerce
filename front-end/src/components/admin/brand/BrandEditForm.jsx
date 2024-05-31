@@ -6,7 +6,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
-import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -16,45 +15,32 @@ import { FormControlLabel, Radio, RadioGroup, TextField } from "@mui/material";
 import FormLabel from '@mui/material/FormLabel';
 import { useDispatch } from "react-redux";
 import { editBrand, fetchBrands } from "../../../slices/brandSlice";
+import { useCallback } from "react";
+import { memo } from "react";
+import { Transition } from "../../customize/CustomizeComponent";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
-export default function BrandEditForm(props) {
-  console.log("BrandEditForm");
+const BrandEditForm = memo(({brand, onClose, handleOpenSuccessSnackbar}) => {
+  console.log("BrandEditForm", brand.brandId);
 
-  const existBrand = props.data;
+  const existBrand = brand;
 
-  const [open, setOpen] = React.useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
+  const [open, setOpen] = React.useState(true);
+
+  const handleClose = useCallback(() => {
     setOpen(false);
-  };
+    onClose();
+  }, [onClose]);
 
-  const [openSuccessSnackbar, setOpenSuccessSnackbar] = React.useState(false);
-  const handleOpenSuccessSnackbar = () => {
-    setOpenSuccessSnackbar(true);
-  };
-  const handleCloseSuccessSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpenSuccessSnackbar(false);
-  };
+
 
   const dispatch = useDispatch();
 
-  const [brandId, setBrandID] = React.useState(existBrand.id);
-  const [brandName, setBrandName] = React.useState(existBrand.name);
-  const [brandDesc, setBrandDesc] = React.useState(existBrand.desc);
-  const [brandStatus, setBrandStatus] = React.useState(existBrand.status);
+  const [brandId, setBrandID] = React.useState(existBrand.brandId);
+  const [brandName, setBrandName] = React.useState(existBrand.brandName);
+  const [brandDesc, setBrandDesc] = React.useState(existBrand.brandDesc);
+  const [brandStatus, setBrandStatus] = React.useState(existBrand.brandStatus);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -66,26 +52,26 @@ export default function BrandEditForm(props) {
     dispatch(editBrand({brandId: brandId, brandData: updateBrandData}))
       .then(() => {
         dispatch(fetchBrands());
-        handleOpenSuccessSnackbar();
+        handleOpenSuccessSnackbar("Cập nhật thương hiệu thành công");
         console.log("Cập nhật thương hiệu thành công!");
+        handleClose();
       })
       .catch((error) => {
         console.log('Cập nhật thương hiệu thất bại: ' + error);
       })
-    setOpen(false);
   };
    
 
   return (
     <div>
-      <Button
+      {/* <Button
         variant="contained"
         color="warning"
         startIcon={<EditIcon />}
         onClick={handleClickOpen}
       >
         Cập nhật
-      </Button>
+      </Button> */}
       <Dialog
         open={open}
         TransitionComponent={Transition}
@@ -93,7 +79,7 @@ export default function BrandEditForm(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{`Chỉnh Sửa Thương Hiệu ID=${props.data.id}`}</DialogTitle>
+        <DialogTitle>{`Chỉnh Sửa Thương Hiệu ID=${brand.brandId}`}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -133,11 +119,7 @@ export default function BrandEditForm(props) {
           <Button onClick={handleClose}>Hủy</Button>
         </DialogActions>
       </Dialog>
-      <Snackbar open={openSuccessSnackbar} autoHideDuration={3000} onClose={handleCloseSuccessSnackbar}>
-        <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%', color: 'white' }}>
-          Cập nhật thành công!
-        </Alert>
-      </Snackbar>
     </div>
   );
-}
+})
+export default BrandEditForm;

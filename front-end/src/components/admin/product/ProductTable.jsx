@@ -10,6 +10,9 @@ import Typography from '@mui/material/Typography';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import EditIcon from '@mui/icons-material/Edit';
 import Button from "@mui/material/Button";
+import Snackbar from '@mui/material/Snackbar';
+import { Alert } from "../../customize/CustomizeComponent";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import {
   IconButton,
@@ -23,33 +26,15 @@ import {
 
 
 
+
 import { fetchProducts, searchProductByName } from "../../../slices/productSlice";
 import ProductEditForm from "./ProductEditForm";
 import ConfirmDeleteProduct from "./ConfirmDeleteProduct";
 import ProductImageComponent from "./ProductImageComponent";
 import { useCallback, useState } from "react";
 import { useEffect } from "react";
+import { formatDateTime, formatNumberWithCommas } from "../../customize/CustomizeComponent";
 
-const formatDateTime = (oriDateTime) => {
-    const dateTime = new Date(oriDateTime);
-    const date = dateTime.getDate();
-    const month = dateTime.getMonth() + 1;
-    const year = dateTime.getFullYear();
-    const hour = dateTime.getHours();
-    const minute = dateTime.getMinutes();
-    const second = dateTime.getSeconds();
-
-    const newDateTime = `${date < 10 ? '0' : ''}${date}-${month < 10 ? '0' : ''}${month}-${year} ${hour < 10 ? '0' : ''}${hour}:${minute < 10 ? '0' : ''}${minute}:${second < 10 ? '0' : ''}${second}`;
-    return newDateTime;
-}
-
-function formatNumberWithCommas(input) {
-  if (typeof input === "number" && Number.isInteger(input))
-    input = input.toString();
-  if (typeof input !== "string") return "Invalid input";
-  if (!/^\d+$/.test(input)) return "Invalid input";
-  return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-}
 
 const uploadDirectory = "D:/Projects/eDigitalCommerce/backend-springboot/src/main/java/com/backend/springboot/ecommerce/uploads/";
 
@@ -59,6 +44,7 @@ const ProductTable = React.memo(() => {
   const products = useSelector((state) => state.product.products);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedProductEdit, setSelectedProductEdit] = useState(null);
+  const [selectedProductDelete, setSelectedProductDelete] = useState(null);
 
   useEffect(() => {
       dispatch(fetchProducts());
@@ -74,7 +60,21 @@ const ProductTable = React.memo(() => {
     setSelectedProductEdit(product);
   }, []);
 
+  const [openSuccessSnackbar, setOpenSuccessSnackbar] = useState(false);
+  const [snackbarSuccessContent, setSnackbarSuccessContent] = useState("Cập nhật thành công");
+  const handleOpenSuccessSnackbar = (content) => {
+    setOpenSuccessSnackbar(true);
+    setSnackbarSuccessContent(content);
+  };
+  const handleCloseSuccessSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSuccessSnackbar(false);
+  };
+
   return (
+    <>
       <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -136,7 +136,9 @@ const ProductTable = React.memo(() => {
                                   >
                                     Cập nhật
                                   </Button>
-                                  <ConfirmDeleteProduct deleteID={product.proId} />
+                                  <Button variant="contained" color="error" startIcon={<DeleteIcon />} onClick={() => setSelectedProductDelete(product)}>
+                                    Xóa
+                                </Button>
                               </Stack>
                           </TableCell>
                       </TableRow>
@@ -155,7 +157,20 @@ const ProductTable = React.memo(() => {
                   onClose={() => setSelectedProductEdit(null)} 
               />
           )}
+          {selectedProductDelete && (
+              <ConfirmDeleteProduct 
+                  product={selectedProductDelete} 
+                  onClose={() => setSelectedProductDelete(null)}
+                handleOpenSuccessSnackbar={handleOpenSuccessSnackbar}
+              />
+          )}
       </TableContainer>
+      <Snackbar open={openSuccessSnackbar} autoHideDuration={3000} onClose={handleCloseSuccessSnackbar}>
+          <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%', color: 'white' }}>
+            {snackbarSuccessContent}
+          </Alert>
+        </Snackbar>
+      </>
   );
 });
 

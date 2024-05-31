@@ -18,32 +18,15 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import RateReviewIcon from '@mui/icons-material/RateReview';
 
 import { fetchImports } from "../../../slices/importSlice";
 import { fetchOrder, getOrderDetailByOrderId } from "../../../slices/orderSlice";
 import { useEffect } from "react";
 import { fetchReviews } from "../../../slices/reviewSlice";
 import ReviewDetailComponent from "./ReviewDetailComponent";
-
-const formatDateTime = (oriDateTime) => {
-    const dateTime = new Date(oriDateTime);
-    const date = dateTime.getDate();
-    const month = dateTime.getMonth() + 1;
-    const year = dateTime.getFullYear();
-    const hour = dateTime.getHours();
-    const minute = dateTime.getMinutes();
-    const second = dateTime.getSeconds();
-
-    const newDateTime = `${date < 10 ? '0' : ''}${date}-${month < 10 ? '0' : ''}${month}-${year} ${hour < 10 ? '0' : ''}${hour}:${minute < 10 ? '0' : ''}${minute}:${second < 10 ? '0' : ''}${second}`;
-    return newDateTime;
-}
-
-function formatNumberWithCommas(input) {
-    if (typeof input === "number" && Number.isInteger(input)) input = input.toString();
-    if (typeof input !== "string") return "Invalid input";
-    if (!/^\d+$/.test(input)) return "Invalid input";
-    return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  }
+import { formatDateTime, Alert, formatNumberWithCommas } from "../../customize/CustomizeComponent";
+import { useState } from "react";
   
 
 export default function ReviewTableComponent() {
@@ -57,8 +40,11 @@ export default function ReviewTableComponent() {
     }, [dispatch]);
     // console.log(products);
 
+    const [selectedReview, setSelectedReview] = useState(null);
+
     
     return (
+      <>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
@@ -91,7 +77,7 @@ export default function ReviewTableComponent() {
                     
                       {/* <ConfirmPayment order={order} /> */}
                         {/* <Button>Chi tiết</Button> */}
-                        <ReviewDetailComponent review={review} />
+                        <Button size="small" variant="outlined" startIcon={<RateReviewIcon />} onClick={() => setSelectedReview(review)}>Xem chi tiết</Button>
                     {/* </Stack> */}
                   </TableCell>
                 </TableRow>
@@ -99,5 +85,11 @@ export default function ReviewTableComponent() {
             </TableBody>
           </Table>
         </TableContainer>
+        {
+          selectedReview && (
+            <ReviewDetailComponent review={selectedReview} onClose={() => setSelectedReview(null)}/>
+          )
+        }
+      </>
     )
 }

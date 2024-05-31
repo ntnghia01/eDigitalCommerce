@@ -5,52 +5,33 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Slide from '@mui/material/Slide';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { useDispatch } from 'react-redux';
-import { deleteBrand, fetchBrands } from '../../../slices/brandSlice';
 import { deleteSupplier, fetchSuppliers } from '../../../slices/supplierSlice';
+import { Transition } from '../../customize/CustomizeComponent';
+import { memo } from 'react';
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+const ConfirmDeleteSupplier = memo(({supplier, onClose, handleOpenSuccessSnackbar}) => {
 
-export default function ConfirmDeleteSupplier(props) {
-
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
+    onClose();
   };
 
-  const [openSuccessSnackbar, setOpenSuccessSnackbar] = React.useState(false);
-  const handleOpenSuccessSnackbar = () => {
-    setOpenSuccessSnackbar(true);
-  };
-  const handleCloseSuccessSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpenSuccessSnackbar(false);
-  };
 
   const dispatch = useDispatch();
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(deleteSupplier(props.deleteID))
+    dispatch(deleteSupplier(supplier.supplierId))
       .then(() => {
         dispatch(fetchSuppliers());
-        setOpen(false);
-        handleOpenSuccessSnackbar();
+        handleOpenSuccessSnackbar("Xóa nhà cung cấp thành công");
         console.log('Delete supplier successfully');
+        handleClose();
       })
       .catch((error) => {
         console.log("Delete supplier failed");
@@ -59,9 +40,6 @@ export default function ConfirmDeleteSupplier(props) {
 
   return (
     <div>
-      <Button variant="contained" color="error" startIcon={<DeleteIcon />} onClick={handleClickOpen}>
-        Xóa
-      </Button>
       <Dialog
         open={open}
         TransitionComponent={Transition}
@@ -72,7 +50,7 @@ export default function ConfirmDeleteSupplier(props) {
         <DialogTitle>{"Xóa Nhà Cung Cấp"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Bạn có chắc muốn xóa nhà cung cấp ID={props.deleteID} này?
+            Bạn có chắc muốn xóa nhà cung cấp #{supplier.supplierId} này?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -80,11 +58,8 @@ export default function ConfirmDeleteSupplier(props) {
           <Button onClick={handleClose}>Hủy</Button>
         </DialogActions>
       </Dialog>
-      <Snackbar open={openSuccessSnackbar} autoHideDuration={3000} onClose={handleCloseSuccessSnackbar}>
-        <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%', color: 'white' }}>
-          Xóa thành công!
-        </Alert>
-      </Snackbar>
     </div>
   );
-}
+})
+
+export default ConfirmDeleteSupplier;

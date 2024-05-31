@@ -8,6 +8,7 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from '@mui/material/Typography';
 import EditIcon from '@mui/icons-material/Edit';
+import InfoIcon from "@mui/icons-material/Info";
 
 import {
   Button,
@@ -19,23 +20,16 @@ import {
   TableRow,
 } from "@mui/material";
 
-import { fetchImports } from "../../../slices/importSlice";
+import { fetchImportDetails, fetchImports } from "../../../slices/importSlice";
 import ImportDetailButton from "./ImportDetailButton";
+import { formatDateTime, Alert } from "../../customize/CustomizeComponent";
+import { useState } from "react";
 
-const formatDateTime = (oriDateTime) => {
-    const dateTime = new Date(oriDateTime);
-    const date = dateTime.getDate();
-    const month = dateTime.getMonth() + 1;
-    const year = dateTime.getFullYear();
-    const hour = dateTime.getHours();
-    const minute = dateTime.getMinutes();
-    const second = dateTime.getSeconds();
 
-    const newDateTime = `${date < 10 ? '0' : ''}${date}-${month < 10 ? '0' : ''}${month}-${year} ${hour < 10 ? '0' : ''}${hour}:${minute < 10 ? '0' : ''}${minute}:${second < 10 ? '0' : ''}${second}`;
-    return newDateTime;
-}
 
 export default function ImportTable() {
+
+  console.log("ImportTable");
 
     const dispatch = useDispatch();
     const imports = useSelector((state) => state.import.imports);
@@ -44,7 +38,15 @@ export default function ImportTable() {
         dispatch(fetchImports());
     }, [dispatch]);
     // console.log(products);
+
+    const [selectedImport, setSelectedImport] = useState(null);
+    const handleClickImportDetail = (import1) => {
+      setSelectedImport(import1);
+      dispatch(fetchImportDetails(import1.importId));
+    }
+
     return (
+      <>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
@@ -87,7 +89,13 @@ export default function ImportTable() {
                   <TableCell align="right">{formatDateTime(import1.importUpdatedAt)}</TableCell>
                   <TableCell align="left">
                     <Stack spacing={2}>
-                    <ImportDetailButton importID={import1.importId}/>
+                      <Button
+                        variant="contained"
+                        startIcon={<InfoIcon />}
+                        onClick={() =>  handleClickImportDetail(import1)}
+                      >
+                        Chi tiết
+                      </Button>
                     </Stack>
                   </TableCell>
                 </TableRow>
@@ -95,5 +103,11 @@ export default function ImportTable() {
             </TableBody>
           </Table>
         </TableContainer>
+        {
+          selectedImport && (
+            <ImportDetailButton import1={selectedImport} onClose={() => setSelectedImport(null)}/>
+          )
+        }
+        </>
     )
 }

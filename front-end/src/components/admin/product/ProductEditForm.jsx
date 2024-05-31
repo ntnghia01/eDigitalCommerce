@@ -19,37 +19,19 @@ import UpdateIcon from "@mui/icons-material/Update";
 import { Box, FormControl, FormControlLabel, Radio, RadioGroup, Select, Stack, TextField, Typography } from "@mui/material";
 import FormLabel from '@mui/material/FormLabel';
 import { useDispatch, useSelector } from "react-redux";
-import { editBrand, fetchBrands } from "../../../slices/brandSlice";
+import { editBrand, fetchBrands, fetchBrandsAvailable } from "../../../slices/brandSlice";
 import { editSupplier, fetchSuppliers } from "../../../slices/supplierSlice";
-import { fetchCategories } from "../../../slices/categorySlice";
+import { fetchCategories, fetchCategoriesAvailable } from "../../../slices/categorySlice";
 import { editProduct, fetchProducts } from "../../../slices/productSlice";
 import StandardImageList from "./ProductImageList";
 import { useEffect, useCallback } from "react";
+import { Transition, Alert, VisuallyHiddenInput } from "../../customize/CustomizeComponent";
 
-const VisuallyHiddenInput = styled('input')({
-  clip: 'rect(0 0 0 0)',
-  clipPath: 'inset(50%)',
-  height: 1,
-  overflow: 'hidden',
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  whiteSpace: 'nowrap',
-  width: 1,
-});
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 const ProductEditForm = React.memo(({ product, onClose }) => {
-  console.log("ProductEditForm");
+  console.log("ProductEditForm", product.proId);
 
-  const existProduct = product;
-  // console.log(existProduct);
+  console.log(product);
 
   const [open, setOpen] = React.useState(true);
   const handleClickOpen = () => {
@@ -76,20 +58,22 @@ const ProductEditForm = React.memo(({ product, onClose }) => {
   const categoryData = useSelector((state) => state.categories.categories);
   const brandData = useSelector((state) => state.brand.brands);
 
+  console.log(categoryData);
+
   useEffect(() => {
-    dispatch(fetchCategories());
-    dispatch(fetchBrands());
+    dispatch(fetchCategoriesAvailable());
+    dispatch(fetchBrandsAvailable());
   }, [dispatch, product.proId]);
 
-  const [proId, setProductID] = React.useState(existProduct.proId);
-  const [proName, setProductName] = React.useState(existProduct.proName);
-  const [proPrice, setProductPrice] = React.useState(existProduct.proPrice);
-  const [proDesc, setProductDesc] = React.useState(existProduct.proDesc);
-  const [proQuantity, setProductQuantity] = React.useState(existProduct.proQuantity);
-  const [proStatus, setProductStatus] = React.useState(existProduct.proStatus);
-  const [proCategory, setProductCategory] = React.useState(existProduct.category.cateId);
-  const [proBrand, setProductBrand] = React.useState(existProduct.brand.brandId);
-  const [proImage, setProImage] = React.useState(existProduct.proImage);
+  const [proId, setProductID] = React.useState(product.proId);
+  const [proName, setProductName] = React.useState(product.proName);
+  const [proPrice, setProductPrice] = React.useState(product.proPrice);
+  const [proDesc, setProductDesc] = React.useState(product.proDesc);
+  const [proQuantity, setProductQuantity] = React.useState(product.proQuantity);
+  const [proStatus, setProductStatus] = React.useState(product.proStatus);
+  const [proCategory, setProductCategory] = React.useState(product.category.cateId);
+  const [proBrand, setProductBrand] = React.useState(product.brand.brandId);
+  const [proImage, setProImage] = React.useState(product.proImage);
   const [image, setImage] = React.useState();
 //   console.log(proCategory);
 
@@ -124,15 +108,6 @@ const ProductEditForm = React.memo(({ product, onClose }) => {
 
   return (
     <>
-      {/* <Button
-        variant="contained"
-        color="warning"
-        startIcon={<EditIcon />}
-        onClick={handleClickOpen}
-        style={{width: '8rem'}}
-      >
-        Cập nhật
-      </Button> */}
       <Dialog
         open={open}
         TransitionComponent={Transition}
@@ -244,8 +219,8 @@ const ProductEditForm = React.memo(({ product, onClose }) => {
           </Button>
           <img
             // srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-            src={`http://localhost:9004/api/product/images/${existProduct.proImage}`}
-            alt={existProduct.proName}
+            src={`http://localhost:9004/api/product/images/${product.proImage}`}
+            alt={product.proName}
             loading="lazy"
             style={{width: "100px", height: "100px"}}
           />

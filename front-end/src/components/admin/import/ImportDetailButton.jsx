@@ -4,8 +4,6 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import Slide from "@mui/material/Slide";
-import InfoIcon from "@mui/icons-material/Info";
 import Paper from "@mui/material/Paper";
 import {
   Table,
@@ -17,44 +15,23 @@ import {
 } from "@mui/material";
 
 import { useDispatch, useSelector } from "react-redux";
-import { fetchImportDetails } from "../../../slices/importSlice";
+import { memo } from "react";
+import { Transition, formatNumberWithCommas } from "../../customize/CustomizeComponent";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
-function formatNumberWithCommas(input) {
-  if (typeof input === "number" && Number.isInteger(input))
-    input = input.toString();
-  if (typeof input !== "string") return "Invalid input";
-  if (!/^\d+$/.test(input)) return "Invalid input";
-  return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-}
+const ImportDetailButton = memo(({import1, onClose}) => {
+  console.log("ImportDetailButton", import1.importId);
 
-export default function ImportDetailButton(props) {
-  const dispatch = useDispatch();
-
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const importDetails = useSelector((state) => state.import.importDetails);
-  const handleClickOpen = () => {
-    setOpen(true);
-    console.log(props.importID);
-    dispatch(fetchImportDetails(props.importID));
-    console.log(importDetails);
-  };
   const handleClose = () => {
     setOpen(false);
+    onClose();
   };
 
   return (
     <div>
-      <Button
-        variant="contained"
-        startIcon={<InfoIcon />}
-        onClick={handleClickOpen}
-      >
-        Chi tiết
-      </Button>
+
       <Dialog
         open={open}
         TransitionComponent={Transition}
@@ -62,7 +39,7 @@ export default function ImportDetailButton(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{`Chi Tiết Phiếu Nhập Hàng #${props.importID}`}</DialogTitle>
+        <DialogTitle>{`Chi Tiết Phiếu Nhập Hàng #${import1.importId}`}</DialogTitle>
         <DialogContent>
           <TableContainer component={Paper}>
             <Table aria-label="simple table">
@@ -104,4 +81,6 @@ export default function ImportDetailButton(props) {
       </Dialog>
     </div>
   );
-}
+})
+
+export default ImportDetailButton;

@@ -70,6 +70,7 @@ const steps1 = [
 ];
 
 export default function OrderDetail(props) {
+  console.log("OrderDetail");
   const { order } = props;
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {

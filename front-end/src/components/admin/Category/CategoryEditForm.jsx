@@ -1,55 +1,35 @@
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
 
-// import Icons
-import UpdateIcon from "@mui/icons-material/Update";
 import { FormControlLabel, Radio, RadioGroup, TextField } from "@mui/material";
-import FormLabel from '@mui/material/FormLabel';
 
-import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories, fetchCategory, updateCategory } from "../../../slices/categorySlice";
+import { useDispatch } from "react-redux";
+import { fetchCategories, updateCategory } from "../../../slices/categorySlice";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
-const CategoryEditForm = React.memo(({ category, onClose }) => {
-  console.log("CategoryEditForm");
+const CategoryEditForm = React.memo(({ category, onClose, handleOpenSuccessSnackbar }) => {
+  console.log("CategoryEditForm", category.cateId);
   const existCategory = category;
   console.log(category);
 
   const [open, setOpen] = React.useState(true);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+
   const handleClose = useCallback(() => {
     setOpen(false);
     onClose();
   }, [onClose]);
 
-  const [openSuccessSnackbar, setOpenSuccessSnackbar] = React.useState(false);
-  const handleOpenSuccessSnackbar = () => {
-    setOpenSuccessSnackbar(true);
-  };
-  const handleCloseSuccessSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpenSuccessSnackbar(false);
-  };
+
 
   const dispatch = useDispatch();
 
@@ -69,26 +49,17 @@ const CategoryEditForm = React.memo(({ category, onClose }) => {
     dispatch(updateCategory({categoryId: cateId, categoryData: updateCategoryData}))
       .then(() => {
         dispatch(fetchCategories());
-        handleOpenSuccessSnackbar();
+        handleOpenSuccessSnackbar("Cập nhật danh mục thành công");
         console.log('Category updated successfully');
-        onClose();
+        handleClose();
       })
       .catch((error) => {
           console.log('Sủa danh mục thất bại: '+error);
       });
-    setOpen(false);
   }
 
   return (
     <div>
-      {/* <Button
-        variant="contained"
-        color="warning"
-        startIcon={<EditIcon />}
-        onClick={handleClickOpen}
-      >
-        Cập nhật
-      </Button> */}
       <Dialog
         open={open}
         TransitionComponent={Transition}
@@ -136,11 +107,6 @@ const CategoryEditForm = React.memo(({ category, onClose }) => {
           <Button onClick={handleClose}>Hủy</Button>
         </DialogActions>
       </Dialog>
-      <Snackbar open={openSuccessSnackbar} autoHideDuration={3000} onClose={handleCloseSuccessSnackbar}>
-        <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%', color: 'white' }}>
-          Cập nhật thành công!
-        </Alert>
-      </Snackbar>
     </div>
   );
 })

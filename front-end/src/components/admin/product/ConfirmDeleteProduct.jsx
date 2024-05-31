@@ -5,52 +5,36 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Slide from '@mui/material/Slide';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { useDispatch } from 'react-redux';
-import { deleteBrand, fetchBrands } from '../../../slices/brandSlice';
-import { deleteSupplier, fetchSuppliers } from '../../../slices/supplierSlice';
 import { deleteProduct, fetchProducts } from '../../../slices/productSlice';
+import { Transition } from '../../customize/CustomizeComponent';
+import { memo } from 'react';
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
-export default function ConfirmDeleteProduct(props) {
 
-  const [open, setOpen] = React.useState(false);
+const ConfirmDeleteProduct = memo(({product, onClose, handleOpenSuccessSnackbar}) => {
+  console.log("ConfirmDeleteProduct", product.proId);
+  const [open, setOpen] = React.useState(true);
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
+    onClose();
   };
 
-  const [openSuccessSnackbar, setOpenSuccessSnackbar] = React.useState(false);
-  const handleOpenSuccessSnackbar = () => {
-    setOpenSuccessSnackbar(true);
-  };
-  const handleCloseSuccessSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpenSuccessSnackbar(false);
-  };
+
 
   const dispatch = useDispatch();
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(deleteProduct(props.deleteID))
+    dispatch(deleteProduct(product.proId))
       .then(() => {
         dispatch(fetchProducts());
         setOpen(false);
-        handleOpenSuccessSnackbar();
+        handleOpenSuccessSnackbar("Xóa sản phẩm thành công");
+        handleClose();
         console.log('Delete product successfully');
       })
       .catch((error) => {
@@ -60,9 +44,7 @@ export default function ConfirmDeleteProduct(props) {
 
   return (
     <div>
-      <Button variant="contained" color="error" startIcon={<DeleteIcon />} onClick={handleClickOpen}>
-        Xóa
-      </Button>
+
       <Dialog
         open={open}
         TransitionComponent={Transition}
@@ -70,7 +52,7 @@ export default function ConfirmDeleteProduct(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{`Xóa Sản Phẩm #${props.deleteID}`}</DialogTitle>
+        <DialogTitle>{`Xóa Sản Phẩm #${product.proId}`}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             Bạn có chắc muốn xóa sản phẩm này?
@@ -81,11 +63,8 @@ export default function ConfirmDeleteProduct(props) {
           <Button onClick={handleClose}>Hủy</Button>
         </DialogActions>
       </Dialog>
-      <Snackbar open={openSuccessSnackbar} autoHideDuration={3000} onClose={handleCloseSuccessSnackbar}>
-        <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%', color: 'white' }}>
-          Xóa thành công!
-        </Alert>
-      </Snackbar>
     </div>
   );
-}
+})
+
+export default ConfirmDeleteProduct;

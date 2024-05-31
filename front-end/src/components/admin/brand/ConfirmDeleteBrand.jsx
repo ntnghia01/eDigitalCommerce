@@ -8,48 +8,36 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { useDispatch } from 'react-redux';
 import { deleteBrand, fetchBrands } from '../../../slices/brandSlice';
+import { Transition } from '../../customize/CustomizeComponent';
+import { memo } from 'react';
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+const ConfirmDeleteBrand = memo(({brand, onClose, handleOpenSuccessSnackbar}) => {
+  console.log("ComfirmDeleteBrand", brand.brandId);
 
-export default function ComfirmDeleteBrand(props) {
-
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
+    onClose();
   };
 
-  const [openSuccessSnackbar, setOpenSuccessSnackbar] = React.useState(false);
-  const handleOpenSuccessSnackbar = () => {
-    setOpenSuccessSnackbar(true);
-  };
-  const handleCloseSuccessSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpenSuccessSnackbar(false);
-  };
+
 
   const dispatch = useDispatch();
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(deleteBrand(props.deleteID))
+    dispatch(deleteBrand(brand.brandId))
       .then(() => {
         dispatch(fetchBrands());
         setOpen(false);
-        handleOpenSuccessSnackbar();
+        handleOpenSuccessSnackbar("Xóa thương hiệu thành công");
         console.log('Delete brand successfully');
+        handleClose();
       })
       .catch((error) => {
         console.log("Delete brand failed");
@@ -58,9 +46,6 @@ export default function ComfirmDeleteBrand(props) {
 
   return (
     <div>
-      <Button variant="contained" color="error" startIcon={<DeleteIcon />} onClick={handleClickOpen}>
-        Xóa
-      </Button>
       <Dialog
         open={open}
         TransitionComponent={Transition}
@@ -71,7 +56,7 @@ export default function ComfirmDeleteBrand(props) {
         <DialogTitle>{"Xóa Thương Hiệu"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Bạn có chắc muốn xóa thương hiệu ID={props.deleteID} này?
+            Bạn có chắc muốn xóa thương hiệu ID={brand.brandId} này?
           </DialogContentText>
           
         </DialogContent>
@@ -80,11 +65,8 @@ export default function ComfirmDeleteBrand(props) {
           <Button onClick={handleClose}>Hủy</Button>
         </DialogActions>
       </Dialog>
-      <Snackbar open={openSuccessSnackbar} autoHideDuration={3000} onClose={handleCloseSuccessSnackbar}>
-        <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%', color: 'white' }}>
-          Xóa thành công!
-        </Alert>
-      </Snackbar>
     </div>
   );
-}
+})
+
+export default ConfirmDeleteBrand;

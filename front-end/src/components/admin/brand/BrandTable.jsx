@@ -7,8 +7,13 @@ import { useSelector, useDispatch } from "react-redux";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from '@mui/material/Typography';
+import EditIcon from '@mui/icons-material/Edit';
+import { Alert, formatDateTime } from "../../customize/CustomizeComponent";
+import Snackbar from '@mui/material/Snackbar';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import {
+  Button,
   Table,
   TableBody,
   TableCell,
@@ -19,33 +24,50 @@ import {
 
 
 
-import ComfirmDeleteBrand from "../../../components/admin/brand/ConfirmDeleteBrand";
+import ConfirmDeleteBrand from "../../../components/admin/brand/ConfirmDeleteBrand";
 import BrandEditForm from "../../../components/admin/brand/BrandEditForm";
 import { fetchBrands } from "../../../slices/brandSlice";
+import { useCallback } from "react";
+import { useState } from "react";
 
-const formatDateTime = (oriDateTime) => {
-    const dateTime = new Date(oriDateTime);
-    const date = dateTime.getDate();
-    const month = dateTime.getMonth() + 1;
-    const year = dateTime.getFullYear();
-    const hour = dateTime.getHours();
-    const minute = dateTime.getMinutes();
-    const second = dateTime.getSeconds();
-
-    const newDateTime = `${date < 10 ? '0' : ''}${date}-${month < 10 ? '0' : ''}${month}-${year} ${hour < 10 ? '0' : ''}${hour}:${minute < 10 ? '0' : ''}${minute}:${second < 10 ? '0' : ''}${second}`;
-    return newDateTime;
-}
 
 export default function BrandTable() {
     console.log("BrandTable");
 
     const dispatch = useDispatch();
     const brands = useSelector((state) => state.brand.brands);
+    const [selectedBrand, setSelectedBrand] = useState(null);
+    const [selectedBrandDelete, setSelectedBrandDelete] = useState(null);
 
     React.useEffect(() => {
         dispatch((fetchBrands()));
     }, [dispatch]);
+
+    const handleClickBrand = useCallback((brand) => {
+      console.log("handleClickBrand: ", brand.brandId);
+      setSelectedBrand(brand);
+    }, []);
+
+    const handleClickBrandDelete = useCallback((brand) => {
+      console.log("handleClickBrandDelete: ", brand.brandId);
+      setSelectedBrandDelete(brand);
+    }, []);
+
+    const [openSuccessSnackbar, setOpenSuccessSnackbar] = React.useState(false);
+    const [successSnackbarContent, setSuccessSnackbarContent] = React.useState(false);
+    const handleOpenSuccessSnackbar = (content) => {
+      setOpenSuccessSnackbar(true);
+      setSuccessSnackbarContent(content);
+    };
+    const handleCloseSuccessSnackbar = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+      setOpenSuccessSnackbar(false);
+    };
+
     return (
+      <>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
@@ -86,14 +108,39 @@ export default function BrandTable() {
                   <TableCell align="right">{formatDateTime(brand.brandUpdatedAt)}</TableCell>
                   <TableCell align="left">
                     <Stack direction="row" spacing={2}>
-                      <BrandEditForm data={{id: brand.brandId, name: brand.brandName, desc: brand.brandDesc, status: brand.brandStatus}} />
-                      <ComfirmDeleteBrand deleteID={brand.brandId}/>
+                      {/* <BrandEditForm data={{id: brand.brandId, name: brand.brandName, desc: brand.brandDesc, status: brand.brandStatus}} /> */}
+                      <Button
+                        variant="contained"
+                        color="warning"
+                        startIcon={<EditIcon />}
+                        onClick={() => handleClickBrand(brand)}
+                      >
+                        Cập nhật
+                      </Button>
+                      <Button variant="contained" color="error" startIcon={<DeleteIcon />} onClick={() => handleClickBrandDelete(brand)}>
+                        Xóa
+                      </Button>
                     </Stack>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
+          {
+            selectedBrand && (
+              <BrandEditForm brand={selectedBrand} onClose={() => setSelectedBrand(null)} handleOpenSuccessSnackbar={handleOpenSuccessSnackbar} />
+            )
+          }
+          {
+            selectedBrandDelete && (
+              <ConfirmDeleteBrand brand={selectedBrandDelete} onClose={() => setSelectedBrandDelete(null)} handleOpenSuccessSnackbar={handleOpenSuccessSnackbar} />
+            )
+          }
         </TableContainer>
+        <Snackbar open={openSuccessSnackbar} autoHideDuration={3000} onClose={handleCloseSuccessSnackbar}>
+          <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%', color: 'white' }}>
+            {successSnackbarContent}
+          </Alert>
+        </Snackbar></>
     )
 }

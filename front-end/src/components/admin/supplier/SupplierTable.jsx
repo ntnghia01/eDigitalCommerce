@@ -7,8 +7,12 @@ import { useSelector, useDispatch } from "react-redux";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from '@mui/material/Typography';
+import EditIcon from '@mui/icons-material/Edit';
+import Snackbar from '@mui/material/Snackbar';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import {
+  Button,
   Table,
   TableBody,
   TableCell,
@@ -20,21 +24,13 @@ import {
 import { fetchSuppliers } from "../../../slices/supplierSlice";
 import SupplierEditForm from "./SupplierEditForm";
 import ConfirmDeleteSupplier from "./ConfirmDeleteSupplier";
+import { formatDateTime, Alert } from "../../customize/CustomizeComponent";
+import { useState } from "react";
 
-const formatDateTime = (oriDateTime) => {
-    const dateTime = new Date(oriDateTime);
-    const date = dateTime.getDate();
-    const month = dateTime.getMonth() + 1;
-    const year = dateTime.getFullYear();
-    const hour = dateTime.getHours();
-    const minute = dateTime.getMinutes();
-    const second = dateTime.getSeconds();
-
-    const newDateTime = `${date < 10 ? '0' : ''}${date}-${month < 10 ? '0' : ''}${month}-${year} ${hour < 10 ? '0' : ''}${hour}:${minute < 10 ? '0' : ''}${minute}:${second < 10 ? '0' : ''}${second}`;
-    return newDateTime;
-}
 
 export default function SuppierTable() {
+
+  console.log("SuppierTable");
 
     const dispatch = useDispatch();
     const suppliers = useSelector((state) => state.supplier.suppliers);
@@ -42,8 +38,25 @@ export default function SuppierTable() {
     React.useEffect(() => {
         dispatch((fetchSuppliers()));
     }, [dispatch]);
-    console.log(suppliers);
+
+    const [selectedSupplierEdit, setSelectedSupplierEdit] = useState(null);
+    const [selectedSupplierDelete, setSelectedSupplierDelete] = useState(null);
+
+    const [openSuccessSnackbar, setOpenSuccessSnackbar] = React.useState(false);
+    const [snackbarSuccessContent, setSnackbarSuccessContent] = useState("Cập nhật thành công");
+    const handleOpenSuccessSnackbar = (content) => {
+      setOpenSuccessSnackbar(true);
+      setSnackbarSuccessContent(content);
+    };
+    const handleCloseSuccessSnackbar = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+      setOpenSuccessSnackbar(false);
+    };
+
     return (
+      <>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
@@ -88,8 +101,18 @@ export default function SuppierTable() {
                   {/* <TableCell align="right">{formatDateTime(supplier.supplierUpdatedAt)}</TableCell> */}
                   <TableCell align="left">
                     <Stack direction="row" spacing={2}>
-                      <SupplierEditForm data={{id: supplier.supplierId, name: supplier.supplierName, email: supplier.supplierEmail, phone: supplier.supplierPhone, address: supplier.supplierAddress, status: supplier.supplierStatus}} />
-                      <ConfirmDeleteSupplier deleteID={supplier.supplierId}/>
+                      <Button
+                        variant="contained"
+                        color="warning"
+                        startIcon={<EditIcon />}
+                        onClick={() => setSelectedSupplierEdit(supplier)}
+                        style={{width: '8rem'}}
+                      >
+                        Cập nhật
+                      </Button>
+                      <Button variant="contained" color="error" startIcon={<DeleteIcon />} onClick={() => setSelectedSupplierDelete(supplier)}>
+                        Xóa
+                      </Button>
                     </Stack>
                   </TableCell>
                 </TableRow>
@@ -97,5 +120,21 @@ export default function SuppierTable() {
             </TableBody>
           </Table>
         </TableContainer>
+        {
+          selectedSupplierEdit && (
+            <SupplierEditForm supplier={selectedSupplierEdit} onClose={() => setSelectedSupplierEdit(null)} handleOpenSuccessSnackbar={handleOpenSuccessSnackbar}/>
+          )
+        }
+        {
+          selectedSupplierDelete && (
+            <ConfirmDeleteSupplier supplier={selectedSupplierDelete} onClose={() => setSelectedSupplierDelete(null)} handleOpenSuccessSnackbar={handleOpenSuccessSnackbar}/>
+          )
+        }
+        <Snackbar open={openSuccessSnackbar} autoHideDuration={3000} onClose={handleCloseSuccessSnackbar}>
+          <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%', color: 'white' }}>
+            {snackbarSuccessContent}
+          </Alert>
+        </Snackbar>
+      </>
     )
 }

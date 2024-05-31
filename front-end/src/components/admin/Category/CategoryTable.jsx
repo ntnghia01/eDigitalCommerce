@@ -5,6 +5,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import Paper from "@mui/material/Paper";
 import Typography from '@mui/material/Typography';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 import {
   Button,
@@ -19,19 +22,8 @@ import {
 import DeleteCategory from "../../../components/admin/Category/ConfirmDeleteCategory";
 import CategoryEditForm from "../../../components/admin/Category/CategoryEditForm";
 import { fetchCategories } from "../../../slices/categorySlice";
+import { formatDateTime, Alert } from "../../customize/CustomizeComponent";
 
-const formatDateTime = (oriDateTime) => {
-  const dateTime = new Date(oriDateTime);
-  const date = dateTime.getDate();
-  const month = dateTime.getMonth() + 1;
-  const year = dateTime.getFullYear();
-  const hour = dateTime.getHours();
-  const minute = dateTime.getMinutes();
-  const second = dateTime.getSeconds();
-
-  const newDateTime = `${date < 10 ? '0' : ''}${date}-${month < 10 ? '0' : ''}${month}-${year} ${hour < 10 ? '0' : ''}${hour}:${minute < 10 ? '0' : ''}${minute}:${second < 10 ? '0' : ''}${second}`;
-  return newDateTime;
-}
 
 const CategoryTable = React.memo(() => {
     console.log("CategoryTable");
@@ -40,6 +32,7 @@ const CategoryTable = React.memo(() => {
     const isLoading = useSelector((state) => state.categories.isLoading);
     const error = useSelector((state) => state.categories.error);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [selectedCategoryDelete, setSelectedCategoryDelete] = useState(null);
 
     useEffect(() => {
         dispatch(fetchCategories());
@@ -50,9 +43,28 @@ const CategoryTable = React.memo(() => {
       setSelectedCategory(category);
     }, []);
 
+    const handleClickCategoryDelete = useCallback((category) => {
+      console.log("handleClickCategoryDelete: ", category.cateId);
+      setSelectedCategoryDelete(category);
+    }, []);
+
+    const [openSuccessSnackbar, setOpenSuccessSnackbar] = React.useState(false);
+    const [snackbarContent, setSnackbarContent] = useState("Cập nhật thành công");
+    const handleOpenSuccessSnackbar = (content) => {
+      setOpenSuccessSnackbar(true);
+      setSnackbarContent(content);
+    };
+    const handleCloseSuccessSnackbar = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+      setOpenSuccessSnackbar(false);
+    };
+
     // console.log(categories);
 
     return (
+      <>
         <TableContainer component={Paper}>
           <Table style={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
@@ -101,7 +113,9 @@ const CategoryTable = React.memo(() => {
                       >
                         Cập nhật
                       </Button>
-                      <DeleteCategory deleteID={category.cateId}/>
+                      <Button variant="contained" color="error" startIcon={<DeleteIcon />} onClick={() => handleClickCategoryDelete(category)}>
+                        Xóa
+                      </Button>
                     </Stack>
                   </TableCell>
                 </TableRow>
@@ -109,11 +123,23 @@ const CategoryTable = React.memo(() => {
             </TableBody>
           </Table>
           {
-          selectedCategory && (
-            <CategoryEditForm category={selectedCategory} onClose={() => setSelectedCategory(null)}  />
-          )
-        }
-        </TableContainer> 
+            selectedCategory && (
+              <CategoryEditForm category={selectedCategory} onClose={() => setSelectedCategory(null)} handleOpenSuccessSnackbar={handleOpenSuccessSnackbar} />
+            )
+          }
+          {
+            selectedCategoryDelete && (
+              <DeleteCategory category={selectedCategoryDelete} onClose={() => setSelectedCategoryDelete(null)} handleOpenSuccessSnackbar={handleOpenSuccessSnackbar}  />
+            )
+          }
+          
+        </TableContainer>
+        <Snackbar open={openSuccessSnackbar} autoHideDuration={3000} onClose={handleCloseSuccessSnackbar}>
+          <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%', color: 'white' }}>
+            {snackbarContent}
+          </Alert>
+        </Snackbar>
+        </>
     );
 });
 export default CategoryTable;

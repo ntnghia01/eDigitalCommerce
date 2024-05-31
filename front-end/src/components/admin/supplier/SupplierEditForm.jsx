@@ -8,7 +8,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import EditIcon from '@mui/icons-material/Edit';
 
 // import Icons
 import UpdateIcon from "@mui/icons-material/Update";
@@ -17,46 +16,30 @@ import FormLabel from '@mui/material/FormLabel';
 import { useDispatch } from "react-redux";
 import { editBrand, fetchBrands } from "../../../slices/brandSlice";
 import { editSupplier, fetchSuppliers } from "../../../slices/supplierSlice";
+import { Transition } from "../../customize/CustomizeComponent";
+import { memo } from "react";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+const SupplierEditForm = memo(({supplier, onClose, handleOpenSuccessSnackbar}) => {
 
-export default function SupplierEditForm(props) {
-
-  const existSupplier = props.data;
-
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
+    onClose();
   };
 
-  const [openSuccessSnackbar, setOpenSuccessSnackbar] = React.useState(false);
-  const handleOpenSuccessSnackbar = () => {
-    setOpenSuccessSnackbar(true);
-  };
-  const handleCloseSuccessSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpenSuccessSnackbar(false);
-  };
 
   const dispatch = useDispatch();
 
-  const [supplierId, setSupplierID] = React.useState(existSupplier.id);
-  const [supplierName, setSupplierName] = React.useState(existSupplier.name);
-  const [supplierEmail, setSupplierEmail] = React.useState(existSupplier.email);
-  const [supplierPhone, setSupplierPhone] = React.useState(existSupplier.phone);
-  const [supplierAddress, setSupplierAddress] = React.useState(existSupplier.address);
-  const [supplierStatus, setSupplierStatus] = React.useState(existSupplier.status);
+  const [supplierId, setSupplierID] = React.useState(supplier.supplierId);
+  const [supplierName, setSupplierName] = React.useState(supplier.supplierName);
+  const [supplierEmail, setSupplierEmail] = React.useState(supplier.supplierEmail);
+  const [supplierPhone, setSupplierPhone] = React.useState(supplier.supplierPhone);
+  const [supplierAddress, setSupplierAddress] = React.useState(supplier.supplierAddress);
+  const [supplierStatus, setSupplierStatus] = React.useState(supplier.supplierStatus);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -70,8 +53,9 @@ export default function SupplierEditForm(props) {
     dispatch(editSupplier({supplierId: supplierId, supplierData: updateSupplierData}))
       .then(() => {
         dispatch(fetchSuppliers());
-        handleOpenSuccessSnackbar();
+        handleOpenSuccessSnackbar("Cập nhật nhà cung cấp thành công");
         console.log("Cập nhật nhà cung cấp thành công!");
+        onClose();
       })
       .catch((error) => {
         console.log('Cập nhật nhà cung cấp thất bại: ' + error);
@@ -82,15 +66,6 @@ export default function SupplierEditForm(props) {
 
   return (
     <div>
-      <Button
-        variant="contained"
-        color="warning"
-        startIcon={<EditIcon />}
-        onClick={handleClickOpen}
-        style={{width: '8rem'}}
-      >
-        Cập nhật
-      </Button>
       <Dialog
         open={open}
         TransitionComponent={Transition}
@@ -98,7 +73,7 @@ export default function SupplierEditForm(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{`Chỉnh Sửa Nhà Cung Cấp ID=${props.data.id}`}</DialogTitle>
+        <DialogTitle>{`Chỉnh Sửa Nhà Cung Cấp ID=${supplier.supplierId}`}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -160,11 +135,8 @@ export default function SupplierEditForm(props) {
           <Button onClick={handleClose}>Hủy</Button>
         </DialogActions>
       </Dialog>
-      <Snackbar open={openSuccessSnackbar} autoHideDuration={3000} onClose={handleCloseSuccessSnackbar}>
-        <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%', color: 'white' }}>
-          Cập nhật thành công!
-        </Alert>
-      </Snackbar>
     </div>
   );
-}
+})
+
+export default SupplierEditForm;

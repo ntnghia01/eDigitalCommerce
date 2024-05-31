@@ -11,28 +11,23 @@ import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
-import RateReviewIcon from '@mui/icons-material/RateReview';
 import { IconButton, TextField } from "@mui/material";
 import { fetchReviews, reviewOrder } from "../../../slices/reviewSlice";
 import { getOrderByCustomerId } from "../../../slices/orderSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { useEffect } from "react";
+import { memo } from "react";
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
-export default function ReviewDetailComponent (props) {
-    const {review} = props;
+const ReviewDetailComponent = memo(({review, onClose}) => {
+    console.log("ReviewDetailComponent");
     // console.log(order);
 
-    const dispatch = useDispatch();
-
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(true);
     const handleClickOpen = () => {
         // if (order.orderCompleted == null) {
         //     alert("Vui lòng đợi đến khi hoàn thành đơn hàng")
@@ -42,35 +37,13 @@ export default function ReviewDetailComponent (props) {
     };
     const handleClose = () => {
         setOpen(false);
+        onClose();
     };
 
-    const [openSnackbar, setOpenSnackbar] = React.useState(false);
-    const handleOpenSnackbar = () => {
-      setOpenSnackbar(true);
-    };
-    const handleCloseSnackbar = (event, reason) => {
-      if (reason === "clickaway") {
-        return;
-      }
-      setOpenSnackbar(false);
-    };
-
-
-
-    useEffect(() => {
-        fetchReviews();
-    })
-
-    const reviews = useSelector((state) => state.review.reviews);
-
-    // const [isReviewed, setIsReviewed] = useState();
-
-    // const isReviewed = reviews.some((review) => review.order.orderId == order.orderId);
-    // console.log("isReviewed:", isReviewed);
 
     return (
         <>
-        <Button size="small" variant="outlined" startIcon={<RateReviewIcon />} onClick={handleClickOpen}>Xem chi tiết</Button>
+        
         <Dialog
             open={open}
             TransitionComponent={Transition}
@@ -80,14 +53,6 @@ export default function ReviewDetailComponent (props) {
         >
             <DialogTitle>{"Chi tiết đánh giá đơn hàng"} #{review.reviewId}</DialogTitle>
             <DialogContent>
-                {/* <TextField
-                    margin="normal"
-                    label="Nhập mức đánh giá"
-                    fullWidth
-                    value={reviewRate}
-                    type="number"
-                    onChange={(e) => setReviewRate(e.target.value)}
-                /> */}
                 <Typography component="legend">Khách hàng: {review.user.userName}</Typography>
                 <Typography component="legend">Mã đơn hàng: {review.order.orderCode}<IconButton
                       onClick={() =>
@@ -122,19 +87,8 @@ export default function ReviewDetailComponent (props) {
                 <Button onClick={()=>handleClose()}>OK</Button>
             </DialogActions>
         </Dialog>
-        <Snackbar
-            open={openSnackbar}
-            autoHideDuration={3000}
-            onClose={handleCloseSnackbar}
-        >
-            <Alert
-            onClose={handleCloseSnackbar}
-            severity="success"
-            sx={{ width: "100%", color: "white" }}
-            >
-            Đánh giá thành công
-            </Alert>
-        </Snackbar>
         </>
     )
-}
+})
+
+export default ReviewDetailComponent;

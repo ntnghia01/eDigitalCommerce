@@ -58,6 +58,7 @@ function formatNumberWithCommas(input) {
   
 
 export default function OrderTable() {
+  console.log("OrderTable");
 
     const dispatch = useDispatch();
     const orders = useSelector((state) => state.order.orders);
