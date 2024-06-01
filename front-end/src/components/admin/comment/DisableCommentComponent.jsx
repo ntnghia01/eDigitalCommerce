@@ -9,43 +9,28 @@ import Slide from '@mui/material/Slide';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import DeleteIcon from '@mui/icons-material/Delete';
-import CommentsDisabledIcon from '@mui/icons-material/CommentsDisabled';
 import { useDispatch } from 'react-redux';
 import { deleteBrand, fetchBrands } from '../../../slices/brandSlice';
 import { deleteSupplier, fetchSuppliers } from '../../../slices/supplierSlice';
 import { deleteProduct, fetchProducts } from '../../../slices/productSlice';
 import { disableComment, fetchComments } from '../../../slices/commentSlice';
+import { Transition } from '../../customize/CustomizeComponent';
+import { memo } from 'react';
+import { useState } from 'react';
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+const DisableCommentComponent =memo(({comment, onClose, handleOpenSuccessSnackbar}) => {
+  console.log("DisableCommentComponent");
 
-export default function DisableCommentComponent(props) {
-
-    const { comment } = props;
-
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(true);
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
+    onClose();
   };
 
-  const [openSuccessSnackbar, setOpenSuccessSnackbar] = React.useState(false);
-  const handleOpenSuccessSnackbar = () => {
-    setOpenSuccessSnackbar(true);
-  };
-  const handleCloseSuccessSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpenSuccessSnackbar(false);
-  };
 
   const dispatch = useDispatch();
   const handleSubmit = (e) => {
@@ -53,8 +38,8 @@ export default function DisableCommentComponent(props) {
     dispatch(disableComment(comment.cmtId))
       .then(() => {
         dispatch(fetchComments());
-        setOpen(false);
-        handleOpenSuccessSnackbar();
+        handleClose();
+        handleOpenSuccessSnackbar("Ẩn bình luận thành công");
         console.log('Disable comment successfully');
       })
       .catch((error) => {
@@ -64,9 +49,6 @@ export default function DisableCommentComponent(props) {
 
   return (
     <div>
-      <Button startIcon={<CommentsDisabledIcon />} onClick={handleClickOpen}>
-        Ẩn
-      </Button>
       <Dialog
         open={open}
         TransitionComponent={Transition}
@@ -85,11 +67,8 @@ export default function DisableCommentComponent(props) {
           <Button onClick={handleClose}>Hủy</Button>
         </DialogActions>
       </Dialog>
-      <Snackbar open={openSuccessSnackbar} autoHideDuration={3000} onClose={handleCloseSuccessSnackbar}>
-        <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%', color: 'white' }}>
-          Ẩn thành công!
-        </Alert>
-      </Snackbar>
     </div>
   );
-}
+})
+
+export default DisableCommentComponent;

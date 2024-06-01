@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from "react-redux";
 
 // import MUI
 import Paper from "@mui/material/Paper";
-import Stack from "@mui/material/Stack";
 import Typography from '@mui/material/Typography';
 
 import {
@@ -17,38 +16,23 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import CommentsDisabledIcon from '@mui/icons-material/CommentsDisabled';
+import InsertCommentIcon from '@mui/icons-material/InsertComment';
+import Snackbar from '@mui/material/Snackbar';
+import Slide from '@mui/material/Slide';
 
-import { fetchImports } from "../../../slices/importSlice";
-import { fetchOrder, getOrderDetailByOrderId } from "../../../slices/orderSlice";
 import { useEffect } from "react";
-import { fetchReviews } from "../../../slices/reviewSlice";
 import { fetchComments } from "../../../slices/commentSlice";
 import DisableCommentComponent from "./DisableCommentComponent";
 import ActiveCommentComponent from "./ActiveCommentComponent";
+import { useState } from "react";
+import { Alert } from "../../customize/CustomizeComponent";
 
-const formatDateTime = (oriDateTime) => {
-    const dateTime = new Date(oriDateTime);
-    const date = dateTime.getDate();
-    const month = dateTime.getMonth() + 1;
-    const year = dateTime.getFullYear();
-    const hour = dateTime.getHours();
-    const minute = dateTime.getMinutes();
-    const second = dateTime.getSeconds();
 
-    const newDateTime = `${date < 10 ? '0' : ''}${date}-${month < 10 ? '0' : ''}${month}-${year} ${hour < 10 ? '0' : ''}${hour}:${minute < 10 ? '0' : ''}${minute}:${second < 10 ? '0' : ''}${second}`;
-    return newDateTime;
-}
-
-function formatNumberWithCommas(input) {
-    if (typeof input === "number" && Number.isInteger(input)) input = input.toString();
-    if (typeof input !== "string") return "Invalid input";
-    if (!/^\d+$/.test(input)) return "Invalid input";
-    return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  }
   
 
 export default function CommentTableComponent() {
-    console.log("check render ReviewTableComponent");
+    console.log("CommentTableComponent");
 
     const dispatch = useDispatch();
     const comments = useSelector((state) => state.comment.comments);
@@ -56,8 +40,22 @@ export default function CommentTableComponent() {
     useEffect(() => {
         dispatch(fetchComments());
     }, [dispatch]);
-    // console.log(products);
 
+    const [selectedActive, setSelectedActive] = useState(null);
+    const [selectedDisable, setSelectedDisable] = useState(null);
+
+    const [openSuccessSnackbar, setOpenSuccessSnackbar] = React.useState(false);
+    const [snackbarContent, setSnackbarContent] = useState("Cập nhật thành công");
+    const handleOpenSuccessSnackbar = (content) => {
+      setOpenSuccessSnackbar(true);
+      setSnackbarContent(content);
+    };
+    const handleCloseSuccessSnackbar = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+      setOpenSuccessSnackbar(false);
+    };
     
     return (<>
         <TableContainer component={Paper}>
@@ -91,10 +89,14 @@ export default function CommentTableComponent() {
                     : <Typography variant="body1" sx={{color: '#b23c17'}}>Đã ẩn</Typography>}
                   </TableCell>
                   <TableCell align="center">
-                    {comment.cmtStatus==1 ?
-                        <DisableCommentComponent comment={comment} />
-                    : comment.cmtStatus==0 ?
-                        <ActiveCommentComponent comment={comment} />
+                    {comment.cmtStatus==1 ? // Activing
+                      <Button startIcon={<CommentsDisabledIcon />} onClick={() => setSelectedDisable(comment)}>
+                        Ẩn
+                      </Button>
+                    : comment.cmtStatus==0 ? // Disabling
+                      <Button startIcon={<InsertCommentIcon />} onClick={() => setSelectedActive(comment)}>
+                        Hiển thị
+                      </Button>
                     : "Không xác định"
                     }
                     
@@ -104,6 +106,21 @@ export default function CommentTableComponent() {
             </TableBody>
           </Table>
         </TableContainer>
+        <Snackbar open={openSuccessSnackbar} autoHideDuration={3000} onClose={handleCloseSuccessSnackbar}>
+          <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%', color: 'white' }}>
+            {snackbarContent}
+          </Alert>
+        </Snackbar>
+        {
+          selectedActive && (
+            <ActiveCommentComponent comment={selectedActive} onClose={() => setSelectedActive(null)} handleOpenSuccessSnackbar={handleOpenSuccessSnackbar}/>
+          )
+        }
+        {
+          selectedDisable && (
+            <DisableCommentComponent comment={selectedDisable} onClose={() => setSelectedDisable(null)} handleOpenSuccessSnackbar={handleOpenSuccessSnackbar}/>
+          )
+        }
         </>
     )
 }
