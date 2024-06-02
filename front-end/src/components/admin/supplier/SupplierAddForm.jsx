@@ -14,6 +14,7 @@ import MuiAlert from '@mui/material/Alert';
 import { useDispatch } from 'react-redux';
 import { addBrand, fetchBrands } from '../../../slices/brandSlice';
 import { addSupplier, fetchSuppliers } from '../../../slices/supplierSlice';
+import { useState } from 'react';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -31,6 +32,7 @@ export default function SupplierAddForm() {
   };
   const handleClose = () => {
     setOpen(false);
+    setIsNull();
   };
 
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
@@ -48,28 +50,39 @@ export default function SupplierAddForm() {
   const [supplierEmail, setSupplierEmail] = React.useState();
   const [supplierPhone, setSupplierPhone] = React.useState();
   const [supplierAddress, setSupplierAddress] = React.useState();
+  const [isNull, setIsNull] = useState();
 
   const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newSupplier = {
-      supplierName: supplierName,
-      supplierEmail: supplierEmail,
-      supplierPhone: supplierPhone,
-      supplierAddress: supplierAddress
-    };
-    // console.log(newSupplier);
-    dispatch(addSupplier(newSupplier))
-      .then(() => {
-        dispatch(fetchSuppliers());
-        handleOpenSnackbar();
-        console.log('Thêm nhà cung cấp thành công!');
-      })
-      .catch((error) => {
-        console.log('Thêm thất bại: ' + error);
-      })
-    setOpen(false);
+    if (!supplierName) {
+      setIsNull("SupplierName");
+    } else if (!supplierEmail) {
+      setIsNull("SupplierEmail");
+    } else if (!supplierPhone) {
+      setIsNull("SupplierPhone");
+    } else if (!supplierAddress) {
+      setIsNull("SupplierAddress");
+    } else {
+      const newSupplier = {
+        supplierName: supplierName,
+        supplierEmail: supplierEmail,
+        supplierPhone: supplierPhone,
+        supplierAddress: supplierAddress
+      };
+      // console.log(newSupplier);
+      dispatch(addSupplier(newSupplier))
+        .then(() => {
+          dispatch(fetchSuppliers());
+          handleOpenSnackbar();
+          console.log('Thêm nhà cung cấp thành công!');
+          handleClose();
+        })
+        .catch((error) => {
+          console.log('Thêm thất bại: ' + error);
+        })
+    }
   }
 
   return (
@@ -98,26 +111,35 @@ export default function SupplierAddForm() {
             fullWidth
             variant="standard"
             onChange={e => {setSupplierName(e.target.value)}}
+            required
+            error={isNull == "SupplierName" ? true : false}
+            helperText={isNull == "SupplierName" ? "Tên nhà cung cấp là bắt buộc" : ""}
           />
           <TextField
             autoFocus
             margin="dense"
             id="cate_email"
-            label="Nhập email tả nhà cung cấp"
-            type="text"
+            label="Nhập email nhà cung cấp"
+            type="email"
             fullWidth
             variant="standard"
             onChange={e => {setSupplierEmail(e.target.value)}}
+            required
+            error={isNull == "SupplierEmail" ? true : false}
+            helperText={isNull == "SupplierEmail" ? "Email nhà cung cấp là bắt buộc" : ""}
           />
           <TextField
             autoFocus
             margin="dense"
             id="cate_phone"
             label="Nhập số điện thoại nhà cung cấp"
-            type="text"
+            type="number"
             fullWidth
             variant="standard"
             onChange={e => {setSupplierPhone(e.target.value)}}
+            required
+            error={isNull == "SupplierPhone" ? true : false}
+            helperText={isNull == "SupplierPhone" ? "Số điện thoại nhà cung cấp là bắt buộc" : ""}
           />
           <TextField
             autoFocus
@@ -128,6 +150,9 @@ export default function SupplierAddForm() {
             fullWidth
             variant="standard"
             onChange={e => {setSupplierAddress(e.target.value)}}
+            required
+            error={isNull == "SupplierAddress" ? true : false}
+            helperText={isNull == "SupplierAddress" ? "Địa chỉ nhà cung cấp là bắt buộc" : ""}
           />
         </DialogContent>
         <DialogActions>

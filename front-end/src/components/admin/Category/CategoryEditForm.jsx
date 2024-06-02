@@ -20,7 +20,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const CategoryEditForm = React.memo(({ category, onClose, handleOpenSuccessSnackbar }) => {
   console.log("CategoryEditForm", category.cateId);
   const existCategory = category;
-  console.log(category);
+  // console.log(category);
 
   const [open, setOpen] = React.useState(true);
 

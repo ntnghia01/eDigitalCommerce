@@ -35,6 +35,7 @@ import { fetchImports } from "../../../slices/importSlice";
 import { fetchOrder, getOrderDetailByOrderId } from "../../../slices/orderSlice";
 import OrderDetail from "./OrderDetail";
 import ConfirmPayment from "./ConfirmPayment";
+import { useState } from "react";
 
 const formatDateTime = (oriDateTime) => {
     const dateTime = new Date(oriDateTime);
@@ -68,9 +69,10 @@ export default function OrderTable() {
     }, [dispatch]);
     // console.log(products);
 
-
+    const [selectedOrder, setSelectedOrder] = useState(null);
     
     return (
+      <>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
@@ -130,7 +132,14 @@ export default function OrderTable() {
                     {/* <Stack spacing={2}> */}
                     
                       {/* <ConfirmPayment order={order} /> */}
-                        <OrderDetail order={order} />
+                      <Button
+                        onClick={() => {
+                          setSelectedOrder(order);
+                          dispatch(getOrderDetailByOrderId(order.orderId));
+                        }}
+                      >
+                        Xem chi tiết
+                      </Button>
                     {/* </Stack> */}
                   </TableCell>
                 </TableRow>
@@ -138,5 +147,11 @@ export default function OrderTable() {
             </TableBody>
           </Table>
         </TableContainer>
+        {
+          selectedOrder && (
+            <OrderDetail order={selectedOrder} onClose={() => setSelectedOrder(null)} />
+          )
+        }
+        </>
     )
 }

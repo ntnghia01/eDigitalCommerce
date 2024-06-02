@@ -54,6 +54,7 @@ export default function ProductAddForm() {
   };
   const handleClose = () => {
     setOpen(false);
+    setIsNull();
   };
 
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
@@ -83,63 +84,78 @@ export default function ProductAddForm() {
 
   const [proName, setProName] = React.useState();
   const [proPrice, setProPrice] = React.useState();
-  const [proDesc, setProDesc] = React.useState();
+  const [proDesc, setProDesc] = React.useState('');
   const [proQuantity, setProQuantity] = React.useState("0");
   const [proCategory, setProCategory] = React.useState();
   const [proBrand, setProBrand] = React.useState();
   const [image, setImage] = React.useState();
 
+  const [isNull, setIsNull] = useState();
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newProduct = {
-      proName: proName,
-      proPrice: proPrice,
-      proDesc: proDesc,
-      proQuantity: proQuantity,
-      cateId: proCategory,
-      brandId: proBrand,
-      proImage: image.name,
-      image: image,
-    };
-    console.log(newProduct);
-    console.log(imagesDetail);
-    // dispatch(addProduct(newProduct))
-    //   .then(() => {
-    //     // add image
-    //     const proId = resultAction.payload.productObject.proId;
-    //     dispatch(addImage({ proId, image: imageData }));
-
-    //     dispatch(fetchProducts());
-    //     handleOpenSnackbar();
-    //     console.log("Thêm sản phẩm thành công!");
-    //     setOpen(false);
-    //   })
-    //   .catch((error) => {
-    //     console.log("Thêm thất bại: " + error);
-    //   });
-    dispatch(addProduct(newProduct))
-  .then((resultAction) => {
-    // Lấy proId từ response của addProduct
-    const proId = resultAction.payload.productObject.proId;
-
-    // Tạo một mảng promises để lưu trữ các hàm addImage cho từng image trong imagesDetail
-    const addImagePromises = imagesDetail.map((item) => {
-      return dispatch(addImage({ proId, image: item.file }));
-    });
-
-    // Sử dụng Promise.all để đợi tất cả các hàm addImage hoàn thành
-    return Promise.all(addImagePromises);
-  })
-  .then(() => {
-    // Thực hiện các thao tác sau khi đã thêm hình ảnh thành công
-    dispatch(fetchProducts());
-    handleOpenSnackbar();
-    console.log("Thêm sản phẩm và hình ảnh thành công!");
-    setOpen(false);
-  })
-  .catch((error) => {
-    console.log("Thêm sản phẩm hoặc hình ảnh thất bại: " + error);
-  });
+    if (!proName) {
+      setIsNull("proName");
+    } else if (!proPrice) {
+      setIsNull("proPrice");
+    }  else if (!proCategory) {
+      setIsNull("proCategory");
+    } else if (!proBrand) {
+      setIsNull("proBrand");
+    } else if (!image) {
+      setIsNull("image");
+    } else {
+      const newProduct = {
+        proName: proName,
+        proPrice: proPrice,
+        proDesc: proDesc,
+        proQuantity: proQuantity,
+        cateId: proCategory,
+        brandId: proBrand,
+        proImage: image.name,
+        image: image,
+      };
+      console.log(newProduct);
+      console.log(imagesDetail);
+      // dispatch(addProduct(newProduct))
+      //   .then(() => {
+      //     // add image
+      //     const proId = resultAction.payload.productObject.proId;
+      //     dispatch(addImage({ proId, image: imageData }));
+  
+      //     dispatch(fetchProducts());
+      //     handleOpenSnackbar();
+      //     console.log("Thêm sản phẩm thành công!");
+      //     setOpen(false);
+      //   })
+      //   .catch((error) => {
+      //     console.log("Thêm thất bại: " + error);
+      //   });
+      dispatch(addProduct(newProduct))
+        .then((resultAction) => {
+          // Lấy proId từ response của addProduct
+          const proId = resultAction.payload.productObject.proId;
+      
+          // Tạo một mảng promises để lưu trữ các hàm addImage cho từng image trong imagesDetail
+          const addImagePromises = imagesDetail.map((item) => {
+            return dispatch(addImage({ proId, image: item.file }));
+          });
+      
+          // Sử dụng Promise.all để đợi tất cả các hàm addImage hoàn thành
+          return Promise.all(addImagePromises);
+        })
+        .then(() => {
+          // Thực hiện các thao tác sau khi đã thêm hình ảnh thành công
+          dispatch(fetchProducts());
+          handleOpenSnackbar();
+          console.log("Thêm sản phẩm và hình ảnh thành công!");
+          setOpen(false);
+        })
+        .catch((error) => {
+          console.log("Thêm sản phẩm hoặc hình ảnh thất bại: " + error);
+        });
+    }
+    
 
   };
 
@@ -205,25 +221,32 @@ export default function ProductAddForm() {
             autoFocus
             margin="dense"
             id="pro_name"
-            label="Nhập tên sản phẩm *"
+            label="Nhập tên sản phẩm"
             type="text"
             fullWidth
             variant="standard"
             onChange={(e) => {
               setProName(e.target.value);
             }}
+            required
+            error={isNull == 'proName' ? true : false}
+            helperText={isNull == 'proName' ? "Tên sản phẩm là bắt buộc" : ""}
           />
           <TextField
             autoFocus
             margin="dense"
             id="pro_price"
-            label="Nhập giá sản phẩm *"
-            type="text"
+            label="Nhập giá sản phẩm"
+            type="number"
             fullWidth
             variant="standard"
             onChange={(e) => {
               setProPrice(e.target.value);
             }}
+            inputProps={{ min: 0 }}
+            required
+            error={isNull == 'proPrice' ? true : false}
+            helperText={isNull == 'proPrice' ? "Giá sản phẩm là bắt buộc" : ""}
           />
           <TextField
             autoFocus
@@ -241,14 +264,15 @@ export default function ProductAddForm() {
             autoFocus
             margin="dense"
             id="pro_quantity"
-            label="Nhập số lượng ban đầu *"
-            type="text"
+            label="Nhập số lượng ban đầu"
+            type="number"
             fullWidth
             variant="standard"
             defaultValue={proQuantity}
             onChange={(e) => {
               setProQuantity(e.target.value);
             }}
+            inputProps={{ min: 0 }}
           />
           <FormControl fullWidth sx={{ mt: 3 }}>
             <InputLabel id="demo-simple-select-label">Danh mục *</InputLabel>
@@ -260,6 +284,9 @@ export default function ProductAddForm() {
               onChange={(e) => {
                 setProCategory(e.target.value);
               }}
+              required
+              error={isNull == 'proCategory' ? true : false}
+              // helperText={isNull == 'proCategory' ? "Vui lòng chọn danh mục cho sản phẩm" : ""}
             >
               {categoryData.map((category) => (
                 <MenuItem key={category.cateId} value={category.cateId}>
@@ -278,6 +305,9 @@ export default function ProductAddForm() {
               onChange={(e) => {
                 setProBrand(e.target.value);
               }}
+              required
+              error={isNull == 'proBrand' ? true : false}
+              // helperText={isNull == 'proBrand' ? "Vui lòng chọn thương hiệu cho sản phẩm" : ""}
             >
               {brandData.map((brand) => (
                 <MenuItem key={brand.brandId} value={brand.brandId}>
@@ -326,6 +356,9 @@ export default function ProductAddForm() {
                 )}
               </Box>
             )}
+            {
+              isNull == 'image' ? <Typography color="red" fontSize={15}>*Vui lòng upload ít nhất một hình ảnh cho sản phẩm</Typography> : null
+            }
             <Button
               component="label"
               variant="contained"

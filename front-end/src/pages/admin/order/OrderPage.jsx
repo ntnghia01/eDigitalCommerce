@@ -24,7 +24,7 @@ function Order() {
       <h1 style={{textAlign: 'center'}}>QUẢN LÝ ĐƠN HÀNG</h1>
       <div style={{ height: 400, width: "100%" }}>
 
-        <FilterOrderTable />
+        {/* <FilterOrderTable /> */}
         <OrderTable />
       </div>
     </>

@@ -31,35 +31,10 @@ import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
+import { Transition, formatDateTime, formatNumberWithCommas } from "../../customize/CustomizeComponent";
+import { memo } from "react";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
-const formatDateTime = (oriDateTime) => {
-  const dateTime = new Date(oriDateTime);
-  const date = dateTime.getDate();
-  const month = dateTime.getMonth() + 1;
-  const year = dateTime.getFullYear();
-  const hour = dateTime.getHours();
-  const minute = dateTime.getMinutes();
-  const second = dateTime.getSeconds();
-
-  const newDateTime = `${date < 10 ? "0" : ""}${date}-${
-    month < 10 ? "0" : ""
-  }${month}-${year} ${hour < 10 ? "0" : ""}${hour}:${
-    minute < 10 ? "0" : ""
-  }${minute}:${second < 10 ? "0" : ""}${second}`;
-  return newDateTime;
-};
-
-function formatNumberWithCommas(input) {
-  if (typeof input === "number" && Number.isInteger(input))
-    input = input.toString();
-  if (typeof input !== "string") return "Invalid input";
-  if (!/^\d+$/.test(input)) return "Invalid input";
-  return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-}
 
 const steps1 = [
   "Đang chờ xử lý",
@@ -69,15 +44,15 @@ const steps1 = [
   "Hoàn thành",
 ];
 
-export default function OrderDetail(props) {
+const OrderDetail = memo(({order, onClose}) => {
   console.log("OrderDetail");
-  const { order } = props;
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(true);
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
+    onClose();
   };
 
   const dispatch = useDispatch();
@@ -92,14 +67,6 @@ export default function OrderDetail(props) {
   // console.log(orderDetails);
   return (
     <>
-      <Button
-        onClick={() => {
-          handleClickOpen();
-          handleGetOrderDetail(order.orderId);
-        }}
-      >
-        Xem chi tiết
-      </Button>
       <Dialog
         fullScreen
         open={open}
@@ -332,4 +299,6 @@ export default function OrderDetail(props) {
       </Dialog>
     </>
   );
-}
+})
+
+export default OrderDetail;

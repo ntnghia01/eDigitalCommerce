@@ -6,7 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import AddIcon from "@mui/icons-material/Add";
-import { Select, TextField } from "@mui/material";
+import { Select, TextField, Typography } from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import InputLabel from '@mui/material/InputLabel';
@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchSuppliers } from "../../../slices/supplierSlice";
 import ImportDetail from "./ImportDetail";
 import { addImport, fetchImports } from "../../../slices/importSlice";
+import { useState } from "react";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -34,6 +35,7 @@ export default function ImportAddForm() {
   };
   const handleClose = () => {
     setOpen(false);
+    setIsNull();
   };
 
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
@@ -52,6 +54,8 @@ export default function ImportAddForm() {
   const supplierData = useSelector((state) => state.supplier.suppliers);
   const [importDetails, setImportDetails] = React.useState([]);
   const [importDetailData, setImportDeTailData] = React.useState([]);
+
+  const [isNull, setIsNull] = useState();
 
   React.useEffect(() => {
     dispatch(fetchSuppliers());
@@ -73,31 +77,33 @@ export default function ImportAddForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    importDetailData.map((detail) => {
-      importTotal += (detail.importDetailQuantity)*(detail.importDetailPrice);
-    })
-
-
-    const newImport = {
-      supplier: supplierId,
-      userId: adminId,
-      importTotal: importTotal
-    };
-    
-    // console.log(newImport);
-    // console.log(importDetailData);
-    dispatch(addImport({importData: newImport, importDetailData: importDetailData}))
-      .then(() => {
-        dispatch(fetchImports());
-        handleOpenSnackbar();
-        console.log("Nhập hàng thành công!");
-        setOpen(false);
-        setImportDetails([]);
+    if (!supplierId) {
+      setIsNull("supplierId");
+    } else if (importDetails.length <= 0) {
+      setIsNull("importDetails");
+    } else {
+      importDetailData.map((detail) => {
+        importTotal += (detail.importDetailQuantity)*(detail.importDetailPrice);
       })
-      .catch((error) => {
-        console.log("Thêm thất bại: " + error);
-      });
+      const newImport = {
+        supplier: supplierId,
+        userId: adminId,
+        importTotal: importTotal
+      };
+      // console.log(newImport);
+      // console.log(importDetailData);
+      dispatch(addImport({importData: newImport, importDetailData: importDetailData}))
+        .then(() => {
+          dispatch(fetchImports());
+          handleOpenSnackbar();
+          console.log("Nhập hàng thành công!");
+          setOpen(false);
+          setImportDetails([]);
+        })
+        .catch((error) => {
+          console.log("Thêm thất bại: " + error);
+        });
+    }
     
   };
 
@@ -131,6 +137,8 @@ export default function ImportAddForm() {
               onChange={(e) => {
                 setSupplierID(e.target.value);
               }}
+              required
+              error={isNull == 'supplierId' ? true : false}
             >
                 {supplierData.map((supplier) => (
                     <MenuItem key={supplier.supplierId} value={supplier.supplierId}>{supplier.supplierName}</MenuItem>
@@ -139,7 +147,10 @@ export default function ImportAddForm() {
           </FormControl>
           {importDetails}
         </DialogContent>
-        <Button variant="outlined" onClick={handleAddDetailClick}>Thêm chi tiết</Button>
+        <Button variant="outlined" onClick={handleAddDetailClick} style={{margin: 5}}>Thêm chi tiết</Button>
+        {
+          isNull == 'importDetails' ? <Typography color="red" fontSize={15} style={{margin: 5}}>*Vui lòng thêm ít nhất một chi tiết</Typography> : null
+        }
         <DialogActions>
           <Button onClick={handleSubmit}>Xác nhận</Button>
           <Button onClick={handleClose}>Hủy</Button>

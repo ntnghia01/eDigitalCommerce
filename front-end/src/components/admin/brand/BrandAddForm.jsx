@@ -13,6 +13,7 @@ import MuiAlert from '@mui/material/Alert';
 // Redux
 import { useDispatch } from 'react-redux';
 import { addBrand, fetchBrands } from '../../../slices/brandSlice';
+import { useState } from 'react';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -30,6 +31,7 @@ export default function BrandAddForm() {
   };
   const handleClose = () => {
     setOpen(false);
+    setIsNull();
   };
 
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
@@ -45,25 +47,30 @@ export default function BrandAddForm() {
 
   const [brandName, setBrandName] = React.useState();
   const [brandDesc, setBrandDesc] = React.useState();
+  const [isNull, setIsNull] = useState();
 
   const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newBrand = {
-      brandName: brandName,
-      brandDesc: brandDesc
-    };
-    dispatch(addBrand(newBrand))
-      .then(() => {
-        dispatch(fetchBrands());
-        handleOpenSnackbar();
-        console.log('Thêm thương hiệu thành công!');
-      })
-      .catch((error) => {
-        console.log('Thêm thất bại: ' + error);
-      })
-    setOpen(false);
+    if (!brandName) {
+      setIsNull("BrandName")
+    } else {
+      const newBrand = {
+        brandName: brandName,
+        brandDesc: brandDesc
+      };
+      dispatch(addBrand(newBrand))
+        .then(() => {
+          dispatch(fetchBrands());
+          handleOpenSnackbar();
+          console.log('Thêm thương hiệu thành công!');
+        })
+        .catch((error) => {
+          console.log('Thêm thất bại: ' + error);
+        })
+      setOpen(false);
+    }
   }
 
   return (
@@ -81,7 +88,7 @@ export default function BrandAddForm() {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Thêm Mới Thương Hiệu"}</DialogTitle>
+        <DialogTitle>{"Thêm Thương Hiệu Mới"}</DialogTitle>
         <DialogContent>
           {/* <DialogContentText id="alert-dialog-slide-description">
             Tên danh mục
@@ -95,6 +102,9 @@ export default function BrandAddForm() {
             fullWidth
             variant="standard"
             onChange={e => {setBrandName(e.target.value)}}
+            required
+            error={isNull == 'BrandName' ? true : false}
+            helperText={isNull == 'BrandName' ? 'Tên thương hiệu là bắt buộc' : ''}
           />
           <TextField
             autoFocus

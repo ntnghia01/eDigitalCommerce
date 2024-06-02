@@ -33,6 +33,7 @@ export default function CategoryAddForm() {
   };
   const handleClose = () => {
     setOpen(false);
+    setIsNull('');
   };
 
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
@@ -49,27 +50,32 @@ export default function CategoryAddForm() {
   
   const [cateName, setCateName] = useState();
   const [cateDesc, setCateDesc] = useState();
+  const [isNull, setIsNull] = useState();
 
   const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newCategory = {
-      categoryName: cateName,
-      categoryDesc: cateDesc,
-    };
-    dispatch(addCategory(newCategory))
-      .then(() => {
-        dispatch(fetchCategories());
-        handleOpenSnackbar();
-        setCateName('');
-        setCateDesc('');
-        console.log('Thêm danh mục mới thành công');
-      })
-      .catch((error) => {
-          console.log('Thêm danh mục thất bại: '+ error);
-      });
-    setOpen(false);
+    if (!cateName) {
+      setIsNull("CateName")
+    } else {
+      const newCategory = {
+        categoryName: cateName,
+        categoryDesc: cateDesc,
+      };
+      dispatch(addCategory(newCategory))
+        .then(() => {
+          dispatch(fetchCategories());
+          handleOpenSnackbar();
+          setCateName('');
+          setCateDesc('');
+          console.log('Thêm danh mục mới thành công');
+        })
+        .catch((error) => {
+            console.log('Thêm danh mục thất bại: '+ error);
+        });
+      setOpen(false);
+    }
   }
 
   return (
@@ -93,12 +99,15 @@ export default function CategoryAddForm() {
             autoFocus
             margin="dense"
             id="cate_name"
-            label="Nhập tên danh mục *"
+            label="Nhập tên danh mục"
             type="text"
             fullWidth
             variant="standard"
             value={cateName}
             onChange={e => {setCateName(e.target.value)}}
+            required
+            error={isNull == "CateName" ? true : false}
+            helperText={isNull == "CateName" ? 'Tên danh mục là bắt buộc' : ''}
           />
           <TextField
             autoFocus

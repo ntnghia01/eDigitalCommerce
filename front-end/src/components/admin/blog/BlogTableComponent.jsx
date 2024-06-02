@@ -9,6 +9,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Snackbar from '@mui/material/Snackbar';
 
 import {
   Button,
@@ -20,41 +21,14 @@ import {
   TableRow,
 } from "@mui/material";
 
-import { fetchImports } from "../../../slices/importSlice";
-import {
-  fetchOrder,
-  getOrderDetailByOrderId,
-} from "../../../slices/orderSlice";
+
 import { useEffect } from "react";
-import { fetchReviews } from "../../../slices/reviewSlice";
 import { fetchBlogs } from "../../../slices/blogSlice";
 import BlogEditForm from "./BlogEditComponent";
 import ConfirmDeleteBlogComponent from "./ComfirmDeleteBlogComponent";
+import { useState } from "react";
+import { Alert } from "../../customize/CustomizeComponent";
 
-const formatDateTime = (oriDateTime) => {
-  const dateTime = new Date(oriDateTime);
-  const date = dateTime.getDate();
-  const month = dateTime.getMonth() + 1;
-  const year = dateTime.getFullYear();
-  const hour = dateTime.getHours();
-  const minute = dateTime.getMinutes();
-  const second = dateTime.getSeconds();
-
-  const newDateTime = `${date < 10 ? "0" : ""}${date}-${
-    month < 10 ? "0" : ""
-  }${month}-${year} ${hour < 10 ? "0" : ""}${hour}:${
-    minute < 10 ? "0" : ""
-  }${minute}:${second < 10 ? "0" : ""}${second}`;
-  return newDateTime;
-};
-
-function formatNumberWithCommas(input) {
-  if (typeof input === "number" && Number.isInteger(input))
-    input = input.toString();
-  if (typeof input !== "string") return "Invalid input";
-  if (!/^\d+$/.test(input)) return "Invalid input";
-  return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-}
 
 export default function BlogTableComponent() {
   console.log("check render ReviewTableComponent");
@@ -67,7 +41,24 @@ export default function BlogTableComponent() {
 
   const blogs = useSelector((state) => state.blog.blogs);
 
+  const [selectedBlogEdit, setSelectedBlogEdit] = useState(null);
+  const [selectedBlogDelete, setSelectedBlogDelete] = useState(null);
+
+  const [openSuccessSnackbar, setOpenSuccessSnackbar] = React.useState(false);
+  const [snackbarContent, setSnackbarContent] = useState("Cập nhật thành công");
+  const handleOpenSuccessSnackbar = (content) => {
+    setOpenSuccessSnackbar(true);
+    setSnackbarContent(content);
+  };
+  const handleCloseSuccessSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSuccessSnackbar(false);
+  };
+
   return (
+    <>
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
@@ -113,23 +104,18 @@ export default function BlogTableComponent() {
               </TableCell>
               <TableCell align="center">
                 <Stack direction="row" spacing={2}>
-                  {/* <ConfirmPayment order={order} /> */}
-                  {/* <Button
+                  <Button
                     variant="contained"
                     color="warning"
                     startIcon={<EditIcon />}
+                    onClick={() => setSelectedBlogEdit(blog)}
+                    style={{width: '8rem'}}
                   >
-                    Sửa
-                  </Button> */}
-                  <BlogEditForm blog={blog} />
-                  {/* <Button
-                    variant="contained"
-                    color="error"
-                    startIcon={<DeleteIcon />}
-                  >
+                    Cập nhật
+                  </Button>
+                  <Button variant="contained" color="error" startIcon={<DeleteIcon />} onClick={() => setSelectedBlogDelete(blog)}>
                     Xóa
-                  </Button> */}
-                  <ConfirmDeleteBlogComponent blog={blog} />
+                  </Button>
                 </Stack>
               </TableCell>
             </TableRow>
@@ -137,5 +123,21 @@ export default function BlogTableComponent() {
         </TableBody>
       </Table>
     </TableContainer>
+    <Snackbar open={openSuccessSnackbar} autoHideDuration={3000} onClose={handleCloseSuccessSnackbar}>
+      <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%', color: 'white' }}>
+        {snackbarContent}
+      </Alert>
+    </Snackbar>
+    {
+      selectedBlogEdit && (
+        <BlogEditForm blog={selectedBlogEdit} onClose={() => setSelectedBlogEdit(null)} handleOpenSuccessSnackbar={handleOpenSuccessSnackbar}/>
+      )
+    }
+    {
+      selectedBlogDelete && (
+        <ConfirmDeleteBlogComponent blog={selectedBlogDelete} onClose={() => setSelectedBlogDelete(null)} handleOpenSuccessSnackbar={handleOpenSuccessSnackbar}/>
+      )
+    }
+    </>
   );
 }

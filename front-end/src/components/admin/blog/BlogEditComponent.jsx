@@ -3,71 +3,23 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import Slide from "@mui/material/Slide";
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import EditIcon from '@mui/icons-material/Edit';
 
-// import Icons
-import UpdateIcon from "@mui/icons-material/Update";
-import { FormControl, FormControlLabel, Radio, RadioGroup, Select, TextField } from "@mui/material";
-import FormLabel from '@mui/material/FormLabel';
-import { useDispatch, useSelector } from "react-redux";
-import { editBrand, fetchBrands } from "../../../slices/brandSlice";
-import { editSupplier, fetchSuppliers } from "../../../slices/supplierSlice";
-import { fetchCategories } from "../../../slices/categorySlice";
-import { editProduct, fetchProducts } from "../../../slices/productSlice";
+import { FormControlLabel, Radio, RadioGroup, TextField } from "@mui/material";
+import { useDispatch } from "react-redux";
 import { editBlog, fetchBlogs } from "../../../slices/blogSlice";
+import { VisuallyHiddenInput, Transition } from "../../customize/CustomizeComponent";
+import { memo } from "react";
 
 
-const VisuallyHiddenInput = styled('input')({
-  clip: 'rect(0 0 0 0)',
-  clipPath: 'inset(50%)',
-  height: 1,
-  overflow: 'hidden',
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  whiteSpace: 'nowrap',
-  width: 1,
-});
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+const BlogEditForm = memo(({blog, onClose, handleOpenSuccessSnackbar}) => {
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
-
-export default function BlogEditForm(props) {
-
-  const {blog} = props;
-
-  const [open, setOpen] = React.useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  const [open, setOpen] = React.useState(true);
   const handleClose = () => {
     setOpen(false);
+    onClose();
   };
-
-  const [openSuccessSnackbar, setOpenSuccessSnackbar] = React.useState(false);
-  const handleOpenSuccessSnackbar = () => {
-    setOpenSuccessSnackbar(true);
-  };
-  const handleCloseSuccessSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpenSuccessSnackbar(false);
-  };
-
 
 
   const [blogId, setBlogID] = React.useState(blog.blogId);
@@ -93,25 +45,16 @@ const handleSubmit = () => {
     dispatch(editBlog({blogId: blog.blogId, blogData: blogData}))
       .then(() => {
         dispatch(fetchBlogs());
-        handleOpenSuccessSnackbar();
+        handleOpenSuccessSnackbar("Cập nhật bài viết thành công");
+        handleClose();
         console.log("Cập nhật blog thành công!");
       }).catch((error) => {
         console.log('Cập nhật blog thất bại: ' + error);
       })
-    setOpen(false);
 }
 
   return (
     <div>
-      <Button
-        variant="contained"
-        color="warning"
-        startIcon={<EditIcon />}
-        onClick={handleClickOpen}
-        style={{width: '8rem'}}
-      >
-        Cập nhật
-      </Button>
       <Dialog
         open={open}
         TransitionComponent={Transition}
@@ -167,11 +110,8 @@ const handleSubmit = () => {
           <Button onClick={handleClose}>Hủy</Button>
         </DialogActions>
       </Dialog>
-      <Snackbar open={openSuccessSnackbar} autoHideDuration={3000} onClose={handleCloseSuccessSnackbar}>
-        <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%', color: 'white' }}>
-          Cập nhật thành công!
-        </Alert>
-      </Snackbar>
     </div>
   );
-}
+})
+
+export default BlogEditForm;
