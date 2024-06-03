@@ -42,6 +42,7 @@ import { customerSignup } from "../../../../slices/customerSlice";
     };
     const handleClose = () => {
       setOpen(false);
+      setIsNull();
     };
   
     const [openSuccessSnackbar, setOpenSuccessSnackbar] = useState(false);
@@ -66,6 +67,8 @@ import { customerSignup } from "../../../../slices/customerSlice";
       userBirthday: "",
       userRole: 2
     });
+
+    const [isNull, setIsNull] = useState();
   
     const handleInputChange = (e) => {
       const { name, value } = e.target;
@@ -82,17 +85,29 @@ import { customerSignup } from "../../../../slices/customerSlice";
     const handleSubmit = (e) => {
       // console.log(signupData);
       e.preventDefault();
-      if (signupData.userPassword !== confirmPassword) {
-        // Nếu mật khẩu và mật khẩu nhập lại không khớp
-        alert("Mật khẩu không khớp");
-        // Thực hiện các hành động thông báo hoặc xử lý khác ở đây (ví dụ: hiển thị thông báo)
+      if (signupData.userPhone == "") {
+        setIsNull("userPhone");
+      } else if (signupData.userPassword == "") {
+        setIsNull("userPassword");
+      } else if (signupData.userName == "") {
+        setIsNull("userName");
+      } else if (signupData.userEmail == "") {
+        setIsNull("userEmail");
+      } else if (signupData.userBirthday == "") {
+        setIsNull("userBirthday");
       } else {
-        dispatch(customerSignup(signupData))
-            .then(() => {
-                console.log("Đăng ký thành công");
-                // navigate('/login')
-                handleClose()
-            })
+        if (signupData.userPassword !== confirmPassword) {
+          // Nếu mật khẩu và mật khẩu nhập lại không khớp
+          alert("Mật khẩu không khớp");
+          // Thực hiện các hành động thông báo hoặc xử lý khác ở đây (ví dụ: hiển thị thông báo)
+        } else {
+          dispatch(customerSignup(signupData))
+              .then(() => {
+                  console.log("Đăng ký thành công");
+                  // navigate('/login')
+                  handleClose()
+              })
+        }
       }
     }
   
@@ -126,6 +141,9 @@ import { customerSignup } from "../../../../slices/customerSlice";
               onChange={(e) => {
                   handleInputChange(e);
               }}
+              required
+              error={isNull == 'userPhone' ? true : false}
+              helperText={isNull == 'userPhone' ? "Số điện thoại là bắt buộc" : ""}
             />
             <TextField
               // margin="dense"
@@ -137,6 +155,9 @@ import { customerSignup } from "../../../../slices/customerSlice";
               onChange={(e) => {
                   handleInputChange(e);
               }}
+              required
+              error={isNull == 'userPassword' ? true : false}
+              helperText={isNull == 'userPassword' ? "Mật khẩu là bắt buộc" : ""}
             />
             <TextField
               name="confirmPassword"
@@ -147,6 +168,9 @@ import { customerSignup } from "../../../../slices/customerSlice";
               onChange={(e) => {
                 setConfirmPassword(e.target.value);
               }}
+              required
+              error={isNull == 'confirmPassword' ? true : false}
+              helperText={isNull == 'confirmPassword' ? "Vui lòng nhập lại mật khẩu" : ""}
             />
             <TextField
               // margin="dense"
@@ -158,6 +182,9 @@ import { customerSignup } from "../../../../slices/customerSlice";
               onChange={(e) => {
                   handleInputChange(e);
               }}
+              required
+              error={isNull == 'userName' ? true : false}
+              helperText={isNull == 'userName' ? "Tên tài khoản là bắt buộc" : ""}
             />
             <RadioGroup
               row
@@ -181,6 +208,9 @@ import { customerSignup } from "../../../../slices/customerSlice";
               onChange={(e) => {
                   handleInputChange(e);
               }}
+              required
+              error={isNull == 'userEmail' ? true : false}
+              helperText={isNull == 'userEmail' ? "Email là bắt buộc" : ""}
             />
             <TextField
               name="userBirthday"
@@ -192,6 +222,9 @@ import { customerSignup } from "../../../../slices/customerSlice";
               onChange={(e) => {
                   handleInputChange(e);
               }}
+              required
+              error={isNull == 'userBirthday' ? true : false}
+              helperText={isNull == 'userBirthday' ? "Ngày sinh là bắt buộc" : ""}
             />
           </Stack>
           </DialogContentText>

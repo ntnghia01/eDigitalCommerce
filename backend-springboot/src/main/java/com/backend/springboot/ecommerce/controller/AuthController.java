@@ -125,23 +125,23 @@ public class AuthController {
 
     // Gửi email chúc mừng khi đặt hàng thành công
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-    String formattedOrderTime = customer.getUserCreatedAt().format(formatter);
+    // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+    // String formattedOrderTime = customer.getUserCreatedAt().format(formatter);
     
-    String to = customer.getUserEmail(); // Địa chỉ email của người nhận
-    String subject = "SUCCESSFULLY REGISTERED AN E-STORE ACCOUNT!!!";
-    String message = "Xin chào, " + customer.getUserName() + "!<br/><br/>"
-            + "Chúc mừng bạn đã đăng ký thành công tài khoản E-STORE. Chúng tôi rất vui mừng khi bạn trở thành một thành viên của chúng tôi<br/><br/>"
-            + "THÔNG TIN TÀI KHOẢN:<br/>"
-            + "Họ tên: " + customer.getUserName() + "<br/>"
-            + "Số điện thoại: " + customer.getUserPhone() + "<br/>"
-            + "Email: " + customer.getUserEmail() + "<br/>"
-            + "Ngày tạo: " + formattedOrderTime + "<br/>"
-            + "Chúng tôi cam kết về vấn đề bảo mật thông tin của bạn." + "<br/><br/>"
-            + "Xin cảm ơn và chúc bạn một ngày tốt lành!";
+    // String to = customer.getUserEmail(); // Địa chỉ email của người nhận
+    // String subject = "SUCCESSFULLY REGISTERED AN E-STORE ACCOUNT!!!";
+    // String message = "Xin chào, " + customer.getUserName() + "!<br/><br/>"
+    //         + "Chúc mừng bạn đã đăng ký thành công tài khoản E-STORE. Chúng tôi rất vui mừng khi bạn trở thành một thành viên của chúng tôi<br/><br/>"
+    //         + "THÔNG TIN TÀI KHOẢN:<br/>"
+    //         + "Họ tên: " + customer.getUserName() + "<br/>"
+    //         + "Số điện thoại: " + customer.getUserPhone() + "<br/>"
+    //         + "Email: " + customer.getUserEmail() + "<br/>"
+    //         + "Ngày tạo: " + formattedOrderTime + "<br/>"
+    //         + "Chúng tôi cam kết về vấn đề bảo mật thông tin của bạn." + "<br/><br/>"
+    //         + "Xin cảm ơn và chúc bạn một ngày tốt lành!";
     
-    // Gửi email khi đặt hàng thành công
-    emailService.sendEmail(to, subject, message);
+    // // Gửi email khi đặt hàng thành công
+    // emailService.sendEmail(to, subject, message);
 
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }
