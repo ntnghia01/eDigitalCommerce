@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { editBlog, fetchBlogs } from "../../../slices/blogSlice";
 import { VisuallyHiddenInput, Transition } from "../../customize/CustomizeComponent";
 import { memo } from "react";
+import { useState } from "react";
 
 
 const BlogEditForm = memo(({blog, onClose, handleOpenSuccessSnackbar}) => {
@@ -28,11 +29,18 @@ const BlogEditForm = memo(({blog, onClose, handleOpenSuccessSnackbar}) => {
   const [blogStatus, setBlogStatus] = React.useState(blog.blogStatus);
   const [blogImage, setBlogImage] = React.useState(blog.blogImage);
   const [image, setImage] = React.useState();
+
+  const [isNull, setIsNull] = useState();
 //   console.log(proCategory);  
 
 const dispatch = useDispatch();
 
 const handleSubmit = () => {
+  if (!blogTitle) {
+    setIsNull("blogTitle");
+  } else if (!blogContent) {
+    setIsNull("blogContent");
+  } else {
     const blogData = {
       blogTitle: blogTitle,
       blogContent: blogContent,
@@ -51,6 +59,7 @@ const handleSubmit = () => {
       }).catch((error) => {
         console.log('Cập nhật blog thất bại: ' + error);
       })
+  }
 }
 
   return (
@@ -76,6 +85,9 @@ const handleSubmit = () => {
             onChange={(e) => {
               setBlogTitle(e.target.value);
             }}
+            required
+            error={isNull == 'blogTitle' ? true : false}
+            helperText={isNull == 'blogTitle' ? "Tiêu đề là bắt buộc" : ""}
           />
           <TextField
             autoFocus
@@ -89,6 +101,9 @@ const handleSubmit = () => {
             onChange={(e) => {
               setBlogContent(e.target.value);
             }}
+            required
+            error={isNull == 'blogContent' ? true : false}
+            helperText={isNull == 'blogContent' ? "Nội dung là bắt buộc" : ""}
           />
           <RadioGroup
             row

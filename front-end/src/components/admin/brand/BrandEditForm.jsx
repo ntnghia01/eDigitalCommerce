@@ -18,6 +18,7 @@ import { editBrand, fetchBrands } from "../../../slices/brandSlice";
 import { useCallback } from "react";
 import { memo } from "react";
 import { Transition } from "../../customize/CustomizeComponent";
+import { useState } from "react";
 
 
 
@@ -41,24 +42,29 @@ const BrandEditForm = memo(({brand, onClose, handleOpenSuccessSnackbar}) => {
   const [brandName, setBrandName] = React.useState(existBrand.brandName);
   const [brandDesc, setBrandDesc] = React.useState(existBrand.brandDesc);
   const [brandStatus, setBrandStatus] = React.useState(existBrand.brandStatus);
+  const [isNull, setIsNull] = useState();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const updateBrandData = {
-      brandName: brandName,
-      brandDesc: brandDesc,
-      brandStatus: brandStatus
+    if (!brandName) {
+      setIsNull("BrandName")
+    } else {
+      const updateBrandData = {
+        brandName: brandName,
+        brandDesc: brandDesc,
+        brandStatus: brandStatus
+      }
+      dispatch(editBrand({brandId: brandId, brandData: updateBrandData}))
+        .then(() => {
+          dispatch(fetchBrands());
+          handleOpenSuccessSnackbar("Cập nhật thương hiệu thành công");
+          console.log("Cập nhật thương hiệu thành công!");
+          handleClose();
+        })
+        .catch((error) => {
+          console.log('Cập nhật thương hiệu thất bại: ' + error);
+        })
     }
-    dispatch(editBrand({brandId: brandId, brandData: updateBrandData}))
-      .then(() => {
-        dispatch(fetchBrands());
-        handleOpenSuccessSnackbar("Cập nhật thương hiệu thành công");
-        console.log("Cập nhật thương hiệu thành công!");
-        handleClose();
-      })
-      .catch((error) => {
-        console.log('Cập nhật thương hiệu thất bại: ' + error);
-      })
   };
    
 
@@ -91,6 +97,9 @@ const BrandEditForm = memo(({brand, onClose, handleOpenSuccessSnackbar}) => {
             variant="standard"
             defaultValue={brandName}
             onChange={e => {setBrandName(e.target.value)}}
+            required
+            error={isNull == 'BrandName' ? true : false}
+            helperText={isNull == 'BrandName' ? 'Tên thương hiệu là bắt buộc' : ''}
           />
           <TextField
             autoFocus

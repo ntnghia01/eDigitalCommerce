@@ -18,6 +18,7 @@ import { editBrand, fetchBrands } from "../../../slices/brandSlice";
 import { editSupplier, fetchSuppliers } from "../../../slices/supplierSlice";
 import { Transition } from "../../customize/CustomizeComponent";
 import { memo } from "react";
+import { useState } from "react";
 
 
 const SupplierEditForm = memo(({supplier, onClose, handleOpenSuccessSnackbar}) => {
@@ -40,27 +41,38 @@ const SupplierEditForm = memo(({supplier, onClose, handleOpenSuccessSnackbar}) =
   const [supplierPhone, setSupplierPhone] = React.useState(supplier.supplierPhone);
   const [supplierAddress, setSupplierAddress] = React.useState(supplier.supplierAddress);
   const [supplierStatus, setSupplierStatus] = React.useState(supplier.supplierStatus);
+  const [isNull, setIsNull] = useState();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const updateSupplierData = {
-        supplierName: supplierName,
-        supplierEmail: supplierEmail,
-        supplierPhone: supplierPhone,
-        supplierAddress: supplierAddress,
-        supplierStatus: supplierStatus
-    }
-    dispatch(editSupplier({supplierId: supplierId, supplierData: updateSupplierData}))
-      .then(() => {
-        dispatch(fetchSuppliers());
-        handleOpenSuccessSnackbar("Cập nhật nhà cung cấp thành công");
-        console.log("Cập nhật nhà cung cấp thành công!");
-        onClose();
-      })
-      .catch((error) => {
-        console.log('Cập nhật nhà cung cấp thất bại: ' + error);
-      })
-    setOpen(false);
+    if (!supplierName) {
+      setIsNull("SupplierName");
+    } else if (!supplierEmail) {
+      setIsNull("SupplierEmail");
+    } else if (!supplierPhone) {
+      setIsNull("SupplierPhone");
+    } else if (!supplierAddress) {
+      setIsNull("SupplierAddress");
+    } else {
+      const updateSupplierData = {
+          supplierName: supplierName,
+          supplierEmail: supplierEmail,
+          supplierPhone: supplierPhone,
+          supplierAddress: supplierAddress,
+          supplierStatus: supplierStatus
+      }
+      dispatch(editSupplier({supplierId: supplierId, supplierData: updateSupplierData}))
+        .then(() => {
+          dispatch(fetchSuppliers());
+          handleOpenSuccessSnackbar("Cập nhật nhà cung cấp thành công");
+          console.log("Cập nhật nhà cung cấp thành công!");
+          onClose();
+        })
+        .catch((error) => {
+          console.log('Cập nhật nhà cung cấp thất bại: ' + error);
+        })
+      setOpen(false);
+      }
   };
    
 
@@ -85,6 +97,9 @@ const SupplierEditForm = memo(({supplier, onClose, handleOpenSuccessSnackbar}) =
             variant="standard"
             value={supplierName}
             onChange={e => {setSupplierName(e.target.value)}}
+            required
+            error={isNull == "SupplierName" ? true : false}
+            helperText={isNull == "SupplierName" ? "Tên nhà cung cấp là bắt buộc" : ""}
           />
           <TextField
             autoFocus
@@ -96,6 +111,9 @@ const SupplierEditForm = memo(({supplier, onClose, handleOpenSuccessSnackbar}) =
             variant="standard"
             value={supplierEmail}
             onChange={e => {setSupplierEmail(e.target.value)}}
+            required
+            error={isNull == "SupplierEmail" ? true : false}
+            helperText={isNull == "SupplierEmail" ? "Email nhà cung cấp là bắt buộc" : ""}
           />
           <TextField
             autoFocus
@@ -107,6 +125,9 @@ const SupplierEditForm = memo(({supplier, onClose, handleOpenSuccessSnackbar}) =
             variant="standard"
             value={supplierPhone}
             onChange={e => {setSupplierPhone(e.target.value)}}
+            required
+            error={isNull == "SupplierPhone" ? true : false}
+            helperText={isNull == "SupplierPhone" ? "Số điện thoại nhà cung cấp là bắt buộc" : ""}
           />
           <TextField
             autoFocus
@@ -118,6 +139,9 @@ const SupplierEditForm = memo(({supplier, onClose, handleOpenSuccessSnackbar}) =
             variant="standard"
             value={supplierAddress}
             onChange={e => {setSupplierAddress(e.target.value)}}
+            required
+            error={isNull == "SupplierAddress" ? true : false}
+            helperText={isNull == "SupplierAddress" ? "Địa chỉ nhà cung cấp là bắt buộc" : ""}
           />
           <RadioGroup
             row

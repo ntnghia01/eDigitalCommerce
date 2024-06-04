@@ -26,12 +26,11 @@ import { editProduct, fetchProducts } from "../../../slices/productSlice";
 import StandardImageList from "./ProductImageList";
 import { useEffect, useCallback } from "react";
 import { Transition, Alert, VisuallyHiddenInput } from "../../customize/CustomizeComponent";
+import { useState } from "react";
 
 
 const ProductEditForm = React.memo(({ product, onClose }) => {
   console.log("ProductEditForm", product.proId);
-
-  console.log(product);
 
   const [open, setOpen] = React.useState(true);
   const handleClickOpen = () => {
@@ -58,7 +57,7 @@ const ProductEditForm = React.memo(({ product, onClose }) => {
   const categoryData = useSelector((state) => state.categories.categories);
   const brandData = useSelector((state) => state.brand.brands);
 
-  console.log(categoryData);
+  // console.log(categoryData);
 
   useEffect(() => {
     dispatch(fetchCategoriesAvailable());
@@ -75,6 +74,8 @@ const ProductEditForm = React.memo(({ product, onClose }) => {
   const [proBrand, setProductBrand] = React.useState(product.brand.brandId);
   const [proImage, setProImage] = React.useState(product.proImage);
   const [image, setImage] = React.useState();
+
+  const [isNull, setIsNull] = useState();
 //   console.log(proCategory);
 
   const updateProductData = {
@@ -90,19 +91,28 @@ const ProductEditForm = React.memo(({ product, onClose }) => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    console.log(updateProductData);
-    dispatch(editProduct({proId: proId, productData: updateProductData}))
-      .then(() => {
-        dispatch(fetchProducts());
-        handleOpenSuccessSnackbar();
-        console.log("Cập nhật sản phẩm thành công!");
-        onClose();
-      })
-      .catch((error) => {
-        console.log('Cập nhật sản phẩm thất bại: ' + error);
-      })
-    setOpen(false);
+    if (!proName) {
+      setIsNull("proName");
+    } else if (!proPrice) {
+      setIsNull("proPrice");
+    }  else if (!proCategory) {
+      setIsNull("proCategory");
+    } else if (!proBrand) {
+      setIsNull("proBrand");
+    } else {
+      console.log(updateProductData);
+      dispatch(editProduct({proId: proId, productData: updateProductData}))
+        .then(() => {
+          dispatch(fetchProducts());
+          handleOpenSuccessSnackbar();
+          console.log("Cập nhật sản phẩm thành công!");
+          onClose();
+        })
+        .catch((error) => {
+          console.log('Cập nhật sản phẩm thất bại: ' + error);
+        })
+      setOpen(false);
+    }
   };
    
 
@@ -129,19 +139,26 @@ const ProductEditForm = React.memo(({ product, onClose }) => {
             onChange={(e) => {
               setProductName(e.target.value);
             }}
+            required
+            error={isNull == 'proName' ? true : false}
+            helperText={isNull == 'proName' ? "Tên sản phẩm là bắt buộc" : ""}
           />
           <TextField
             autoFocus
             margin="dense"
             id="pro_price"
             label="Nhập giá sản phẩm *"
-            type="text"
+            type="number"
             fullWidth
             variant="standard"
             value={proPrice}
             onChange={(e) => {
               setProductPrice(e.target.value);
             }}
+            inputProps={{ min: 0 }}
+            required
+            error={isNull == 'proPrice' ? true : false}
+            helperText={isNull == 'proPrice' ? "Giá sản phẩm là bắt buộc" : ""}
           />
           <TextField
             autoFocus
@@ -179,6 +196,8 @@ const ProductEditForm = React.memo(({ product, onClose }) => {
               onChange={(e) => {
                 setProductCategory(e.target.value);
               }}
+              required
+              error={isNull == 'proCategory' ? true : false}
             >
                 {categoryData.map((category) => (
                     <MenuItem key={category.cateId} value={category.cateId + ""}>{category.cateName}</MenuItem>
@@ -195,6 +214,8 @@ const ProductEditForm = React.memo(({ product, onClose }) => {
               onChange={(e) => {
                 setProductBrand(e.target.value);
               }}
+              required
+              error={isNull == 'proBrand' ? true : false}
             >
               {brandData.map((brand) => (
                     <MenuItem key={brand.brandId} value={brand.brandId + ""}>{brand.brandName}</MenuItem>
@@ -217,6 +238,9 @@ const ProductEditForm = React.memo(({ product, onClose }) => {
             Upload hình ảnh chính
             <VisuallyHiddenInput type="file" onChange={(e) => { setImage(e.target.files[0]); }}/>
           </Button>
+          {
+              isNull == 'image' ? <Typography color="red" fontSize={15}>*Vui lòng upload ít nhất một hình ảnh cho sản phẩm</Typography> : null
+            }
           <img
             // srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
             src={`http://localhost:9004/api/product/images/${product.proImage}`}

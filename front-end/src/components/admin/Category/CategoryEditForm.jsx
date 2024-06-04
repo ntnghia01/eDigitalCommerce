@@ -37,25 +37,30 @@ const CategoryEditForm = React.memo(({ category, onClose, handleOpenSuccessSnack
   const [cateName, setCateName] = useState(existCategory.cateName);
   const [cateDesc, setCateDesc] = useState(existCategory.cateDesc);
   const [cateStatus, setCateStatus] = useState(existCategory.cateStatus);
+  const [isNull, setIsNull] = useState();
   
   const handleSubmit = (e) => {
     e.preventDefault();
-    const updateCategoryData = {
-      categoryName: cateName,
-      categoryDesc: cateDesc,
-      categoryStatus: cateStatus,
-    };
-    // console.log(updateCategory);
-    dispatch(updateCategory({categoryId: cateId, categoryData: updateCategoryData}))
-      .then(() => {
-        dispatch(fetchCategories());
-        handleOpenSuccessSnackbar("Cập nhật danh mục thành công");
-        console.log('Category updated successfully');
-        handleClose();
-      })
-      .catch((error) => {
-          console.log('Sủa danh mục thất bại: '+error);
-      });
+    if (!cateName) {
+      setIsNull("CateName")
+    } else {
+      const updateCategoryData = {
+        categoryName: cateName,
+        categoryDesc: cateDesc,
+        categoryStatus: cateStatus,
+      };
+      // console.log(updateCategory);
+      dispatch(updateCategory({categoryId: cateId, categoryData: updateCategoryData}))
+        .then(() => {
+          dispatch(fetchCategories());
+          handleOpenSuccessSnackbar("Cập nhật danh mục thành công");
+          console.log('Category updated successfully');
+          handleClose();
+        })
+        .catch((error) => {
+            console.log('Sủa danh mục thất bại: '+error);
+        });
+    }
   }
 
   return (
@@ -79,6 +84,9 @@ const CategoryEditForm = React.memo(({ category, onClose, handleOpenSuccessSnack
             variant="standard"
             defaultValue={cateName}
             onChange={e => {setCateName(e.target.value)}}
+            required
+            error={isNull == "CateName" ? true : false}
+            helperText={isNull == "CateName" ? 'Tên danh mục là bắt buộc' : ''}
           />
           <TextField
             autoFocus
