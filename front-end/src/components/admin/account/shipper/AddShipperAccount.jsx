@@ -2,38 +2,25 @@ import {
     Button,
     Dialog,
     FormControlLabel,
-    Grid,
     Radio,
     RadioGroup,
     Snackbar,
     Stack,
     TextField,
   } from "@mui/material";
-  import BorderColorIcon from '@mui/icons-material/BorderColor';
   import { useState } from "react";
   
 import { customerSignup } from "../../../../slices/customerSlice";
-  import LoginIcon from "@mui/icons-material/Login";
-  import Paper from "@mui/material/Paper";
   import { useDispatch } from "react-redux";
   import { useNavigate } from 'react-router-dom';
-  import BlockIcon from '@mui/icons-material/Block';
   import DialogActions from "@mui/material/DialogActions";
   import DialogContent from "@mui/material/DialogContent";
   import DialogContentText from "@mui/material/DialogContentText";
   import DialogTitle from "@mui/material/DialogTitle";
-  import Slide from "@mui/material/Slide";
-  import MuiAlert from "@mui/material/Alert";
 import AddIcon from "@mui/icons-material/Add";
 import { fetchShipperAccounts } from "../../../../slices/accountSlice";
 
-  const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
-  
-  const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
+import { Transition, Alert } from "../../../customize/CustomizeComponent";
   
   export default function AddShipperAccount() {
 

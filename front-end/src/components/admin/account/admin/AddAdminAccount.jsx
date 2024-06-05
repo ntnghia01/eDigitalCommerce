@@ -26,13 +26,7 @@ import { customerSignup } from "../../../../slices/customerSlice";
   import MuiAlert from "@mui/material/Alert";
   import AddIcon from "@mui/icons-material/Add";
 
-  const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
-  
-  const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
+  import { Transition, Alert } from "../../../customize/CustomizeComponent";
   
   export default function AddAdminAccount() {
 

@@ -24,18 +24,7 @@ import { fetchCustomerAccounts } from "../../../../slices/accountSlice";
 import DisableCustomerAccountComponent from "./DisableCustomerAccountComponent";
 import ActiveCustomerAccountComponent from "./ActiveCustomerAccountComponent";
 
-const formatDateTime = (oriDateTime) => {
-    const dateTime = new Date(oriDateTime);
-    const date = dateTime.getDate();
-    const month = dateTime.getMonth() + 1;
-    const year = dateTime.getFullYear();
-    const hour = dateTime.getHours();
-    const minute = dateTime.getMinutes();
-    const second = dateTime.getSeconds();
 
-    const newDateTime = `${date < 10 ? '0' : ''}${date}-${month < 10 ? '0' : ''}${month}-${year} ${hour < 10 ? '0' : ''}${hour}:${minute < 10 ? '0' : ''}${minute}:${second < 10 ? '0' : ''}${second}`;
-    return newDateTime;
-}
 
   function convertMillisecondsToDate(milliseconds) {
     const date = new Date(milliseconds);

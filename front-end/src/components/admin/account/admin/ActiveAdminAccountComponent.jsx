@@ -13,14 +13,8 @@ import KeyIcon from '@mui/icons-material/Key';
 import CommentsDisabledIcon from "@mui/icons-material/CommentsDisabled";
 import { useDispatch } from "react-redux";
 import { activeCustomerAccount, disableCustomerAccount, fetchCustomerAccounts } from "../../../../slices/accountSlice";
+import { Transition, Alert } from "../../../customize/CustomizeComponent";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 export default function ActiveAdminAccountComponent(props) {
     console.log("check ActiveCustomerAccountComponent");

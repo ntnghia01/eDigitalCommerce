@@ -20,22 +20,9 @@ import {
 } from "@mui/material";
 
 import { useEffect } from "react";
-import { fetchCustomerAccounts, fetchShipperAccounts } from "../../../../slices/accountSlice";
+import { fetchShipperAccounts } from "../../../../slices/accountSlice";
 import DisableShipperAccountComponent from "./DisableShipperAccountComponent";
-import ActiveCustomerAccountComponent from "../customer/ActiveCustomerAccountComponent";
 
-const formatDateTime = (oriDateTime) => {
-    const dateTime = new Date(oriDateTime);
-    const date = dateTime.getDate();
-    const month = dateTime.getMonth() + 1;
-    const year = dateTime.getFullYear();
-    const hour = dateTime.getHours();
-    const minute = dateTime.getMinutes();
-    const second = dateTime.getSeconds();
-
-    const newDateTime = `${date < 10 ? '0' : ''}${date}-${month < 10 ? '0' : ''}${month}-${year} ${hour < 10 ? '0' : ''}${hour}:${minute < 10 ? '0' : ''}${minute}:${second < 10 ? '0' : ''}${second}`;
-    return newDateTime;
-}
 
 function convertMillisecondsToDate(milliseconds) {
   const date = new Date(milliseconds);

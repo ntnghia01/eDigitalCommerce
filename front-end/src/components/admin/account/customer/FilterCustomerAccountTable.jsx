@@ -1,25 +1,12 @@
-import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
-
 import { useDispatch, useSelector } from "react-redux";
 
 import * as React from "react";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 // import Icons
-import DeleteIcon from "@mui/icons-material/Delete";
-import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import AddIcon from "@mui/icons-material/Add";
-import FileUploadIcon from "@mui/icons-material/FileUpload";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Typography,
 } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";

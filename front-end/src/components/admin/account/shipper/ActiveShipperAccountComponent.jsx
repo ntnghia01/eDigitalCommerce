@@ -5,22 +5,12 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import Slide from "@mui/material/Slide";
 import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
-import DeleteIcon from "@mui/icons-material/Delete";
 import KeyIcon from '@mui/icons-material/Key';
-import CommentsDisabledIcon from "@mui/icons-material/CommentsDisabled";
 import { useDispatch } from "react-redux";
-import { activeCustomerAccount, disableCustomerAccount, fetchCustomerAccounts } from "../../../../slices/accountSlice";
+import { activeCustomerAccount, fetchCustomerAccounts } from "../../../../slices/accountSlice";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import { Transition, Alert } from "../../../customize/CustomizeComponent";
 
 export default function ActiveShipperAccountComponent(props) {
     console.log("check ActiveShipperAccountComponent");
