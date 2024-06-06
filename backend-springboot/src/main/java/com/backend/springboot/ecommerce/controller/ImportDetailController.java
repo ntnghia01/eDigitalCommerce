@@ -42,6 +42,7 @@ public class ImportDetailController {
 
     @PostMapping
     public ResponseEntity<?> createImportDetail(@RequestBody ImportDetailRequestDto importDetailRequestDto) {
+        System.out.println("importDetailRequestDto importId: " + importDetailRequestDto.getImportImport());
         Optional<Product> productOptional = productRepository.findById(importDetailRequestDto.getProduct());
         Optional<Import> importOptional = importRepository.findById(importDetailRequestDto.getImportImport());
 

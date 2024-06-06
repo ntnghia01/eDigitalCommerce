@@ -26,18 +26,17 @@ import HistoryIcon from "@mui/icons-material/History";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import MicIcon from "@mui/icons-material/Mic";
-import LinearProgress from "@mui/material/LinearProgress";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { countCartDetail } from "../../slices/cartSlice";
+import { countCartDetail, fetchCartDetail } from "../../slices/cartSlice";
 import { deleteCustomerInfo, getCustomerInfo } from "../../slices/customerSlice";
 import { searchProductAvailable, searchProductByName } from "../../slices/productSlice";
 import { getOrderCountByCustomerId } from "../../slices/orderSlice";
-import { Grid } from "@mui/material";
+import { Grid, List, ListItem, ListItemText, Popover } from "@mui/material";
+import CartPreviewComponent from "./cart/CartPreviewComponent";
 
 const pages = ["Trang chủ", "Giới thiệu", "Liên hệ"];
-const settings = ["Thông tin cá nhân", "Tài khoản", "Cài đặt", "Đăng xuất"];
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -163,6 +162,7 @@ export default function CustomerTopBar() {
 
   const countCart = useSelector((state) => state.cart.countCart);
   const countOrder = useSelector((state) => state.order.orderCount);
+  const cart = useSelector((state) => state.cart.cart);
 
   useEffect(() => {
     const SpeechRecognition =
@@ -190,12 +190,13 @@ export default function CustomerTopBar() {
     };
 
     setRecognition(recognitionInstance);
-
+    dispatch(fetchCartDetail(localStorage.getItem("customerID")));
     dispatch(countCartDetail(localStorage.getItem("customerID")));
     dispatch(getOrderCountByCustomerId(localStorage.getItem("customerID")));
   }, []);
 
   useEffect(() => {
+    dispatch(fetchCartDetail(localStorage.getItem("customerID")));
     dispatch(countCartDetail(localStorage.getItem("customerID")));
     dispatch(getOrderCountByCustomerId(localStorage.getItem("customerID")));
   }, []);
@@ -210,6 +211,19 @@ export default function CustomerTopBar() {
         recognition.stop();
       }
   };
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handlePopoverOpen = (event) => {
+    dispatch(fetchCartDetail(localStorage.getItem("customerID")));
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
 
   return (
     <>
@@ -332,7 +346,7 @@ export default function CustomerTopBar() {
               >
                 Tra cứu
               </Button>
-              <Button
+              {/* <Button
                 key="intro"
                 onClick={() => {
                   navigate("/");
@@ -340,7 +354,7 @@ export default function CustomerTopBar() {
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 Giới thiệu
-              </Button>
+              </Button> */}
               <Button
                 key="blog"
                 onClick={() => {
@@ -383,11 +397,14 @@ export default function CustomerTopBar() {
                 onClick={() =>
                   navigate(`/cart/${localStorage.getItem("customerID")}`)
                 }
+                onMouseEnter={handlePopoverOpen}
+                onMouseLeave={handlePopoverClose}
               >
                 <Badge badgeContent={countCart} color="error">
                   <ShoppingCartIcon />
                 </Badge>
               </IconButton>
+              <CartPreviewComponent open={open} anchorEl={anchorEl} handlePopoverClose={handlePopoverClose} cart={cart}/>
               <IconButton
                 size="large"
                 // aria-label="show 4 new history"
@@ -400,7 +417,7 @@ export default function CustomerTopBar() {
                   <HistoryIcon />
                 </Badge>
               </IconButton>
-              {/* <IconButton
+              <IconButton
                 size="large"
                 // aria-label="show 4 new mails"
                 color="inherit"
@@ -408,8 +425,8 @@ export default function CustomerTopBar() {
                 <Badge badgeContent={4} color="error">
                   <MailIcon />
                 </Badge>
-              </IconButton> */}
-              {/* <IconButton
+              </IconButton>
+              <IconButton
                 size="large"
                 // aria-label="show 17 new notifications"
                 color="inherit"
@@ -417,7 +434,7 @@ export default function CustomerTopBar() {
                 <Badge badgeContent={17} color="error">
                   <NotificationsIcon />
                 </Badge>
-              </IconButton> */}
+              </IconButton>
               <IconButton
                 size="large"
                 // aria-label="show 17 new mode"
@@ -516,6 +533,7 @@ export default function CustomerTopBar() {
         </Grid>
         <Grid item xs={2} sm={0} md={0} lg={0}></Grid>
       </Grid>
+      
       </AppBar>
       
       {/* <Box sx={{ width: '100%' }}>
