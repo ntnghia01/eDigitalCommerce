@@ -241,8 +241,8 @@ export default function CustomerTopBar() {
             {/* <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} /> */}
             <img
               alt="LOGO"
-              src="../../../public/logo3_transparent.png"
-              style={{ cursor: "pointer", width: 200, padding: 5 }}
+              src="../../../public/logo6.png"
+              style={{ cursor: "pointer", width: 120, padding: 5 }}
               onClick={() => navigate("/")}
             />
             {/* <Typography

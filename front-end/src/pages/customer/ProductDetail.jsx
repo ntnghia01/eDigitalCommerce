@@ -35,67 +35,10 @@ import {
   TableRow,
 } from "@mui/material";
 import ProductImageList from "../../components/admin/product/ProductImageList";
+import { formatDateTime, formatNumberWithCommas, StyledBreadcrumb, Alert } from "../../components/customize/CustomizeComponent"
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import InventoryIcon from '@mui/icons-material/Inventory';
 
-const StyledBreadcrumb = styled(Chip)(({ theme }) => {
-  const backgroundColor =
-    theme.palette.mode === "light"
-      ? theme.palette.grey[200]
-      : theme.palette.grey[800];
-  return {
-    backgroundColor,
-    height: theme.spacing(3),
-    color: theme.palette.text.primary,
-    fontWeight: theme.typography.fontWeightRegular,
-    "&:hover, &:focus": {
-      backgroundColor: emphasize(backgroundColor, 0.06),
-    },
-    "&:active": {
-      boxShadow: theme.shadows[1],
-      backgroundColor: emphasize(backgroundColor, 0.12),
-    },
-  };
-});
-
-function formatNumberWithCommas(input) {
-  // Kiểm tra xem đầu vào có phải là một số nguyên không
-  if (typeof input === "number" && Number.isInteger(input)) {
-    // Chuyển số nguyên thành chuỗi
-    input = input.toString();
-  }
-
-  // Kiểm tra xem đầu vào có phải là một chuỗi không
-  if (typeof input !== "string") {
-    return "Invalid input";
-  }
-
-  // Kiểm tra xem chuỗi có chứa chỉ chứa số không
-  if (!/^\d+$/.test(input)) {
-    return "Invalid input";
-  }
-
-  // Sử dụng regular expression để thêm dấu chấm sau mỗi 3 chữ số từ phải sang trái
-  return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-}
-
-const formatDateTime = (oriDateTime) => {
-  const dateTime = new Date(oriDateTime);
-  const date = dateTime.getDate();
-  const month = dateTime.getMonth() + 1;
-  const year = dateTime.getFullYear();
-  const hour = dateTime.getHours();
-  const minute = dateTime.getMinutes();
-  const second = dateTime.getSeconds();
-  const newDateTime = `${date < 10 ? "0" : ""}${date}-${
-    month < 10 ? "0" : ""
-  }${month}-${year} ${hour < 10 ? "0" : ""}${hour}:${
-    minute < 10 ? "0" : ""
-  }${minute}:${second < 10 ? "0" : ""}${second}`;
-  return newDateTime;
-};
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 function stringToColor(string) {
   let hash = 0;
@@ -252,7 +195,26 @@ export default function ProductDetail() {
                 {formatNumberWithCommas(product.proPrice)} VNĐ
               </Typography>
               <Typography variant="h7" gutterBottom>
-                {product.proQuantity > 0 ? "Còn hàng" : "Hết hàng"}
+              <Stack
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+                spacing={2}
+              >
+                <VisibilityIcon />
+                <div>{Math.floor(Math.random() * 100) + 1} người đang xem</div>
+              </Stack>
+              </Typography>
+              <Typography variant="h7" gutterBottom>
+                <Stack
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  spacing={2}
+                >
+                  <InventoryIcon />
+                  <div>{product.proQuantity > 0 ? "Còn hàng" : "Hết hàng"}</div>
+                </Stack>
               </Typography>
               <Rating name="read-only" value={4} readOnly />
               <TextField
