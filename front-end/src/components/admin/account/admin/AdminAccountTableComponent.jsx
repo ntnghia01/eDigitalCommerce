@@ -26,21 +26,8 @@ import {
 } from "../../../../slices/accountSlice";
 import DisableAdminAccountComponent from "./DisableAdminAccountComponent";
 import ActiveAdminAccountComponent from "./ActiveAdminAccountComponent";
+import { convertMillisecondsToDate } from "../../../customize/CustomizeComponent";
 
-
-function convertMillisecondsToDate(milliseconds) {
-  const date = new Date(milliseconds);
-  const day = date.getDate();
-  const month = date.getMonth() + 1; // Tháng bắt đầu từ 0
-  const year = date.getFullYear();
-
-  // Định dạng ngày và tháng để đảm bảo có hai chữ số
-  const formattedDay = day < 10 ? `0${day}` : day;
-  const formattedMonth = month < 10 ? `0${month}` : month;
-
-  // Trả về chuỗi ngày/tháng/năm
-  return `${formattedDay}-${formattedMonth}-${year}`;
-}
 
 export default function AdminAccountTableComponent() {
   console.log("check render AdminAccountTableComponent");

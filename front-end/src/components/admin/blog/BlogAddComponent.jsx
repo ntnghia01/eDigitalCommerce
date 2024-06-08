@@ -16,26 +16,8 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useDispatch } from "react-redux";
 import { addBlog, fetchBlogs } from "../../../slices/blogSlice";
 import { useState } from "react";
+import { VisuallyHiddenInput, Transition, Alert } from "../../../customize/CustomizeComponent";
 
-const VisuallyHiddenInput = styled('input')({
-  clip: 'rect(0 0 0 0)',
-  clipPath: 'inset(50%)',
-  height: 1,
-  overflow: 'hidden',
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  whiteSpace: 'nowrap',
-  width: 1,
-});
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 export default function BlogAddComponent() {
   const [open, setOpen] = React.useState(false);
