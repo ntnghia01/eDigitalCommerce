@@ -4,7 +4,6 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import Snackbar from '@mui/material/Snackbar';
@@ -12,10 +11,12 @@ import MuiAlert from '@mui/material/Alert';
 
 // import Icons
 import AddIcon from "@mui/icons-material/Add";
-import { InputAdornment, TextField } from '@mui/material';
+import { TextField } from '@mui/material';
 
 import { addCategory, fetchCategories } from '../../../slices/categorySlice';
 import { useDispatch } from 'react-redux';
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from '../../../../firebaseConfig'; // Path to firebaseConfig.js
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -48,9 +49,11 @@ export default function CategoryAddForm() {
   };
   
   
-  const [cateName, setCateName] = useState();
-  const [cateDesc, setCateDesc] = useState();
+  const [cateName, setCateName] = useState('');
+  const [cateDesc, setCateDesc] = useState('');
   const [isNull, setIsNull] = useState();
+  const [file, setFile] = useState(null);
+  const [progress, setProgress] = useState(0);
 
   const dispatch = useDispatch();
 
@@ -77,6 +80,38 @@ export default function CategoryAddForm() {
       setOpen(false);
     }
   }
+
+  const handleUpload = () => {
+    if (!file) return;
+
+    const storageRef = ref(storage, `images/${file.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      snapshot => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setProgress(progress);
+      },
+      error => {
+        console.error("Upload failed:", error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
+          console.log("File available at:", downloadURL);
+
+          // Gửi URL tới backend
+          // axios.post('/api/images/upload', { url: downloadURL })
+          //   .then(response => {
+          //     console.log("Image URL saved successfully:", response.data);
+          //   })
+          //   .catch(error => {
+          //     console.error("Error saving image URL:", error);
+          //   });
+        });
+      }
+    );
+  };
 
   return (
     <div>
@@ -120,6 +155,9 @@ export default function CategoryAddForm() {
             value={cateDesc}
             onChange={e => {setCateDesc(e.target.value)}}
           />
+          <input type="file" onChange={e => setFile(e.target.files[0])} />
+          <button onClick={handleUpload}>Upload</button>
+          <progress value={progress} max="100" />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleSubmit}>Xác nhận</Button>

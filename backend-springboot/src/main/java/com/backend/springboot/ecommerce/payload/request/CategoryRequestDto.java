@@ -8,4 +8,5 @@ public class CategoryRequestDto {
     private String categoryName;
     private String categoryDesc;
     private Integer categoryStatus;
+    private String categoryImage;
 }

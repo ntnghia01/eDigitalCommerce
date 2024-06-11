@@ -16,7 +16,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useDispatch } from "react-redux";
 import { addBlog, fetchBlogs } from "../../../slices/blogSlice";
 import { useState } from "react";
-import { VisuallyHiddenInput, Transition, Alert } from "../../../customize/CustomizeComponent";
+import { VisuallyHiddenInput, Transition, Alert } from "../../../components/customize/CustomizeComponent";
 
 
 export default function BlogAddComponent() {

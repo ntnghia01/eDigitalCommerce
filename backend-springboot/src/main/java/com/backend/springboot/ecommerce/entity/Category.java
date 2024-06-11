@@ -33,11 +33,14 @@ public class Category implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "cate_updated_at", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime cateUpdatedAt;
+    @Column(name = "cate_image", nullable = true)
+    private String cateImage;
 
-    public Category(String cateName, String cateDesc) {
+    public Category(String cateName, String cateDesc, String cateImage) {
         this.cateName = cateName;
         this.cateDesc = cateDesc;
         this.cateStatus = 1;
+        this.cateImage = cateImage;
         this.cateCreatedAt = LocalDateTime.now();
         this.cateUpdatedAt = LocalDateTime.now();
     }

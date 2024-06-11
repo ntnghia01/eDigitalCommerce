@@ -80,6 +80,13 @@ export default function ContactPage() {
     dispatch(addContact(formData))
       .then(() => {
         handleOpenSnackbar();
+        setFormData({
+          contactUsername: "",
+          contactUseremail: "",
+          contactUserphone: "",
+          contactTitle: "",
+          contactContent: "",
+        })
       });
     
   };

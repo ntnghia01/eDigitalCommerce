@@ -56,7 +56,7 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<?> createCategory(@RequestBody CategoryRequestDto categoryRequestDto) {
-        Category category = new Category(categoryRequestDto.getCategoryName(), categoryRequestDto.getCategoryDesc());
+        Category category = new Category(categoryRequestDto.getCategoryName(), categoryRequestDto.getCategoryDesc(), categoryRequestDto.getCategoryImage());
         categoryRepository.save(category);
         return ResponseEntity.ok(new MessageResponse("Add category successfully!!!"));
     }
