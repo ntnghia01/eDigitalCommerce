@@ -14,14 +14,8 @@ import MuiAlert from '@mui/material/Alert';
 import { useDispatch } from 'react-redux';
 import { addBrand, fetchBrands } from '../../../slices/brandSlice';
 import { useState } from 'react';
+import { Transition, Alert } from "../../../components/customize/CustomizeComponent";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 export default function BrandAddForm() {
 
