@@ -18,14 +18,7 @@ import { useDispatch } from "react-redux";
 import { editBrand, fetchBrands } from "../../../slices/brandSlice";
 import { editSupplier, fetchSuppliers } from "../../../slices/supplierSlice";
 import { getCustomerInfo, updateCustomerInfomation } from "../../../slices/customerSlice";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import { Transition, Alert } from "../../../components/customize/CustomizeComponent";
 
 function convertMillisecondsToDate(milliseconds) {
     const date = new Date(milliseconds);

@@ -29,36 +29,8 @@ import { Grid, InputAdornment, Stack, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getOrderDetailByOrderId } from "../../slices/orderSlice";
+import { Transition, formatDateTime, formatNumberWithCommas } from "../../../components/customize/CustomizeComponent";
 
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const formatDateTime = (oriDateTime) => {
-  const dateTime = new Date(oriDateTime);
-  const date = dateTime.getDate();
-  const month = dateTime.getMonth() + 1;
-  const year = dateTime.getFullYear();
-  const hour = dateTime.getHours();
-  const minute = dateTime.getMinutes();
-  const second = dateTime.getSeconds();
-
-  const newDateTime = `${date < 10 ? "0" : ""}${date}-${
-    month < 10 ? "0" : ""
-  }${month}-${year} ${hour < 10 ? "0" : ""}${hour}:${
-    minute < 10 ? "0" : ""
-  }${minute}:${second < 10 ? "0" : ""}${second}`;
-  return newDateTime;
-};
-
-function formatNumberWithCommas(input) {
-  if (typeof input === "number" && Number.isInteger(input))
-    input = input.toString();
-  if (typeof input !== "string") return "Invalid input";
-  if (!/^\d+$/.test(input)) return "Invalid input";
-  return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-}
 
 const steps1 = [
   "Đang chờ xử lý",

@@ -12,10 +12,7 @@ import { DialogContentText, Snackbar } from "@mui/material";
 import { getOrderByCustomerId, requestCancelOrder } from "../../../slices/orderSlice";
 import { Alert } from "../../customize/CustomizeComponent";
 import { useDispatch } from "react-redux";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
+import { Transition, Alert } from "../../../components/customize/CustomizeComponent";
 
 export default function CancelOrderComponent (props) {
 

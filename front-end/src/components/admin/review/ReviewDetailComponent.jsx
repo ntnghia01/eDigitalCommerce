@@ -18,9 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { useEffect } from "react";
 import { memo } from "react";
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
+import { Transition } from "../../../components/customize/CustomizeComponent";
 
 
 const ReviewDetailComponent = memo(({review, onClose}) => {

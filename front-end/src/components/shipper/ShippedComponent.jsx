@@ -22,15 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { fetchOrderByShipper, shipped } from "../../slices/shipperSlice";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import { Transition, Alert } from "../../../components/customize/CustomizeComponent";
 
 export default function ShippedComponent(props) {
   console.log("check render");

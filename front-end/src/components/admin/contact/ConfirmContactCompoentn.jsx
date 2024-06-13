@@ -14,14 +14,8 @@ import { deleteBrand, fetchBrands } from '../../../slices/brandSlice';
 import { deleteSupplier, fetchSuppliers } from '../../../slices/supplierSlice';
 import { deleteProduct, fetchProducts } from '../../../slices/productSlice';
 import { confirmContact, fetchContacts } from '../../../slices/contactSlice';
+import { Transition, Alert } from "../../../components/customize/CustomizeComponent";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 export default function ConfirmContactComponent(props) {
 

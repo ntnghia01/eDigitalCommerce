@@ -22,39 +22,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
 import { fetchOrderByShipper, startShip } from "../../slices/shipperSlice";
+import { Transition, Alert } from "../../../components/customize/CustomizeComponent";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const formatDateTime = (oriDateTime) => {
-  const dateTime = new Date(oriDateTime);
-  const date = dateTime.getDate();
-  const month = dateTime.getMonth() + 1;
-  const year = dateTime.getFullYear();
-  const hour = dateTime.getHours();
-  const minute = dateTime.getMinutes();
-  const second = dateTime.getSeconds();
-
-  const newDateTime = `${date < 10 ? "0" : ""}${date}-${
-    month < 10 ? "0" : ""
-  }${month}-${year} ${hour < 10 ? "0" : ""}${hour}:${
-    minute < 10 ? "0" : ""
-  }${minute}:${second < 10 ? "0" : ""}${second}`;
-  return newDateTime;
-};
-
-function formatNumberWithCommas(input) {
-  if (typeof input === "number" && Number.isInteger(input))
-    input = input.toString();
-  if (typeof input !== "string") return "Invalid input";
-  if (!/^\d+$/.test(input)) return "Invalid input";
-  return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-}
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 export default function StartShipComponent(props) {
   console.log("check render");

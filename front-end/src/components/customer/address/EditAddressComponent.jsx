@@ -28,10 +28,7 @@ import {
 } from "../../../slices/addressSlice";
 import { useState } from "react";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { Transition, Alert } from "../../../components/customize/CustomizeComponent";
 
 export default function EditAddressComponent(props) {
   const { editID } = props;

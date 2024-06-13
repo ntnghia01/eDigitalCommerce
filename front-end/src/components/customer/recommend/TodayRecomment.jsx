@@ -21,23 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { addToCart, countCartDetail } from "../../../slices/cartSlice";
 import { fetchAvailableProductsDESC } from "../../../slices/productSlice";
-
-function formatNumberWithCommas(input) {
-  if (typeof input === "number" && Number.isInteger(input)) {
-    input = input.toString();
-  }
-  if (typeof input !== "string") {
-    return "Invalid input";
-  }
-  if (!/^\d+$/.test(input)) {
-    return "Invalid input";
-  }
-  return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-}
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import { formatNumberWithCommas, Alert } from "../../../components/customize/CustomizeComponent";
 
 export default function TodayRecommend() {
   const navigate = useNavigate();

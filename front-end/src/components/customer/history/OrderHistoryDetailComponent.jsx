@@ -29,13 +29,7 @@ import { Grid, InputAdornment, Stack, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getOrderDetailByOrderId } from "../../../slices/orderSlice";
-// import ConfirmPayment from "./ConfirmPayment";
-// import ConfirmOrder from "./ConfirmOrder";
-// import ConfirmCancel from "./ConfirmCancel";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { Transition, Alert } from "../../../components/customize/CustomizeComponent";
 
 const formatDateTime = (oriDateTime) => {
   const dateTime = new Date(oriDateTime);

@@ -14,14 +14,7 @@ import { deleteBrand, fetchBrands } from '../../../slices/brandSlice';
 import { deleteSupplier, fetchSuppliers } from '../../../slices/supplierSlice';
 import { deleteProduct, fetchProducts } from '../../../slices/productSlice';
 import { deleteContact, fetchContacts } from '../../../slices/contactSlice';
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import { Transition, Alert } from "../../../components/customize/CustomizeComponent";
 
 export default function ConfirmDeleteContactComponent(props) {
 

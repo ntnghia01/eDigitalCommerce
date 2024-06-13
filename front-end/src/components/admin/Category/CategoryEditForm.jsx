@@ -11,10 +11,7 @@ import { FormControlLabel, Radio, RadioGroup, TextField } from "@mui/material";
 
 import { useDispatch } from "react-redux";
 import { fetchCategories, updateCategory } from "../../../slices/categorySlice";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { Transition, Alert } from "../../../components/customize/CustomizeComponent";
 
 
 const CategoryEditForm = React.memo(({ category, onClose, handleOpenSuccessSnackbar }) => {

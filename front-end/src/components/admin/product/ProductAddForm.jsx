@@ -23,26 +23,7 @@ import { addProduct, fetchProducts } from "../../../slices/productSlice";
 import StandardImageList from "./ProductImageList";
 import { useState } from "react";
 import { addImage } from "../../../slices/imageSlice";
-
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import { Transition, Alert, VisuallyHiddenInput } from "../../../components/customize/CustomizeComponent";
 
 export default function ProductAddForm() {
   const [open, setOpen] = React.useState(false);

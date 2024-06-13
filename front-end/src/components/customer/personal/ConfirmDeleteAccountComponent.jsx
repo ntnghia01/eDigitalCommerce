@@ -15,14 +15,7 @@ import { deleteBrand, fetchBrands } from "../../../slices/brandSlice";
 import { deleteAddress, fetchAddresses } from "../../../slices/addressSlice";
 import { deleteCustomerAccount } from "../../../slices/customerSlice";
 import { useNavigate } from "react-router-dom";
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import { Transition, Alert } from "../../../components/customize/CustomizeComponent";
 
 export default function ConfirmDeleteAccountComponent(props) {
   console.log("Check render ConfirmDeleteAccountComponent");
