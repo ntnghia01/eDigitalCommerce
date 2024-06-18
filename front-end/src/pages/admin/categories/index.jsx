@@ -47,14 +47,7 @@ import DataGridDemo from "../../../components/admin/Category/CategoryDataTable";
 import FilterCategoryTable from "../../../components/admin/Category/FilterCategoryTable";
 
 
-// import Component
-
-// example data
-
 function Categories() {
-
-
-
 
   return (
     <>

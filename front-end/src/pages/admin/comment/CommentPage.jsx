@@ -35,11 +35,6 @@ import ReviewTableComponent from "../../../components/admin/review/ReviewTableCo
 import CommentTableComponent from "../../../components/admin/comment/CommentTableComponent";
 import FilterCommentTable from "../../../components/admin/comment/FilterCommentTable";
 
-// import Component
-
-// example data
-
-
 
 export default function CommentPage() {
   return (
