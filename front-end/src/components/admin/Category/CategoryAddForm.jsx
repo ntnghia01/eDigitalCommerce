@@ -17,7 +17,8 @@ import { addCategory, fetchCategories } from '../../../slices/categorySlice';
 import { useDispatch } from 'react-redux';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from '../../../../firebaseConfig'; // Path to firebaseConfig.js
-import { Transition, Alert } from "../../../components/customize/CustomizeComponent";
+import { Transition, Alert, getCurrentDateTime } from "../../../components/customize/CustomizeComponent";
+
 
 
 export default function CategoryAddForm() {
@@ -51,60 +52,68 @@ export default function CategoryAddForm() {
 
   const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!cateName) {
       setIsNull("CateName")
     } else {
-      const newCategory = {
-        categoryName: cateName,
-        categoryDesc: cateDesc,
-      };
-      dispatch(addCategory(newCategory))
-        .then(() => {
-          dispatch(fetchCategories());
-          handleOpenSnackbar();
-          setCateName('');
-          setCateDesc('');
-          console.log('Thêm danh mục mới thành công');
-        })
-        .catch((error) => {
-            console.log('Thêm danh mục thất bại: '+ error);
-        });
-      setOpen(false);
+      try {
+        var imageUrl = null;
+        if (file != null) {
+          imageUrl = await handleUploadImage();
+        }
+        const newCategory = {
+          categoryName: cateName,
+          categoryDesc: cateDesc,
+          categoryImage: imageUrl
+        };
+        dispatch(addCategory(newCategory))
+          .then(() => {
+            dispatch(fetchCategories());
+            handleOpenSnackbar();
+            setCateName('');
+            setCateDesc('');
+            console.log('Thêm danh mục mới thành công');
+          })
+          .catch((error) => {
+              console.log('Thêm danh mục thất bại: '+ error);
+          });
+        setOpen(false);
+      } catch (error) {
+        console.error('Thêm danh mục thất bại:', error);
+      }
     }
   }
 
-  const handleUpload = () => {
-    if (!file) return;
-
-    const storageRef = ref(storage, `images/${file.name}`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    uploadTask.on(
-      "state_changed",
-      snapshot => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setProgress(progress);
-      },
-      error => {
-        console.error("Upload failed:", error);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
-          console.log("File available at:", downloadURL);
-
-          // Gửi URL tới backend
-          // axios.post('/api/images/upload', { url: downloadURL })
-          //   .then(response => {
-          //     console.log("Image URL saved successfully:", response.data);
-          //   })
-          //   .catch(error => {
-          //     console.error("Error saving image URL:", error);
-          //   });
-        });
+  const handleUploadImage = () => {
+    console.log("handleUpload");
+    return new Promise((resolve, reject) => {
+      if (!file) {
+        reject('No file selected');
+        return;
       }
-    );
+
+      const storageRef = ref(storage, `images/category_${getCurrentDateTime()}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        snapshot => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setProgress(progress);
+        },
+        error => {
+          console.error("Upload failed:", error);
+          reject(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
+            console.log("File available at:", downloadURL);
+            resolve(downloadURL);
+          });
+        }
+      );
+    });
   };
 
   return (
@@ -150,7 +159,7 @@ export default function CategoryAddForm() {
             onChange={e => {setCateDesc(e.target.value)}}
           />
           <input type="file" onChange={e => setFile(e.target.files[0])} />
-          <button onClick={handleUpload}>Upload</button>
+          {/* <button onClick={handleUpload}>Upload</button> */}
           <progress value={progress} max="100" />
         </DialogContent>
         <DialogActions>

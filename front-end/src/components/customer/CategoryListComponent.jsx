@@ -61,7 +61,7 @@ export default function CategoryListComponent() {
 
             {categories && (
               categories.slice(0,10).map((category) => (
-                <BottomNavigationAction key={category.cateId} label={category.cateName} icon={<CategoryIcon />} onClick={()=>navigate(`/category/${category.cateId}`)}/>
+                <BottomNavigationAction key={category.cateId} label={category.cateName} icon={<img src={category.cateImage} alt="" style={{width: "30%", height: "50%"}} />} onClick={()=>navigate(`/category/${category.cateId}`)}/>
               ))
             )}
 

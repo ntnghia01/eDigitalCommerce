@@ -29,7 +29,7 @@ import { Grid, InputAdornment, Stack, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getOrderDetailByOrderId } from "../../slices/orderSlice";
-import { Transition, formatDateTime, formatNumberWithCommas } from "../../../components/customize/CustomizeComponent";
+import { Transition, formatDateTime, formatNumberWithCommas } from "../customize/CustomizeComponent";
 
 
 const steps1 = [

@@ -10,7 +10,6 @@ import Slide from "@mui/material/Slide";
 import CancelIcon from '@mui/icons-material/Cancel';
 import { DialogContentText, Snackbar } from "@mui/material";
 import { getOrderByCustomerId, requestCancelOrder } from "../../../slices/orderSlice";
-import { Alert } from "../../customize/CustomizeComponent";
 import { useDispatch } from "react-redux";
 import { Transition, Alert } from "../../../components/customize/CustomizeComponent";
 

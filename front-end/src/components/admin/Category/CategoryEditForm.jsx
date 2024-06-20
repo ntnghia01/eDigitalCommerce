@@ -11,7 +11,10 @@ import { FormControlLabel, Radio, RadioGroup, TextField } from "@mui/material";
 
 import { useDispatch } from "react-redux";
 import { fetchCategories, updateCategory } from "../../../slices/categorySlice";
-import { Transition, Alert } from "../../../components/customize/CustomizeComponent";
+import { Transition, getCurrentDateTime, VisuallyHiddenInput } from "../../../components/customize/CustomizeComponent";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from '../../../../firebaseConfig'; // Path to firebaseConfig.js
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 
 const CategoryEditForm = React.memo(({ category, onClose, handleOpenSuccessSnackbar }) => {
@@ -34,16 +37,28 @@ const CategoryEditForm = React.memo(({ category, onClose, handleOpenSuccessSnack
   const [cateName, setCateName] = useState(existCategory.cateName);
   const [cateDesc, setCateDesc] = useState(existCategory.cateDesc);
   const [cateStatus, setCateStatus] = useState(existCategory.cateStatus);
+  const [cateImage, setCateImage] = useState(existCategory.cateImage)
   const [isNull, setIsNull] = useState();
+  const [file, setFile] = useState(null);
+  const [progress, setProgress] = useState(0);
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!cateName) {
       setIsNull("CateName")
     } else {
+      var imageUrl = null;
+      if (file != null) {
+        console.log(file);
+        imageUrl = await handleUploadImage();
+        setCateImage(imageUrl);
+      } else {
+        imageUrl = cateImage
+      }
       const updateCategoryData = {
         categoryName: cateName,
         categoryDesc: cateDesc,
+        categoryImage: imageUrl,
         categoryStatus: cateStatus,
       };
       // console.log(updateCategory);
@@ -60,6 +75,37 @@ const CategoryEditForm = React.memo(({ category, onClose, handleOpenSuccessSnack
     }
   }
 
+  const handleUploadImage = () => {
+    console.log("handleUpload");
+    return new Promise((resolve, reject) => {
+      if (!file) {
+        reject('No file selected');
+        return;
+      }
+
+      const storageRef = ref(storage, `images/category_${getCurrentDateTime()}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        snapshot => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setProgress(progress);
+        },
+        error => {
+          console.error("Upload failed:", error);
+          reject(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
+            console.log("File available at:", downloadURL);
+            resolve(downloadURL);
+          });
+        }
+      );
+    });
+  };
+
   return (
     <div>
       <Dialog
@@ -75,7 +121,7 @@ const CategoryEditForm = React.memo(({ category, onClose, handleOpenSuccessSnack
             autoFocus
             margin="dense"
             id="cate_name"
-            label="Tên danh mục *"
+            label="Tên danh mục"
             type="text"
             fullWidth
             variant="standard"
@@ -106,6 +152,32 @@ const CategoryEditForm = React.memo(({ category, onClose, handleOpenSuccessSnack
             <FormControlLabel value="1" control={<Radio />} label="Hoạt động" />
             <FormControlLabel value="0" control={<Radio />} label="Không hoạt động" />
           </RadioGroup>
+          {cateImage && (
+            <img src={cateImage} alt="" style={{width: "50%", height: "50%"}} />
+          )}
+          <div>
+            {/* <input type="file" onChange={e => setFile(e.target.files[0])} /> */}
+            <Button
+              component="label"
+              variant="contained"
+              style={{ marginTop: 20 }}
+              startIcon={<CloudUploadIcon />}
+            >
+              Tải lên hình ảnh
+              <VisuallyHiddenInput
+                type="file"
+                accept="image/*"
+                onChange={e => {
+                  setFile(e.target.files[0]);
+                }}
+              />
+            </Button>
+            {file && (<span>{file.name}</span>)}
+            </div>
+            <progress value={progress} max="100" />
+          
+          {/* <button onClick={handleUpload}>Upload</button> */}
+          
         </DialogContent>
         <DialogActions>
           <Button onClick={handleSubmit}>Xác nhận</Button>

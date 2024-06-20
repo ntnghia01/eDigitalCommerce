@@ -64,12 +64,14 @@ public class CategoryController {
     @PutMapping("/{categoryId}")
     public ResponseEntity<?> updateCategory(@PathVariable Integer categoryId, @RequestBody CategoryRequestDto categoryRequestDto) {
         Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
+        System.out.println(categoryRequestDto);
         if (categoryOptional.isPresent()) {
             Category existingCategory = categoryOptional.get();
             existingCategory.setCateName(categoryRequestDto.getCategoryName());
             existingCategory.setCateDesc(categoryRequestDto.getCategoryDesc());
             existingCategory.setCateStatus(categoryRequestDto.getCategoryStatus());
             existingCategory.setCateUpdatedAt(LocalDateTime.now());
+            existingCategory.setCateImage(categoryRequestDto.getCategoryImage());
 
             categoryRepository.save(existingCategory);
             return ResponseEntity.ok(new MessageResponse("Update category successfully!"));

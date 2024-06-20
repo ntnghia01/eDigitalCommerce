@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { fetchOrderByShipper, shipped } from "../../slices/shipperSlice";
-import { Transition, Alert } from "../../../components/customize/CustomizeComponent";
+import { Transition, Alert } from "../customize/CustomizeComponent";
 
 export default function ShippedComponent(props) {
   console.log("check render");

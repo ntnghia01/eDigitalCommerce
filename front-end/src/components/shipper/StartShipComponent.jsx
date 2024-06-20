@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
 import { fetchOrderByShipper, startShip } from "../../slices/shipperSlice";
-import { Transition, Alert } from "../../../components/customize/CustomizeComponent";
+import { Transition, Alert } from "../customize/CustomizeComponent";
 
 
 export default function StartShipComponent(props) {
