@@ -74,6 +74,7 @@ export default function BrandTable() {
               <TableRow>
                 <TableCell>ID</TableCell>
                 <TableCell align="left">Tên Thương Hiệu</TableCell>
+                <TableCell align="left">Hình ảnh</TableCell>
                 <TableCell align="left">Mô Tả</TableCell>
                 <TableCell align="left">Trạng Thái</TableCell>
                 <TableCell align="right">
@@ -95,6 +96,7 @@ export default function BrandTable() {
                     #{brand.brandId}
                   </TableCell>
                   <TableCell align="left">{brand.brandName}</TableCell>
+                  <TableCell><img src={brand.brandImage} alt="" style={{width: "50px", height: "50px"}} /></TableCell>
                   <TableCell align="left">{brand.brandDesc}</TableCell>
                   <TableCell align="left">
                     {brand.brandStatus == 1 ? 

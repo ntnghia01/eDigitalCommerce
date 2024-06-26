@@ -9,4 +9,5 @@ public class BrandRequestDto {
     private String brandName;
     private String brandDesc;
     private Integer brandStatus;
+    private String brandImage;
 }

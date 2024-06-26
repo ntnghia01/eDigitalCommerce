@@ -48,7 +48,7 @@ public class BrandController {
 
     @PostMapping
     public ResponseEntity<?> createBrand(@RequestBody BrandRequestDto brandRequestDto) {
-        Brand brand = new Brand(brandRequestDto.getBrandName(), brandRequestDto.getBrandDesc());
+        Brand brand = new Brand(brandRequestDto.getBrandName(), brandRequestDto.getBrandDesc(), brandRequestDto.getBrandImage());
         brandRepository.save(brand);
         return ResponseEntity.ok(new MessageResponse("Add brand successfully!!!"));
     }
@@ -62,6 +62,7 @@ public class BrandController {
             existingBrand.setBrandDesc(brandRequestDto.getBrandDesc());
             existingBrand.setBrandStatus(brandRequestDto.getBrandStatus());
             existingBrand.setBrandUpdatedAt(LocalDateTime.now());
+            existingBrand.setBrandImage(brandRequestDto.getBrandImage());
 
             brandRepository.save(existingBrand);
             return ResponseEntity.ok(new MessageResponse("Update brand successfully!"));

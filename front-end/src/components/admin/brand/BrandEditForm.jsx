@@ -17,8 +17,11 @@ import { useDispatch } from "react-redux";
 import { editBrand, fetchBrands } from "../../../slices/brandSlice";
 import { useCallback } from "react";
 import { memo } from "react";
-import { Transition } from "../../customize/CustomizeComponent";
 import { useState } from "react";
+import { Transition, getCurrentDateTime, VisuallyHiddenInput } from "../../../components/customize/CustomizeComponent";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from '../../../../firebaseConfig'; // Path to firebaseConfig.js
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 
 
@@ -43,16 +46,28 @@ const BrandEditForm = memo(({brand, onClose, handleOpenSuccessSnackbar}) => {
   const [brandDesc, setBrandDesc] = React.useState(existBrand.brandDesc);
   const [brandStatus, setBrandStatus] = React.useState(existBrand.brandStatus);
   const [isNull, setIsNull] = useState();
+  const [brandImage, setBrandImage] = useState(existBrand.brandImage);
+  const [file, setFile] = useState(null);
+  const [progress, setProgress] = useState(0);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!brandName) {
       setIsNull("BrandName")
     } else {
+      var imageUrl = null;
+      if (file != null) {
+        // console.log(file);
+        imageUrl = await handleUploadImage();
+        setBrandImage(imageUrl);
+      } else {
+        imageUrl = brandImage
+      }
       const updateBrandData = {
         brandName: brandName,
         brandDesc: brandDesc,
-        brandStatus: brandStatus
+        brandStatus: brandStatus,
+        brandImage: imageUrl
       }
       dispatch(editBrand({brandId: brandId, brandData: updateBrandData}))
         .then(() => {
@@ -65,6 +80,37 @@ const BrandEditForm = memo(({brand, onClose, handleOpenSuccessSnackbar}) => {
           console.log('Cập nhật thương hiệu thất bại: ' + error);
         })
     }
+  };
+
+  const handleUploadImage = () => {
+    console.log("handleUpload");
+    return new Promise((resolve, reject) => {
+      if (!file) {
+        reject('No file selected');
+        return;
+      }
+
+      const storageRef = ref(storage, `images/category_${getCurrentDateTime()}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        snapshot => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setProgress(progress);
+        },
+        error => {
+          console.error("Upload failed:", error);
+          reject(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
+            console.log("File available at:", downloadURL);
+            resolve(downloadURL);
+          });
+        }
+      );
+    });
   };
    
 
@@ -122,6 +168,29 @@ const BrandEditForm = memo(({brand, onClose, handleOpenSuccessSnackbar}) => {
             <FormControlLabel value="1" control={<Radio />} label="Hoạt động" />
             <FormControlLabel value="0" control={<Radio />} label="Không hoạt động" />
           </RadioGroup>
+          {brandImage && (
+            <img src={brandImage} alt="" style={{width: "50%", height: "50%"}} />
+          )}
+          <div>
+            {/* <input type="file" onChange={e => setFile(e.target.files[0])} /> */}
+            <Button
+              component="label"
+              variant="contained"
+              style={{ marginTop: 20 }}
+              startIcon={<CloudUploadIcon />}
+            >
+              Tải lên hình ảnh
+              <VisuallyHiddenInput
+                type="file"
+                accept="image/*"
+                onChange={e => {
+                  setFile(e.target.files[0]);
+                }}
+              />
+            </Button>
+            {file && (<span>{file.name}</span>)}
+            </div>
+            <progress value={progress} max="100" />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleSubmit}>Xác nhận</Button>

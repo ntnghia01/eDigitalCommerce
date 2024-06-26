@@ -49,12 +49,13 @@ export default function BrandListComponent() {
                 <BottomNavigationAction
                   key={brand.brandId}
                   label={brand.brandName}
+                  icon={<img src={brand.brandImage} alt="" style={{width: "30%", height: "50%"}} />}
                   // icon={<img
                   //   alt="Apple Logo"
                   //   src="https://cdn.hoanghamobile.com/i/cat/Uploads/2022/09/07/logoooooooooooooooo.png"
                   //   style={{ width: "40px", height: "40px", objectFit: "contain" }}
                   // />}
-                  icon={<BrandingWatermarkIcon />}
+                  // icon={<BrandingWatermarkIcon />}
                   onClick={()=>navigate(`/brand/${brand.brandId}`)}
                 />
               ))

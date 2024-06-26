@@ -9,12 +9,15 @@ import AddIcon from "@mui/icons-material/Add";
 import { TextField } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 // Redux
 import { useDispatch } from 'react-redux';
 import { addBrand, fetchBrands } from '../../../slices/brandSlice';
 import { useState } from 'react';
-import { Transition, Alert } from "../../../components/customize/CustomizeComponent";
+import { Transition, Alert, VisuallyHiddenInput, getCurrentDateTime } from "../../../components/customize/CustomizeComponent";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from '../../../../firebaseConfig'; // Path to firebaseConfig.js
 
 
 export default function BrandAddForm() {
@@ -42,30 +45,74 @@ export default function BrandAddForm() {
   const [brandName, setBrandName] = React.useState();
   const [brandDesc, setBrandDesc] = React.useState();
   const [isNull, setIsNull] = useState();
+  const [file, setFile] = useState(null);
+  const [progress, setProgress] = useState(0);
 
   const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!brandName) {
       setIsNull("BrandName")
     } else {
-      const newBrand = {
-        brandName: brandName,
-        brandDesc: brandDesc
-      };
-      dispatch(addBrand(newBrand))
-        .then(() => {
-          dispatch(fetchBrands());
-          handleOpenSnackbar();
-          console.log('Thêm thương hiệu thành công!');
-        })
-        .catch((error) => {
-          console.log('Thêm thất bại: ' + error);
-        })
-      setOpen(false);
+      try {
+        var imageUrl = null;
+        if (file != null) {
+          imageUrl = await handleUploadImage();
+        }
+        const newBrand = {
+          brandName: brandName,
+          brandDesc: brandDesc,
+          brandImage: imageUrl
+        };
+        dispatch(addBrand(newBrand))
+          .then(() => {
+            dispatch(fetchBrands());
+            handleOpenSnackbar();
+            setBrandName('');
+            setBrandDesc('');
+            console.log('Thêm thương hiệu thành công!');
+          })
+          .catch((error) => {
+            console.log('Thêm thất bại: ' + error);
+          })
+        setOpen(false);
+      } catch (error) {
+        console.error('Thêm thương hiệu thất bại: ', error);
+      }
     }
   }
+
+  const handleUploadImage = () => {
+    console.log("handleUpload");
+    return new Promise((resolve, reject) => {
+      if (!file) {
+        reject('No file selected');
+        return;
+      }
+
+      const storageRef = ref(storage, `images/brand_${getCurrentDateTime()}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        snapshot => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setProgress(progress);
+        },
+        error => {
+          console.error("Upload failed:", error);
+          reject(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
+            console.log("File available at:", downloadURL);
+            resolve(downloadURL);
+          });
+        }
+      );
+    });
+  };
 
   return (
     <div>
@@ -110,6 +157,21 @@ export default function BrandAddForm() {
             variant="standard"
             onChange={e => {setBrandDesc(e.target.value)}}
           />
+          <Button
+              component="label"
+              variant="contained"
+              style={{ marginTop: 20 }}
+              startIcon={<CloudUploadIcon />}
+            >
+              Tải lên hình ảnh
+          <VisuallyHiddenInput
+                type="file"
+                accept="image/*"
+                onChange={e => setFile(e.target.files[0])}
+              />
+              </Button>
+              {file && (<div><progress value={progress} max="100" /></div>)}
+          
         </DialogContent>
         <DialogActions>
           <Button onClick={handleSubmit}>Xác nhận</Button>

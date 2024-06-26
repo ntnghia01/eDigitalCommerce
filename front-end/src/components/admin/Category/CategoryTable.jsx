@@ -71,6 +71,7 @@ const CategoryTable = React.memo(() => {
               <TableRow>
                 <TableCell>ID</TableCell>
                 <TableCell align="left">Tên Danh Mục</TableCell>
+                <TableCell align="left">Hình ảnh</TableCell>
                 <TableCell align="left">Mô Tả</TableCell>
                 <TableCell align="left">Trạng Thái</TableCell>
                 <TableCell align="right">
@@ -92,6 +93,7 @@ const CategoryTable = React.memo(() => {
                     #{category.cateId}
                   </TableCell>
                   <TableCell align="left">{category.cateName}</TableCell>
+                  <TableCell><img src={category.cateImage} alt="" style={{width: "50px", height: "50px"}} /></TableCell>
                   <TableCell align="left">{category.cateDesc}</TableCell>
                   <TableCell align="left" color="red">
                     {category.cateStatus == 1 ? 

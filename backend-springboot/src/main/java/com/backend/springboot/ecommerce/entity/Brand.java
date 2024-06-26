@@ -30,11 +30,14 @@ public class Brand implements Serializable{
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name="brand_updated_at", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime brandUpdatedAt;
+    @Column(name = "brand_image", nullable = true)
+    private String brandImage;
 
-    public Brand(String brandName, String brandDesc) {
+    public Brand(String brandName, String brandDesc, String brandImage) {
         this.brandName = brandName;
         this.brandDesc = brandDesc;
         this.brandStatus = 1;
+        this.brandImage = brandImage;
         this.brandCreatedAt = LocalDateTime.now();
         this.brandUpdatedAt = LocalDateTime.now();
     }

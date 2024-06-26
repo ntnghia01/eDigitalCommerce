@@ -160,7 +160,7 @@ export default function CategoryAddForm() {
           />
           <input type="file" onChange={e => setFile(e.target.files[0])} />
           {/* <button onClick={handleUpload}>Upload</button> */}
-          <progress value={progress} max="100" />
+          {file && (<progress value={progress} max="100" />)}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleSubmit}>Xác nhận</Button>
