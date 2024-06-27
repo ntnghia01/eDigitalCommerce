@@ -175,11 +175,17 @@ export default function CustomerPage() {
                   </Stack>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <Stack spacing={2}>
-                    <Typography variant="body2"><CallIcon />  0559303471</Typography>
-                    <Typography variant="body2"><LocationOnIcon />  Đường 3/2, Xuân Khánh, Ninh Kiều - TP.Cần Thơ</Typography>
-                    <Typography variant="body2"><EmailIcon />  nghiab1910265@student.ctu.edu.vn</Typography>
-                  </Stack>
+                <Stack spacing={2}>
+                  <Typography variant="body2" display="flex" alignItems="center">
+                    <CallIcon style={{ marginRight: 8 }} /> 0559303471
+                  </Typography>
+                  <Typography variant="body2" display="flex" alignItems="center">
+                    <LocationOnIcon style={{ marginRight: 8 }} /> Đường 3/2, Xuân Khánh, Ninh Kiều - TP.Cần Thơ
+                  </Typography>
+                  <Typography variant="body2" display="flex" alignItems="center">
+                    <EmailIcon style={{ marginRight: 8 }} /> nguyentrungnghia26112001@gmail.com
+                  </Typography>
+                </Stack>
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <Stack spacing={2}>
