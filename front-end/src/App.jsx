@@ -23,7 +23,6 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        {/* <Admin></Admin> */}
         <Routes>
           <Route path='/*' element={<CustomerPage />}></Route>
           {/* <Route path='/login' element={<CustomerLoginPage />}></Route> */}
