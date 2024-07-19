@@ -18,8 +18,6 @@ import Shipper from './pages/shipper/Shipper';
 
 function App() {
 
-  const categories = useSelector((state) => state.categories);
-
   return (
     <>
       <BrowserRouter>
