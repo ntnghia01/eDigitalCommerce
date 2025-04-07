@@ -10,6 +10,7 @@ import FilterAdminAccountTable from "../../../components/admin/account/admin/Fil
 import AddAdminAccount from "../../../components/admin/account/admin/AddAdminAccount";
 
 export default function AdminAccountPage() {
+  console.log("AdminAccountPage");
   return (
     <>
       <h1 style={{textAlign: 'center'}}>QUẢN LÝ TÀI KHOẢN QUẢN TRỊ VIÊN</h1>
